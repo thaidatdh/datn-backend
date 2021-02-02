@@ -4,8 +4,8 @@ let router = require("express").Router();
 let userController = require("../controllers/user.controller");
 
 // User routes
-router.route("/").get(userController.index);
-  //.post(verifyToken.verifyUser, chatController.add)
+router.route("/").get(userController.index)
+  router.route("/add").get(userController.add);
   //.delete(verifyToken.verifyUser, chatController.delete_many);
 //router
   //.route("/:user_id")
@@ -15,3 +15,5 @@ router.route("/").get(userController.index);
   //.delete(verifyToken.verifyUser, chatController.delete);
 
 //Export API routes
+
+module.exports = router;

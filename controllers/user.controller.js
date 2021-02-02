@@ -16,3 +16,7 @@ exports.index = function (req, res) {
     });
   });
 };
+exports.add = function(req, res) {
+  user = new User();
+  user.save();
+}
