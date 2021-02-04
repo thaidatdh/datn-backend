@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const User = require("./user.model");
 const PatientSchema = mongoose.Schema(
   {
     user: {
@@ -30,6 +30,9 @@ const PatientSchema = mongoose.Schema(
       default: "NOT_SPECIFY", //MALE, FEMALE, NOT_SPECIFY
     },
     patient_photo: String,
+    patient_balance: Number,
+    insurance_balance: Number,
+    credit_amount: Number,
   },
   {
     timestamps: true,

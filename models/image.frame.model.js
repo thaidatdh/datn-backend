@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Images = require("./images.model");
 const ImageFrameSchema = mongoose.Schema({
    image_mouth_id: mongoose.Types.ObjectId,
    image: {

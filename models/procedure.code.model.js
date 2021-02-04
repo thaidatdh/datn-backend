@@ -21,12 +21,17 @@ const ProcedureCodeSchema = mongoose.Schema(
     mark_type: Number,
     tooth_type: {
       type: String,
-      default: 'ADULT',
+      default: "ADULT",
     }, //Child, Adult
     auto_progress_note: {
       type: Boolean,
       default: false,
     },
+    auto_recall: {
+      type: Boolean,
+      default: false,
+    },
+    recall_interval: String,
   },
   {
     timestamps: true,

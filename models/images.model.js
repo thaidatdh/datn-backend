@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-
+const Patient = require("./patient.model");
 const ImagesSchema = mongoose.Schema({
-   user: {
+   patient: {
       type: mongoose.Types.ObjectId,
-      ref: 'user',
+      ref: 'patient',
       required: false,
    },
    image_path: String,

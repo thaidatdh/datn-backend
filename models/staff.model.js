@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-
+require("./specialist.model");
+require("./access.group.model");
 const StaffSchema = mongoose.Schema(
   {
     user: {
