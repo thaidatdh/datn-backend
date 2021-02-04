@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 var cors = require("cors");
 require("dotenv").config();
-require("./models/index");
 // create express app
 const app = express();
 app.use(cors());
@@ -21,7 +20,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_DB, {
    useNewUrlParser: true
 }).then(() => {
-   console.log("Successfully connected to the express-mongo-app database");
+   console.log("Successfully connected to the mongo database");
 }).catch(err => {
    console.log('Could not connect to the database. Exiting now...', err);
    process.exit();
@@ -33,9 +32,10 @@ app.get("/", (req, res) => {
     message: "Welcome to  application.",
   });
 });
-let routes = require("./routes/user.route");
+let routes = require("./routes/index");
 app.use("/api", routes);
 // listen for requests
-app.listen(3000, () => {
-  console.log("Server is listening on port 3000");
+const SERVER_PORT = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
+app.listen(SERVER_PORT, () => {
+  console.log("Server is listening on port " + SERVER_PORT);
 });

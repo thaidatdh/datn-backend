@@ -1,0 +1,33 @@
+module.exports = {
+  USER: {
+    DEFAULT_PASSWORD: "hello123",
+    USER_TYPE_STAFF: 'STAFF',
+    USER_TYPE_PROVIDER: 'PROVIDER',
+    USER_TYPE_PATIENT: 'PATIENT',
+    USER_TYPE_OTHER: 'OTHER',
+  },
+  PATIENT: {
+    PATIENT_TYPE: ["NON_PATIENT", "PATIENT"],
+    DEFAULT_PATIENT_TYPE: "NON_PATIENT",
+    DEFAULT_IS_ACTIVE: true,
+    DEFAULT_IS_NEW_PATIENT: true,
+    DEFAULT_EMAIL_RECALL: false,
+    DEFAULT_APPT_REMINDER: false,
+    GENDER: ["NOT_SPECIFY", "MALE", "FEMALE"],
+    DEFAULT_GENDER: "NOT_SPECIFY",
+    DEFAULT_PATIENT_PHOTO_LINK: "",
+    MARIRAL_STATUS: ["NOT_SPECIFY", "MARRIED", "DIVORCED", "SINGLE", "WIDOWED"],
+    DEFAULT_MARIRAL_STATUS: "NOT_SPECIFY",
+  },
+  STAFF: {
+    STAFF_TYPES: ["PROVIDER", "STAFF"],
+    DEFAULT_STAFF_TYPE: "STAFF",
+    STAFF_TYPE_PROVIDER: "PROVIDER",
+    STAFF_TYPE_STAFF: "STAFF",
+    DEFAULT_IS_ACTIVE: true,
+  },
+};
+module.exports.RANDOM_COLOR = () => {
+  const randomColor = Math.floor(Math.random()*16777215).toString(16);
+  return "#" + randomColor.toString().toUpperCase();
+}
