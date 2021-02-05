@@ -23,8 +23,14 @@ exports.index = async function (req, res) {
 };
 exports.index_provider = async function (req, res) {
   try {
-    const options = req.body.options ? req.body.options : {};
-    const providerList = await StaffModel.get({staff_type: constants.STAFF.STAFF_TYPE_PROVIDER}, options);
+    const options = {
+      get_access_group: req.query.get_access_group,
+      get_specialist: req.query.get_specialist,
+    };
+    const providerList = await StaffModel.get(
+      { staff_type: constants.STAFF.STAFF_TYPE_PROVIDER },
+      options
+    );
     res.json({
       success: true,
       providers: providerList,
@@ -39,7 +45,10 @@ exports.index_provider = async function (req, res) {
 };
 exports.index_staff = async function (req, res) {
   try {
-    const options = req.body.options ? req.body.options : {};
+    const options = {
+      get_access_group: req.query.get_access_group,
+      get_specialist: req.query.get_specialist,
+    };
     const staffList = await StaffModel.get(
       { staff_type: constants.STAFF.STAFF_TYPE_STAFF },
       options
@@ -59,7 +68,8 @@ exports.index_staff = async function (req, res) {
 //insert
 exports.add = async function (req, res) {
   try {
-    const rs = await StaffModel.insert(req.body.staff);
+    const staffInfo = Object.assign({}, req.body);
+    const rs = await StaffModel.insert(staffInfo);
     return res.json({ success: true, staff: rs });
   } catch (err) {
     return res.json({

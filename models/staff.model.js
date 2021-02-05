@@ -68,7 +68,9 @@ module.exports.insert = async function (staffInfo) {
     : Date.now();
   staff.npi = staffInfo.npi ? staffInfo.npi : null;
   const insertedStaff = await staff.save();
-  return await Object.assign({}, insertedUser._doc, insertedStaff._doc);
+  const result = await Object.assign({}, insertedStaff._doc);
+  result.user = await Object.assign({}, insertedUser._doc);
+  return result;
 };
 
 module.exports.get = async function (query, populateOptions) {

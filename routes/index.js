@@ -1,8 +1,16 @@
 let router = require("express").Router();
 const patientRouter = require("./patient.route");
-const providerRouter = require("./provider.route");
 const staffRouter = require("./staff.route");
+const specialistRouter = require("./specialist.route");
+const practiceRouter = require("./practice.route");
+const referralSourceRouter = require("./referral.source.route");
+const documentCategoryRouter = require("./document.category.route");
+const appointmentRouter = require("./appointment.route");
 router.use("/patient", patientRouter);
-router.use("/provider", providerRouter);
 router.use("/staff", staffRouter);
+router.use("/specialist", specialistRouter);
+router.use("/practice", practiceRouter);
+router.use("/referral-source", referralSourceRouter);
+router.use("/document/category", documentCategoryRouter);
+router.use("/appointment", appointmentRouter);
 module.exports = router;

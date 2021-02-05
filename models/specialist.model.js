@@ -1,10 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const SpecialistSchema = mongoose.Schema({
-   name: String,
-}, {
-   timestamps: true,
-   collection: 'specialists'
-});
+const SpecialistSchema = mongoose.Schema(
+  {
+    name: String,
+  },
+  {
+    timestamps: true,
+    collection: "specialists",
+  }
+);
 
-module.exports = mongoose.model('specialist', SpecialistSchema);
+const SpecialistModel = (module.exports = mongoose.model(
+  "specialist",
+  SpecialistSchema
+));

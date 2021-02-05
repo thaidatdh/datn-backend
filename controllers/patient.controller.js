@@ -23,7 +23,8 @@ exports.index = async function (req, res) {
 //insert
 exports.add = async function (req, res) {
   try {
-    const rs = await PatientModel.insert(req.body.patient);
+    const patientInfo = Object.assign({}, req.body);
+    const rs = await PatientModel.insert(patientInfo);
     return res.json({ success: true, patient: rs });
   } catch (err) {
     return res.json({

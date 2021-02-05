@@ -55,7 +55,7 @@ UserSchema.methods.comparePassword = function (passw, cb) {
 };
 const UserModel = (module.exports = mongoose.model("user", UserSchema));
 module.exports.insert = async function (userInfo) {
-  let user = new User();
+  let user = new UserModel();
   user.first_name = userInfo.first_name ? userInfo.first_name : "";
   user.last_name = userInfo.last_name ? userInfo.last_name : "";
   user.fax = userInfo.fax ? userInfo.fax : null;

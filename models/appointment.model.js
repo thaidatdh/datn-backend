@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Patient = require("./patient.model");
 const Staff = require("./staff.model");
 const Chair = require("./chair.model");
@@ -42,4 +42,55 @@ AppointmentSchema.virtual("treatments", {
   foreignField: "appointment",
   justOne: false,
 });
-module.exports = mongoose.model('appointment', AppointmentSchema);
+const AppointmentModel = (module.exports = mongoose.model(
+  "appointment",
+  AppointmentSchema
+));
+module.exports.get = async function (query, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = StaffModel.find(query);
+  promise.populate({
+    path: "patient",
+    populate: {
+      path: "user",
+    },
+  });
+  promise.populate({
+    path: "staff",
+    populate: {
+      path: "user",
+    },
+  });
+  promise.populate("chair");
+  // Limit
+  if (populateOptions.limit) {
+    promise.limit(limit);
+  }
+
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};
+module.exports.getById = async function (id, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = StaffModel.findById(id);
+  promise.populate({
+    path: "patient",
+    populate: {
+      path: "user",
+    },
+  });
+  promise.populate({
+    path: "staff",
+    populate: {
+      path: "user",
+    },
+  });
+  promise.populate("chair");
+  // Limit
+  if (populateOptions.limit) {
+    promise.limit(limit);
+  }
+
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};

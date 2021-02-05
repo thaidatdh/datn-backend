@@ -80,7 +80,7 @@ module.exports.insert = async function (patientInfo) {
     : null;
   patient.marital_status = patientInfo.marital_status
     ? patientInfo.marital_status
-    : constants.PATIENT.DEFAULT_MARITAL_STATUS;
+    : constants.PATIENT.DEFAULT_MARIRAL_STATUS;
   patient.dob = patientInfo.dob ? patientInfo.dob : patient.dob;
   patient.other_info = patientInfo.other_info
     ? patientInfo.other_info
