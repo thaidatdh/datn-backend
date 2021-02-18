@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const AccessGroupSchema = mongoose.Schema({
    name: String,
-   vakue: String,
+   value: String,
 }, {
    timestamps: true,
    collection: 'access_group'

@@ -9,11 +9,15 @@ const PrescriptionDetailSchema = mongoose.Schema(
     },
     is_deleted: Boolean,
     status: String,
-    dispense: {
+    drug: {
       type: mongoose.Types.ObjectId,
-      ref: "dispense",
+      ref: "drug",
       required: true,
     },
+    refill: String,
+    dispensed: String,
+    quantity: String,
+    description: String,
   },
   {
     timestamps: true,

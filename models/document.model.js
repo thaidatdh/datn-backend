@@ -23,4 +23,29 @@ const DocumentSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("document", DocumentSchema);
+const DocumentModel = (module.exports = mongoose.model(
+  "document",
+  DocumentSchema
+));
+
+module.exports.get = async function (query, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = DocumentModel.find(query);
+  // Limit
+  if (populateOptions.limit) {
+    promise.limit(limit);
+  }
+  if (populateOptions.get_patient) {
+    promise.populate({
+      path: "patient",
+      populate: {
+        path: "user"
+      }
+    });
+  }
+  if (populateOptions.get_category) {
+    promise.populate("category");
+  }
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};

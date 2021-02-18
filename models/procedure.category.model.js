@@ -13,4 +13,18 @@ ProcedureCategorySchema.virtual("procedure_code", {
   foreignField: "category",
   justOne: false,
 });
-module.exports = mongoose.model("procedure_category", ProcedureCategorySchema);
+const CategoryModel = module.exports = mongoose.model("procedure_category", ProcedureCategorySchema);
+
+module.exports.get = async function (query, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = CategoryModel.find(query);
+  // Limit
+  if (populateOptions.limit) {
+    promise.limit(limit);
+  }
+  if (populateOptions.get_codes) {
+    promise.populate("procedure_code");
+  }
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};

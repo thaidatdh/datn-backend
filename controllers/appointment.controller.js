@@ -101,6 +101,7 @@ exports.add_appointment = async function (req, res) {
     appointment.note = apptInfo.note ? apptInfo.note : null;
     appointment.status = apptInfo.status? apptInfo.status : "NEW";
     const rs = await appointment.save();
+    //link treatment and recall here
     return res.json({ success: true, appointment: rs });
   } catch (err) {
     return res.json({
@@ -110,3 +111,5 @@ exports.add_appointment = async function (req, res) {
     });
   }
 };
+
+//Appointment Blocks

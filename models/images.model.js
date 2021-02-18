@@ -14,4 +14,25 @@ const ImagesSchema = mongoose.Schema({
    collection: 'images'
 });
 
-module.exports = mongoose.model('image', ImagesSchema);
+const ImageModel = module.exports = mongoose.model('image', ImagesSchema);
+
+module.exports.get = async function (query, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = ImageModel.find(query);
+  // Limit
+  if (populateOptions.limit) {
+    promise.limit(limit);
+  }
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};
+
+module.exports.insert = async function (imageInfo) {
+  let image = new ImageModel();
+  image.patient = imageInfo.patient ? imageInfo.patient : null;
+  image.image_path = imageInfo.image_path ? imageInfo.image_path : null;
+  image.thumbnail_path = imageInfo.thumbnail_path
+    ? imageInfo.thumbnail_path
+    : null;
+  return await image.save();
+};

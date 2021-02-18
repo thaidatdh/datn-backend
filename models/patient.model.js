@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 require("./staff.model");
 const User = require("./user.model");
+const ToothModel = require("./tooth.model");
 const PatientSchema = mongoose.Schema(
   {
     user: {
@@ -47,6 +48,12 @@ const PatientModel = (module.exports = mongoose.model(
   "patient",
   PatientSchema
 ));
+function calculateAge(birthday) {
+  // birthday is a date
+  var ageDifMs = Date.now() - birthday.getTime();
+  var ageDate = new Date(ageDifMs); // miliseconds from epoch
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 module.exports.insert = async function (patientInfo) {
   patientInfo.user_type = constants.USER.USER_TYPE_PATIENT;
   const insertedUser = await User.insert(patientInfo);
@@ -104,6 +111,8 @@ module.exports.insert = async function (patientInfo) {
   patient.insurance_balance = 0.0;
   patient.credit_amount = 0.0;
   const insertedPatient = await patient.save();
+  const tooth_type = calculateAge(Date.parse(patientInfo.dob)) > 13 ? "ADULT": "CHILD";
+  ToothModel.init_tooth_for_patient(insertedPatient._id, tooth_type);
   return await Object.assign({}, insertedUser._doc, insertedPatient._doc);
 };
 
