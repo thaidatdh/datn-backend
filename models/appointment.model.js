@@ -94,3 +94,51 @@ module.exports.getById = async function (id, populateOptions) {
   const resultQuery = await promise.exec();
   return resultQuery;
 };
+
+module.exports.insert = async function(apptInfo) {
+  let appointment = new AppointmentModel();
+  appointment.patient = apptInfo.patient ? apptInfo.patient : null;
+  appointment.provider = apptInfo.provider ? apptInfo.provider : null;
+  appointment.assistant = apptInfo.assistant ? apptInfo.assistant : null;
+  appointment.chair = apptInfo.chair ? apptInfo.chair : null;
+  appointment.appointment_date = apptInfo.appointment_date
+    ? apptInfo.appointment_date
+    : Date.now();
+  appointment.appointment_time = apptInfo.appointment_time
+    ? apptInfo.appointment_time
+    : null;
+  appointment.duration = apptInfo.duration ? apptInfo.duration : 15;
+  appointment.note = apptInfo.note ? apptInfo.note : null;
+  appointment.status = apptInfo.status ? apptInfo.status : "NEW";
+  const rs = await appointment.save();
+  return rs;
+}
+module.exports.updateAppt = async function (apptInfo, appointment_id) {
+  let appointment = await AppointmentModel.findById(appointment_id);
+  if (appointment == null) {
+    return null;
+  }
+  appointment.patient = apptInfo.patient
+    ? apptInfo.patient
+    : appointment.patient;
+  appointment.provider = apptInfo.provider
+    ? apptInfo.provider
+    : appointment.provider;
+  appointment.assistant = apptInfo.assistant
+    ? apptInfo.assistant
+    : appointment.assistant;
+  appointment.chair = apptInfo.chair ? apptInfo.chair : appointment.chair;
+  appointment.appointment_date = apptInfo.appointment_date
+    ? apptInfo.appointment_date
+    : appointment.appointment_date;
+  appointment.appointment_time = apptInfo.appointment_time
+    ? apptInfo.appointment_time
+    : appointment.appointment_time;
+  appointment.duration = apptInfo.duration
+    ? apptInfo.duration
+    : appointment.duration;
+  appointment.note = apptInfo.note ? apptInfo.note : appointment.note;
+  appointment.status = apptInfo.status ? apptInfo.status : appointment.status;
+  const rs = await appointment.save();
+  return rs;
+};

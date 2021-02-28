@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const chairModel = require("../models/chair.model");
 const appointmentModel = require("../models/appointment.model");
+const blockModel = require("../models/appointment.block.model");
 //Chair
 exports.chair_index = async function (req, res) {
   try {
@@ -86,21 +87,7 @@ exports.appointment_info = async function (req, res) {
 exports.add_appointment = async function (req, res) {
   try {
     let apptInfo = req.body;
-    let appointment = new appointmentModel();
-    appointment.patient = apptInfo.patient ? apptInfo.patient : null;
-    appointment.provider = apptInfo.provider ? apptInfo.provider : null;
-    appointment.assistant = apptInfo.assistant ? apptInfo.assistant : null;
-    appointment.chair = apptInfo.chair ? apptInfo.chair : null;
-    appointment.appointment_date = apptInfo.appointment_date
-      ? apptInfo.appointment_date
-      : Date.now();
-    appointment.appointment_time = apptInfo.appointment_time
-      ? apptInfo.appointment_time
-      : null;
-    appointment.duration = apptInfo.duration ? apptInfo.duration : 15;
-    appointment.note = apptInfo.note ? apptInfo.note : null;
-    appointment.status = apptInfo.status? apptInfo.status : "NEW";
-    const rs = await appointment.save();
+    const rs = await appointmentModel.insert(apptInfo);
     //link treatment and recall here
     return res.json({ success: true, appointment: rs });
   } catch (err) {
@@ -111,5 +98,83 @@ exports.add_appointment = async function (req, res) {
     });
   }
 };
-
+exports.update_appointment = async function (req, res) {
+  try {
+    let apptInfo = req.body;
+    const rs = await appointmentModel.updateAppt(
+      apptInfo,
+      req.params.appointment_id
+    );
+    //link treatment and recall here
+    return res.json({ success: true, appointment: rs });
+  } catch (err) {
+    return res.json({
+      success: false,
+      message: "Update appointment failed",
+      exeption: err,
+    });
+  }
+};
 //Appointment Blocks
+exports.block_index = async function (req, res) {
+  try {
+    const blocks = await blockModel.find();
+    res.json({
+      success: true,
+      blocks: blocks,
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Get appointment block list failed",
+      exeption: err,
+    });
+  }
+};
+exports.appointmentblock_info = async function (req, res) {
+  const appointment_id = req.params.appointment_block_id;
+  try {
+    const appointment = await blockModel.findById(appointment_id);
+    res.json({
+      success: true,
+      result: appointment,
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Get appointment block " + appointment_id + " failed",
+      exeption: err,
+    });
+  }
+};
+exports.add_appointmentblock = async function (req, res) {
+  try {
+    let apptInfo = req.body;
+    const rs = await blockModel.insert(apptInfo);
+    //link treatment and recall here
+    return res.json({ success: true, block: rs });
+  } catch (err) {
+    return res.json({
+      success: false,
+      message: "Insert appointment block failed",
+      exeption: err,
+    });
+  }
+};
+exports.update_appointmentblock = async function (req, res) {
+  try {
+    let apptInfo = req.body;
+    const rs = await blockModel.updateBlock(
+      apptInfo,
+      req.params.appointment_block_id
+    );
+    //link treatment and recall here
+    return res.json({ success: true, block: rs });
+  } catch (err) {
+    return res.json({
+      success: false,
+      message: "Update appointment block failed",
+      exeption: err,
+    });
+  }
+};
