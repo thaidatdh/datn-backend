@@ -8,8 +8,8 @@ exports.verifyUser = (request, response, next) => {
   token = token.replace("Bearer ", "");
 
   try {
-    jwt.verify(token, config.secret, (err, decoded) => {
-      if (err || decoded.is_active != true) {
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+      if (err) {
         console.log(err);
         response.status(401).send({ message: "Access Denied" });
       } else {
