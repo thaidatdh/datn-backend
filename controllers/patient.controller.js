@@ -34,3 +34,17 @@ exports.add = async function (req, res) {
     });
   }
 };
+exports.update = async function (req, res) {
+  try {
+    const patient_id = req.params.patient_id;
+    const patientInfo = Object.assign({}, req.body);
+    const rs = await PatientModel.updatePatient(patient_id, patientInfo);
+    return res.json({ success: true, patient: rs });
+  } catch (err) {
+    return res.json({
+      success: false,
+      message: "Update patient failed",
+      exeption: err,
+    });
+  }
+};

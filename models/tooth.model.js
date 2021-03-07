@@ -24,10 +24,10 @@ const ToothModel = module.exports = mongoose.model("tooth", ToothSchema);
 
 module.exports.insert = async function (toothInfo) {
   let tooth = new ToothModel();
-  tooth.patient = userInfo.patient ? userInfo.patient : null;
-  tooth.tooth_number = userInfo.tooth_number ? userInfo.tooth_number : null;
-  tooth.tooth_note = userInfo.tooth_note ? userInfo.tooth_note : null;
-  tooth.tooth_type = userInfo.tooth_type ? userInfo.tooth_type : null;
+  tooth.patient = toothInfo.patient ? toothInfo.patient : null;
+  tooth.tooth_number = toothInfo.tooth_number ? toothInfo.tooth_number : null;
+  tooth.tooth_note = toothInfo.tooth_note ? toothInfo.tooth_note : null;
+  tooth.tooth_type = toothInfo.tooth_type ? toothInfo.tooth_type : "ADULT";
   return await tooth.save();
 };
 
