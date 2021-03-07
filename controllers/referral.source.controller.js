@@ -24,6 +24,7 @@ exports.add = async function (req, res) {
     source.address = req.body.address ? req.body.address : null;
     source.phone = req.body.phone ? req.body.phone : null;
     source.fax = req.body.fax ? req.body.fax : null;
+    source.email = req.body.email ? req.body.email : null;
     source.additional_info = req.body.additional_info
       ? req.body.additional_info
       : null;

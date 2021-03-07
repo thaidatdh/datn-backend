@@ -23,7 +23,8 @@ exports.signin_staff = async function (req, res) {
       });
     } else {
       // check if password matches
-      if (req.body.password.length < 8) {
+      if (req.body.password.length < 1) {
+        console.log("match");
         return res.status(422).send({
           success: false,
           errors: [
@@ -36,6 +37,7 @@ exports.signin_staff = async function (req, res) {
           ],
         });
       } else {
+        console.log("match");
         user.comparePassword(req.body.password, function (err, isMatch) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
@@ -114,25 +116,13 @@ exports.signin_patient = async function (req, res) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
             let token = jwt.sign(
-              JSON.stringify(user),
-              process.env.TOKEN_SECRET_MOBILE,
-              {
-                expiresIn: "1h",
-              }
-            );
-            let refreshToken = jwt.sign(
-              JSON.stringify(user),
-              process.env.TOKEN_SECRET_MOBILE,
-              {
-                expiresIn: "1d",
-              }
+              JSON.stringify(user)
             );
             // return the information including token as JSON
             return res.json({
               success: true,
               user: user,
               token: token,
-              refreshToken: refreshToken,
             });
           } else {
             return res.status(403).send({

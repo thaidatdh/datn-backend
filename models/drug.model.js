@@ -7,6 +7,7 @@ const DrugSchema = mongoose.Schema(
     refill: String,
     dispensed: String,
     quantity: String,
+    note: String,
   },
   {
     timestamps: true,
@@ -23,5 +24,6 @@ module.exports.insert = async function (drugInfo) {
   drug.refill = drugInfo.refill ? drugInfo.refill : null;
   drug.dispensed = drugInfo.dispensed ? drugInfo.dispensed : null;
   drug.quantity = drugInfo.quantity ? drugInfo.quantity : null;
+  drug.note = drugInfo.note ? drugInfo.note : null;
   return await drug.save();
 };

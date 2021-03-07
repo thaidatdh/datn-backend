@@ -22,7 +22,7 @@ exports.add = async function (req, res) {
   try {
     const procedureCodeInfo = req.body;
     const rs = await procedureModel.insert(procedureCodeInfo);
-    return res.json({ success: true, drug: rs });
+    return res.json({ success: true, procedure_code: rs });
   } catch (err) {
     return res.json({
       success: false,

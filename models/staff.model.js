@@ -44,7 +44,7 @@ module.exports.insert = async function (staffInfo) {
   const insertedUser = await User.insert(staffInfo);
   const user_id = insertedUser._id;
   let staff = new StaffModel();
-  staff.user = user_id;
+  staff.user = mongoose.Types.ObjectId(user_id);
   staff.display_id = staffInfo.display_id
     ? staffInfo.display_id
     : '';
@@ -58,13 +58,13 @@ module.exports.insert = async function (staffInfo) {
     : constants.STAFF.DEFAULT_STAFF_TYPE;
   staff.drug_lic = staffInfo.drug_lic ? staffInfo.drug_lic : null;
   staff.specialist = staffInfo.specialist
-    ? staffInfo.specialist
+    ? mongoose.Types.ObjectId(staffInfo.specialist)
     : null;
   staff.access_group = staffInfo.access_group
     ? staffInfo.access_group
     : null;
   staff.start_date = staffInfo.start_date
-    ? staffInfo.start_date
+    ? Date.parse(staffInfo.start_date)
     : Date.now();
   staff.npi = staffInfo.npi ? staffInfo.npi : null;
   const insertedStaff = await staff.save();

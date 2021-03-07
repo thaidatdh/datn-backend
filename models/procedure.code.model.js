@@ -8,6 +8,7 @@ const ProcedureCodeSchema = mongoose.Schema(
     description: String,
     procedure_type: String, //TREATMENT, CONDITION
     procedure_fee: mongoose.Types.Decimal128,
+    procedure_time: mongoose.Types.Decimal128,
     category: {
       type: mongoose.Types.ObjectId,
       ref: "procedure_category",
@@ -21,8 +22,8 @@ const ProcedureCodeSchema = mongoose.Schema(
     mark_type: Number,
     tooth_type: {
       type: String,
-      default: "ADULT",
-    }, //Child, Adult
+      default: "DEFAULT",
+    }, //Child, Adult, DEFAULT
     auto_progress_note: {
       type: Boolean,
       default: false,
@@ -63,6 +64,9 @@ module.exports.insert = async function (procedureCodeInfo) {
     : null;
   proc.procedure_type = procedureCodeInfo.procedure_type
     ? procedureCodeInfo.procedure_type
+    : null;
+  proc.procedure_time = procedureCodeInfo.procedure_time
+    ? procedureCodeInfo.procedure_time
     : null;
   proc.category = procedureCodeInfo.category
     ? procedureCodeInfo.category

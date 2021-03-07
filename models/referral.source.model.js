@@ -6,6 +6,7 @@ const ReferralSourceSchema = mongoose.Schema(
     address: String,
     phone: String,
     fax: String,
+    email: String,
     additional_info: String,
   },
   {
