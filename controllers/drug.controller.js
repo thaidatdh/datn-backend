@@ -30,3 +30,48 @@ exports.add = async function (req, res) {
     });
   }
 };
+
+exports.drug = async function (req, res) {
+  try {
+    const drug = await drugModel.findById(req.params.drug_id);
+    if (drug) {
+      res.json({
+        success: true,
+        drug: drug,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Drug not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const drugInfo = req.body;
+    const drug = await drugModel.findById(req.params.drug_id);
+    if (drug) {
+      const result = await drugModel.updateDrug(drug, drugInfo);
+      res.json({
+        success: true,
+        drug: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Drug not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+    });
+  }
+};

@@ -19,21 +19,37 @@ exports.index = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    let practice = new practiceModel();
-    practice.name = req.body.name ? req.body.name : null;
-    practice.address = req.body.address ? req.body.address : null;
-    practice.phone = req.body.phone ? req.body.phone : null;
-    practice.fax = req.body.fax ? req.body.fax : null;
-    practice.default_provider = req.body.default_provider
-      ? req.body.default_provider
-      : null;
-    const rs = await practice.save();
+    const practiceInfo = req.body;
+    const rs = practiceModel.updatePractice(practiceInfo);
     return res.json({ success: true, practice: rs });
   } catch (err) {
     return res.json({
       success: false,
       message: "Insert practice failed",
       exeption: err,
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const practiceInfo = req.body;
+    const practice = await practiceModel.findById(req.params.practice_id);
+    if (practice) {
+      const result = await practiceModel.updatePractice(practice, practiceInfo);
+      res.json({
+        success: true,
+        practice: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Practice not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
     });
   }
 };

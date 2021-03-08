@@ -31,3 +31,47 @@ exports.add = async function (req, res) {
     });
   }
 };
+exports.insurer = async function (req, res) {
+  try {
+    const insurer = await InsurerModel.findById(req.params.insurer_id);
+    if (insurer) {
+      res.json({
+        success: true,
+        insurer: insurer,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Insurer not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const insurerInfo = req.body;
+    const insurer = await InsurerModel.findById(req.params.insurer_id);
+    if (insurer) {
+      const result = await InsurerModel.updateInsurer(insurer, insurerInfo);
+      res.json({
+        success: true,
+        insurer: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Insurer not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+    });
+  }
+};

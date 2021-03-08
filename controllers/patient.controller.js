@@ -34,6 +34,30 @@ exports.add = async function (req, res) {
     });
   }
 };
+exports.patient = async function (req, res) {
+  try {
+    const patient_id = req.params.patient_id;
+    const options = {
+      get_hohh: req.query.get_hohh,
+      get_provider: req.query.get_provider,
+    };
+    const rs = await PatientModel.get({ _id: patient_id }, options);
+    if (rs != null && rs.length > 0) {
+      return res.json({ success: true, patient: rs[0] });
+    } else {
+      return res.json({
+        success: false,
+        message: "Patient not found",
+      });
+    }
+  } catch (err) {
+    return res.json({
+      success: false,
+      message: "Get patient failed",
+      exeption: err,
+    });
+  }
+};
 exports.update = async function (req, res) {
   try {
     const patient_id = req.params.patient_id;

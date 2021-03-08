@@ -19,16 +19,8 @@ exports.index = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    let source = new referralSourceModel();
-    source.name = req.body.name ? req.body.name : null;
-    source.address = req.body.address ? req.body.address : null;
-    source.phone = req.body.phone ? req.body.phone : null;
-    source.fax = req.body.fax ? req.body.fax : null;
-    source.email = req.body.email ? req.body.email : null;
-    source.additional_info = req.body.additional_info
-      ? req.body.additional_info
-      : null;
-    const rs = await source.save();
+    const sourceInfo = req.body;
+    const rs = await referralSourceModel.insert(sourceInfo);
     return res.json({ success: true, referral_source: rs });
   } catch (err) {
     return res.json({
@@ -38,3 +30,49 @@ exports.add = async function (req, res) {
     });
   }
 };
+
+exports.source = async function (req, res) {
+  try {
+    const source = await referralSourceModel.findById(req.params.source_id);
+    if (source) {
+      res.json({
+        success: true,
+        referral_source: source,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Referral source not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const sourceInfo = req.body;
+    const source = await referralSourceModel.findById(req.params.insurer_id);
+    if (source) {
+      const result = await referralSourceModel.updateSource(source, sourceInfo);
+      res.json({
+        success: true,
+        referral_source: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Referral source not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+    });
+  }
+};
+
