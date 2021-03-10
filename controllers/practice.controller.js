@@ -20,7 +20,7 @@ exports.index = async function (req, res) {
 exports.add = async function (req, res) {
   try {
     const practiceInfo = req.body;
-    const rs = practiceModel.updatePractice(practiceInfo);
+    const rs = await practiceModel.insert(practiceInfo);
     return res.json({ success: true, practice: rs });
   } catch (err) {
     return res.json({

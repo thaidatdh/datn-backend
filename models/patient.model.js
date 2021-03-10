@@ -128,42 +128,52 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
   }
   const updatedUser = await User.updateUser(patient.user, patientInfo);
   patientInfo.user_type = constants.USER.USER_TYPE_PATIENT;
-  patient.patient_id = patientInfo.patient_id
-    ? patientInfo.patient_id
-    : patient.patient_id;
-  patient.active_date = patientInfo.active_date
-    ? Date.parse(patientInfo.active_date)
-    : patientInfo.active_date;
+  patient.patient_id =
+    patientInfo.patient_id != undefined
+      ? patientInfo.patient_id
+      : patient.patient_id;
+  patient.active_date =
+    patientInfo.active_date != undefined
+      ? Date.parse(patientInfo.active_date)
+      : patientInfo.active_date;
   patient.is_active =
     patientInfo.is_active != undefined
       ? patientInfo.is_active
       : patient.is_active;
-  patient.head_of_household = patientInfo.head_of_household
-    ? mongoose.Types.ObjectId(patientInfo.head_of_household)
-    : patientInfo.head_of_household;
-  patient.patient_type = patientInfo.patient_type
-    ? patientInfo.patient_type
-    : patient.patient_type;
+  patient.head_of_household =
+    patientInfo.head_of_household != undefined
+      ? mongoose.Types.ObjectId(patientInfo.head_of_household)
+      : patientInfo.head_of_household;
+  patient.patient_type =
+    patientInfo.patient_type != undefined
+      ? patientInfo.patient_type
+      : patient.patient_type;
   patient.new_patient =
     patientInfo.new_patient != undefined
       ? patientInfo.new_patient
       : patient.new_patient;
-  patient.medical_alert = patientInfo.medical_alert
-    ? patientInfo.medical_alert
-    : patient.medical_alert;
-  patient.patient_note = patientInfo.patient_note
-    ? patientInfo.patient_note
-    : patient.patient_note;
-  patient.marital_status = patientInfo.marital_status
-    ? patientInfo.marital_status
-    : patient.marital_status;
-  patient.dob = patientInfo.dob ? Date.parse(patientInfo.dob) : patient.dob;
-  patient.other_info = patientInfo.other_info
-    ? patientInfo.other_info
-    : patient.other_info;
-  patient.provider = patientInfo.provider
-    ? mongoose.Types.ObjectId(patientInfo.provider)
-    : patient.provider;
+  patient.medical_alert =
+    patientInfo.medical_alert != undefined
+      ? patientInfo.medical_alert
+      : patient.medical_alert;
+  patient.patient_note =
+    patientInfo.patient_note != undefined
+      ? patientInfo.patient_note
+      : patient.patient_note;
+  patient.marital_status =
+    patientInfo.marital_status != undefined
+      ? patientInfo.marital_status
+      : patient.marital_status;
+  patient.dob =
+    patientInfo.dob != undefined ? Date.parse(patientInfo.dob) : patient.dob;
+  patient.other_info =
+    patientInfo.other_info != undefined
+      ? patientInfo.other_info
+      : patient.other_info;
+  patient.provider =
+    patientInfo.provider != undefined
+      ? mongoose.Types.ObjectId(patientInfo.provider)
+      : patient.provider;
   patient.email_recall =
     patientInfo.email_recall != undefined
       ? patientInfo.email_recall
@@ -172,21 +182,26 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
     patientInfo.appt_reminder != undefined
       ? patientInfo.appt_reminder
       : patient.appt_reminder;
-  patient.gender = patientInfo.gender ? patientInfo.gender : patient.gender;
-  patient.patient_photo = patientInfo.patient_photo
-    ? patientInfo.patient_photo
-    : patient.patient_photo;
-  patient.patient_balance = patientInfo.patient_balance
-    ? patientInfo.patient_balance
-    : patient.patient_balance;
-  patient.insurance_balance = patientInfo.insurance_balance
-    ? patientInfo.insurance_balance
-    : patient.insurance_balance;
-  patient.credit_amount = patientInfo.credit_amount
-    ? patientInfo.credit_amount
-    : patient.credit_amount;
-  const updatedUser = await patient.save();
-  const result = await Object.assign({}, updatedUser._doc);
+  patient.gender =
+    patientInfo.gender != undefined ? patientInfo.gender : patient.gender;
+  patient.patient_photo =
+    patientInfo.patient_photo != undefined
+      ? patientInfo.patient_photo
+      : patient.patient_photo;
+  patient.patient_balance =
+    patientInfo.patient_balance != undefined
+      ? patientInfo.patient_balance
+      : patient.patient_balance;
+  patient.insurance_balance =
+    patientInfo.insurance_balance != undefined
+      ? patientInfo.insurance_balance
+      : patient.insurance_balance;
+  patient.credit_amount =
+    patientInfo.credit_amount != undefined
+      ? patientInfo.credit_amount
+      : patient.credit_amount;
+  const updatedPatient = await patient.save();
+  const result = await Object.assign({}, updatedPatient._doc);
   result.user = await Object.assign({}, updatedUser._doc);
   return result;
 };

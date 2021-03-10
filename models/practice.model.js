@@ -22,7 +22,7 @@ const PracticeModel = (module.exports = mongoose.model(
   PracticeSchema
 ));
 
-module.exports.updatePractice = async function (practiceInfo) {
+module.exports.insert = async function (practiceInfo) {
   let practice = new PracticeModel();
   practice.name = practiceInfo.name ? practiceInfo.name : null;
   practice.address = practiceInfo.address ? practiceInfo.address : null;
