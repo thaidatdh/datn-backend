@@ -7,5 +7,6 @@ router
 router
   .route("/:source_id")
   .get(referralSourceController.source)
-  .post(referralSourceController.update);
+  .post(referralSourceController.update)
+  .delete(referralSourceController.delete);
 module.exports = router;

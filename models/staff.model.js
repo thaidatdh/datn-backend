@@ -30,6 +30,9 @@ const StaffSchema = mongoose.Schema(
     },
     start_date: { type: Date, default: Date.now() },
     npi: String,
+    notify_staff_msg: Boolean,
+    notify_patient_msg: Boolean,
+    notify_meeting: Boolean,
   },
   {
     timestamps: true,
@@ -45,11 +48,11 @@ module.exports.insert = async function (staffInfo) {
   const user_id = insertedUser._id;
   let staff = new StaffModel();
   staff.user = mongoose.Types.ObjectId(user_id);
-  staff.display_id = staffInfo.display_id
-    ? staffInfo.display_id
-    : '';
+  staff.display_id = staffInfo.display_id ? staffInfo.display_id : "";
   staff.is_active =
-    staffInfo.is_active != undefined ? staffInfo.is_active : constants.STAFF.DEFAULT_IS_ACTIVE;
+    staffInfo.is_active != undefined
+      ? staffInfo.is_active
+      : constants.STAFF.DEFAULT_IS_ACTIVE;
   staff.provider_color = staffInfo.provider_color
     ? staffInfo.provider_color
     : constants.RANDOM_COLOR();
@@ -61,12 +64,22 @@ module.exports.insert = async function (staffInfo) {
     ? mongoose.Types.ObjectId(staffInfo.specialist)
     : null;
   staff.access_group = staffInfo.access_group
-    ? staffInfo.access_group
+    ? mongoose.Types.ObjectId(staffInfo.access_group)
     : null;
   staff.start_date = staffInfo.start_date
     ? Date.parse(staffInfo.start_date)
     : Date.now();
   staff.npi = staffInfo.npi ? staffInfo.npi : null;
+  staff.notify_staff_msg =
+    staffInfo.notify_staff_msg != undefined
+      ? staffInfo.notify_staff_msg
+      : false;
+  staff.notify_patient_msg =
+    staffInfo.notify_patient_msg != undefined
+      ? staffInfo.notify_patient_msg
+      : false;
+  staff.notify_meeting =
+    staffInfo.notify_meeting != undefined ? staffInfo.notify_meeting : false;
   const insertedStaff = await staff.save();
   const result = await Object.assign({}, insertedStaff._doc);
   result.user = await Object.assign({}, insertedUser._doc);

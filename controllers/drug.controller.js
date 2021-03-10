@@ -75,3 +75,16 @@ exports.update = async function (req, res) {
     });
   }
 };
+exports.delete = async function (req, res) {
+  try {
+    await drugModel.deleteOne({_id: req.params.drug_id});
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
+    });
+  }
+};

@@ -53,3 +53,16 @@ exports.update = async function (req, res) {
     });
   }
 };
+exports.delete = async function (req, res) {
+  try {
+    await practiceModel.deleteOne({_id: req.params.practice_id});
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
+    });
+  }
+};

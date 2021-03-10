@@ -75,3 +75,16 @@ exports.update = async function (req, res) {
     });
   }
 };
+exports.delete = async function (req, res) {
+  try {
+    await InsurerModel.deleteOne({_id: req.params.insurer_id});
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
+    });
+  }
+};

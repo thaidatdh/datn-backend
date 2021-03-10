@@ -33,12 +33,12 @@ module.exports.insert = async function (sourceInfo) {
   return await source.save();
 };
 module.exports.updateSource = async function (source, sourceInfo) {
-  source.name = sourceInfo.name ? sourceInfo.name : source.name;
-  source.address = sourceInfo.address ? sourceInfo.address : source.address;
-  source.phone = sourceInfo.phone ? sourceInfo.phone : source.phone;
-  source.fax = sourceInfo.fax ? sourceInfo.fax : source.fax;
-  source.email = sourceInfo.email ? sourceInfo.email : source.email;
-  source.additional_info = sourceInfo.additional_info
+  source.name = sourceInfo.name != undefined ? sourceInfo.name : source.name;
+  source.address = sourceInfo.address != undefined ? sourceInfo.address : source.address;
+  source.phone = sourceInfo.phone != undefined ? sourceInfo.phone : source.phone;
+  source.fax = sourceInfo.fax != undefined ? sourceInfo.fax : source.fax;
+  source.email = sourceInfo.email != undefined ? sourceInfo.email : source.email;
+  source.additional_info = sourceInfo.additional_info != undefined
     ? sourceInfo.additional_info
     : source.additional_info;
   return await source.save();

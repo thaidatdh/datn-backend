@@ -34,12 +34,17 @@ module.exports.updatePractice = async function (practiceInfo) {
   return await practice.save();
 };
 module.exports.updatePractice = async function (practice, practiceInfo) {
-  practice.name = practiceInfo.name ? practiceInfo.name : null;
-  practice.address = practiceInfo.address ? practiceInfo.address : null;
-  practice.phone = practiceInfo.phone ? practiceInfo.phone : null;
-  practice.fax = practiceInfo.fax ? practiceInfo.fax : null;
-  practice.default_provider = practiceInfo.default_provider
-    ? practiceInfo.default_provider
-    : null;
+  practice.name =
+    practiceInfo.name != undefined ? practiceInfo.name : practice.name;
+  practice.address =
+    practiceInfo.address != undefined ? practiceInfo.address : practice.address;
+  practice.phone =
+    practiceInfo.phone != undefined ? practiceInfo.phone : practice.phone;
+  practice.fax =
+    practiceInfo.fax != undefined ? practiceInfo.fax : practice.fax;
+  practice.default_provider =
+    practiceInfo.default_provider != undefined
+      ? practiceInfo.default_provider
+      : practice.default_provider;
   return await practice.save();
 };

@@ -28,13 +28,14 @@ module.exports.insert = async function (drugInfo) {
   return await drug.save();
 };
 module.exports.updateDrug = async function (drug, drugInfo) {
-  drug.name = drugInfo.name ? drugInfo.name : drug.name;
-  drug.description = drugInfo.description
-    ? drugInfo.description
-    : drug.description;
-  drug.refill = drugInfo.refill ? drugInfo.refill : drug.refill;
-  drug.dispensed = drugInfo.dispensed ? drugInfo.dispensed : drug.dispensed;
-  drug.quantity = drugInfo.quantity ? drugInfo.quantity : drug.quantity;
-  drug.note = drugInfo.note ? drugInfo.note : drug.note;
+  drug.name = drugInfo.name != undefined ? drugInfo.name : drug.name;
+  drug.description =
+    drugInfo.description != undefined ? drugInfo.description : drug.description;
+  drug.refill = drugInfo.refill != undefined ? drugInfo.refill : drug.refill;
+  drug.dispensed =
+    drugInfo.dispensed != undefined ? drugInfo.dispensed : drug.dispensed;
+  drug.quantity =
+    drugInfo.quantity != undefined ? drugInfo.quantity : drug.quantity;
+  drug.note = drugInfo.note != undefined ? drugInfo.note : drug.note;
   return await drug.save();
 };

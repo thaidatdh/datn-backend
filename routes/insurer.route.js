@@ -4,5 +4,6 @@ router.route("/").get(insurerController.index).post(insurerController.add);
 router
   .route("/:insurer_id")
   .get(insurerController.insurer)
-  .post(insurerController.update);
+  .post(insurerController.update)
+  .delete(insurerController.delete);
 module.exports = router;

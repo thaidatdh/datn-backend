@@ -32,13 +32,18 @@ module.exports.insert = async function (insurerInfo) {
   return await insurer.save();
 };
 module.exports.updateInsurer = async function (insurer, insurerInfo) {
-  insurer.name = insurerInfo.name ? insurerInfo.name : insurer.name;
-  insurer.address = insurerInfo.address ? insurerInfo.address : insurer.address;
-  insurer.phone = insurerInfo.phone ? insurerInfo.phone : insurer.phone;
-  insurer.fax = insurerInfo.fax ? insurerInfo.fax : insurer.fax;
-  insurer.email = insurerInfo.email ? insurerInfo.email : insurer.email;
-  insurer.max_coverage = insurerInfo.max_coverage
-    ? insurerInfo.max_coverage
-    : insurer.max_coverage;
+  insurer.name =
+    insurerInfo.name != undefined ? insurerInfo.name : insurer.name;
+  insurer.address =
+    insurerInfo.address != undefined ? insurerInfo.address : insurer.address;
+  insurer.phone =
+    insurerInfo.phone != undefined ? insurerInfo.phone : insurer.phone;
+  insurer.fax = insurerInfo.fax != undefined ? insurerInfo.fax : insurer.fax;
+  insurer.email =
+    insurerInfo.email != undefined ? insurerInfo.email : insurer.email;
+  insurer.max_coverage =
+    insurerInfo.max_coverage != undefined
+      ? insurerInfo.max_coverage
+      : insurer.max_coverage;
   return await insurer.save();
 };
