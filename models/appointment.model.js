@@ -118,27 +118,29 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
   if (appointment == null) {
     return null;
   }
-  appointment.patient = apptInfo.patient
+  appointment.patient = apptInfo.patient !== undefined
     ? apptInfo.patient
     : appointment.patient;
-  appointment.provider = apptInfo.provider
-    ? apptInfo.provider
-    : appointment.provider;
-  appointment.assistant = apptInfo.assistant
-    ? apptInfo.assistant
-    : appointment.assistant;
-  appointment.chair = apptInfo.chair ? apptInfo.chair : appointment.chair;
+  appointment.provider =
+    apptInfo.provider !== undefined ? apptInfo.provider : appointment.provider;
+  appointment.assistant =
+    apptInfo.assistant !== undefined
+      ? apptInfo.assistant
+      : appointment.assistant;
+  appointment.chair =
+    apptInfo.chair !== undefined ? apptInfo.chair : appointment.chair;
   appointment.appointment_date = apptInfo.appointment_date
-    ? apptInfo.appointment_date
+    ? Date.parse(apptInfo.appointment_date)
     : appointment.appointment_date;
-  appointment.appointment_time = apptInfo.appointment_time
+  appointment.appointment_time = apptInfo.appointment_time !== undefined
     ? apptInfo.appointment_time
     : appointment.appointment_time;
-  appointment.duration = apptInfo.duration
-    ? apptInfo.duration
-    : appointment.duration;
-  appointment.note = apptInfo.note ? apptInfo.note : appointment.note;
-  appointment.status = apptInfo.status ? apptInfo.status : appointment.status;
+  appointment.duration =
+    apptInfo.duration !== undefined ? apptInfo.duration : appointment.duration;
+  appointment.note =
+    apptInfo.note !== undefined ? apptInfo.note : appointment.note;
+  appointment.status =
+    apptInfo.status !== undefined ? apptInfo.status : appointment.status;
   const rs = await appointment.save();
   return rs;
 };

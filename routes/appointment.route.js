@@ -11,7 +11,8 @@ router
 router
   .route("/:appointment_id")
   .get(appointmentController.appointment_info)
-  .post(appointmentController.update_appointment);
+  .post(appointmentController.update_appointment)
+  .delete(appointmentController.delete_appointment);
 router
   .route("/patient/:patient_id")
   .get(appointmentController.appointments_of_patient);
@@ -19,9 +20,10 @@ router
 router
   .route("/block")
   .get(appointmentController.block_index)
-  .post(appointmentController.add_appointmentblock);
+  .post(appointmentController.add_block);
 router
   .route("/block/:appointment_block_id")
-  .get(appointmentController.appointmentblock_info)
-  .post(appointmentController.update_appointmentblock);
+  .get(appointmentController.block_info)
+  .post(appointmentController.update_block)
+  .delete(appointmentController.delete_block);
 module.exports = router;

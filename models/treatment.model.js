@@ -26,6 +26,7 @@ const TreatmentSchema = mongoose.Schema(
       ref: "procedure_code",
       required: true,
     },
+    ada_code: String,
     tooth: String,
     surface: String,
     fee: Number,

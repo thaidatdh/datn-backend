@@ -35,15 +35,15 @@ module.exports.insert = async function (practiceInfo) {
 };
 module.exports.updatePractice = async function (practice, practiceInfo) {
   practice.name =
-    practiceInfo.name != undefined ? practiceInfo.name : practice.name;
+    practiceInfo.name !== undefined ? practiceInfo.name : practice.name;
   practice.address =
-    practiceInfo.address != undefined ? practiceInfo.address : practice.address;
+    practiceInfo.address !== undefined ? practiceInfo.address : practice.address;
   practice.phone =
-    practiceInfo.phone != undefined ? practiceInfo.phone : practice.phone;
+    practiceInfo.phone !== undefined ? practiceInfo.phone : practice.phone;
   practice.fax =
-    practiceInfo.fax != undefined ? practiceInfo.fax : practice.fax;
+    practiceInfo.fax !== undefined ? practiceInfo.fax : practice.fax;
   practice.default_provider =
-    practiceInfo.default_provider != undefined
+    practiceInfo.default_provider !== undefined
       ? practiceInfo.default_provider
       : practice.default_provider;
   return await practice.save();

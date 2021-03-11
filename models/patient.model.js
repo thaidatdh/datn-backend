@@ -129,7 +129,7 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
   const updatedUser = await User.updateUser(patient.user, patientInfo);
   patientInfo.user_type = constants.USER.USER_TYPE_PATIENT;
   patient.patient_id =
-    patientInfo.patient_id != undefined
+    patientInfo.patient_id !== undefined
       ? patientInfo.patient_id
       : patient.patient_id;
   patient.active_date =
@@ -141,9 +141,9 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
       ? patientInfo.is_active
       : patient.is_active;
   patient.head_of_household =
-    patientInfo.head_of_household != undefined
-      ? mongoose.Types.ObjectId(patientInfo.head_of_household)
-      : patientInfo.head_of_household;
+    patientInfo.head_of_household !== undefined
+      ? patientInfo.head_of_household
+      : patient.head_of_household;
   patient.patient_type =
     patientInfo.patient_type != undefined
       ? patientInfo.patient_type
@@ -153,11 +153,11 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
       ? patientInfo.new_patient
       : patient.new_patient;
   patient.medical_alert =
-    patientInfo.medical_alert != undefined
+    patientInfo.medical_alert !== undefined
       ? patientInfo.medical_alert
       : patient.medical_alert;
   patient.patient_note =
-    patientInfo.patient_note != undefined
+    patientInfo.patient_note !== undefined
       ? patientInfo.patient_note
       : patient.patient_note;
   patient.marital_status =
@@ -171,21 +171,21 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
       ? patientInfo.other_info
       : patient.other_info;
   patient.provider =
-    patientInfo.provider != undefined
-      ? mongoose.Types.ObjectId(patientInfo.provider)
+    patientInfo.provider !== undefined
+      ? patientInfo.provider
       : patient.provider;
   patient.email_recall =
     patientInfo.email_recall != undefined
       ? patientInfo.email_recall
       : patient.email_recall;
   patient.appt_reminder =
-    patientInfo.appt_reminder != undefined
+    patientInfo.appt_reminder !== undefined
       ? patientInfo.appt_reminder
       : patient.appt_reminder;
   patient.gender =
-    patientInfo.gender != undefined ? patientInfo.gender : patient.gender;
+    patientInfo.gender !== undefined ? patientInfo.gender : patient.gender;
   patient.patient_photo =
-    patientInfo.patient_photo != undefined
+    patientInfo.patient_photo !== undefined
       ? patientInfo.patient_photo
       : patient.patient_photo;
   patient.patient_balance =

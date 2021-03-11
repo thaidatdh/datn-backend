@@ -1,9 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 var cors = require("cors");
-const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const swaggerConfig = require('./swagger-config');
+const swaggerDocument = require("./swagger.json");
 require("dotenv").config();
 // create express app
 const app = express();
@@ -38,8 +37,14 @@ app.get("/", (req, res) => {
 let routes = require("./routes/index");
 app.use("/api", routes);
 //swagger
-const swaggerSpec = swaggerJSDoc(swaggerConfig.swagger_options);
-app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+var options = {
+  explorer: true,
+};
+app.use(
+  "/api",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, options)
+);
 // listen for requests
 const SERVER_PORT = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
 app.listen(SERVER_PORT, () => {

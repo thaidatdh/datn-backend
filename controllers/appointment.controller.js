@@ -72,10 +72,17 @@ exports.appointment_info = async function (req, res) {
   const appointment_id = req.params.appointment_id;
   try {
     const appointment = await appointmentModel.getById(appointment_id, {});
-    res.json({
-      success: true,
-      result: appointment,
-    });
+    if (appointment) {
+      res.json({
+        success: true,
+        appointment: appointment,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
   } catch (err) {
     res.json({
       success: false,
@@ -105,12 +112,42 @@ exports.update_appointment = async function (req, res) {
       apptInfo,
       req.params.appointment_id
     );
-    //link treatment and recall here
-    return res.json({ success: true, appointment: rs });
+    if (rs) {
+      //link treatment and recall here
+      return res.json({ success: true, appointment: rs });
+    } else {
+      return res.json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
   } catch (err) {
     return res.json({
       success: false,
       message: "Update appointment failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete_appointment = async function (req, res) {
+  const appointment_id = req.params.appointment_id;
+  try {
+    const appointment = await appointmentModel.getById(appointment_id, {});
+    if (appointment) {
+      await appointmentModel.deleteOne({ _id: appointment_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete appointment " + appointment_id + " failed",
       exeption: err,
     });
   }
@@ -131,7 +168,7 @@ exports.block_index = async function (req, res) {
     });
   }
 };
-exports.appointmentblock_info = async function (req, res) {
+exports.block_info = async function (req, res) {
   const appointment_id = req.params.appointment_block_id;
   try {
     const appointment = await blockModel.findById(appointment_id);
@@ -147,7 +184,7 @@ exports.appointmentblock_info = async function (req, res) {
     });
   }
 };
-exports.add_appointmentblock = async function (req, res) {
+exports.add_block = async function (req, res) {
   try {
     let apptInfo = req.body;
     const rs = await blockModel.insert(apptInfo);
@@ -161,19 +198,48 @@ exports.add_appointmentblock = async function (req, res) {
     });
   }
 };
-exports.update_appointmentblock = async function (req, res) {
+exports.update_block = async function (req, res) {
   try {
     let apptInfo = req.body;
     const rs = await blockModel.updateBlock(
       apptInfo,
       req.params.appointment_block_id
     );
-    //link treatment and recall here
-    return res.json({ success: true, block: rs });
+    if (rs) {
+      return res.json({ success: true, block: rs });
+    } else {
+      return res.json({
+        success: false,
+        message: "Appointment block not found",
+      });
+    }
   } catch (err) {
     return res.json({
       success: false,
       message: "Update appointment block failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete_block = async function (req, res) {
+  const block_id = req.params.appointment_block_id;
+  try {
+    const block = await blockModel.findById(block_id);
+    if (block) {
+      await blockModel.deleteOne({ _id: block_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Appointment block not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete appointment block " + block_id + " failed",
       exeption: err,
     });
   }

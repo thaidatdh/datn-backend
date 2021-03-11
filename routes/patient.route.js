@@ -4,5 +4,6 @@ router.route("/").get(patientController.index).post(patientController.add);
 router
   .route("/:patient_id")
   .get(patientController.patient)
-  .post(patientController.update);
+  .post(patientController.update)
+  .delete(patientController.delete);
 module.exports = router;

@@ -49,6 +49,7 @@ exports.source = async function (req, res) {
     res.json({
       success: false,
       message: "Update failed",
+      exeption: err,
     });
   }
 };
@@ -72,6 +73,7 @@ exports.update = async function (req, res) {
     res.json({
       success: false,
       message: "Update failed",
+      exeption: err,
     });
   }
 };
@@ -85,6 +87,7 @@ exports.delete = async function (req, res) {
     res.json({
       success: false,
       message: "Delete failed",
+      exeption: err,
     });
   }
 };

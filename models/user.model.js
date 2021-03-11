@@ -83,27 +83,27 @@ module.exports.updateUser = async function (user_id, userInfo) {
     return null;
   }
   user.first_name =
-    userInfo.first_name == undefined ? userInfo.first_name : user.first_name;
+    userInfo.first_name !== undefined ? userInfo.first_name : user.first_name;
   user.last_name =
-    userInfo.last_name == undefined ? userInfo.last_name : user.last_name;
-  user.fax = userInfo.fax == undefined ? userInfo.fax : user.fax;
+    userInfo.last_name !== undefined ? userInfo.last_name : user.last_name;
+  user.fax = userInfo.fax !== undefined ? userInfo.fax : user.fax;
   user.mobile_phone =
-    userInfo.mobile_phone == undefined
+    userInfo.mobile_phone !== undefined
       ? userInfo.mobile_phone
       : user.mobile_phone;
   user.home_phone =
-    userInfo.home_phone == undefined ? userInfo.home_phone : user.home_phone;
+    userInfo.home_phone !== undefined ? userInfo.home_phone : user.home_phone;
   user.facebook =
-    userInfo.facebook == undefined ? userInfo.facebook : user.facebook;
-  user.email = userInfo.email == undefined ? userInfo.email : user.email;
+    userInfo.facebook !== undefined ? userInfo.facebook : user.facebook;
+  user.email = userInfo.email !== undefined ? userInfo.email : user.email;
   user.username =
-    userInfo.username == undefined ? userInfo.username : user.username;
+    userInfo.username !== undefined ? userInfo.username : user.username;
   user.password =
-    userInfo.password == undefined ? userInfo.password : user.password;
+    userInfo.password !== undefined ? userInfo.password : user.password;
   user.user_type =
-    userInfo.user_type == undefined ? userInfo.user_type : user.user_type;
-  user.theme = userInfo.theme == undefined ? userInfo.theme : user.theme;
+    userInfo.user_type !== undefined ? userInfo.user_type : user.user_type;
+  user.theme = userInfo.theme !== undefined ? userInfo.theme : user.theme;
   user.language =
-    userInfo.language == undefined ? userInfo.language : user.language;
+    userInfo.language !== undefined ? userInfo.language : user.language;
   return await user.save();
 };

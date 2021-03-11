@@ -63,11 +63,42 @@ exports.update = async function (req, res) {
     const patient_id = req.params.patient_id;
     const patientInfo = Object.assign({}, req.body);
     const rs = await PatientModel.updatePatient(patient_id, patientInfo);
-    return res.json({ success: true, patient: rs });
+    if (rs) {
+      return res.json({ success: true, patient: rs });
+    } else {
+      return res.json({
+        success: false,
+        message: "Patient not found",
+      });
+    }
   } catch (err) {
     return res.json({
       success: false,
       message: "Update patient failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete = async function (req, res) {
+  try {
+    const patient = await PatientModel.findById(req.params.patient_id);
+    if (patient) {
+      await PatientModel.deleteOne({ _id: req.params.patient_id });
+      await userModel.delete({ _id: patient.user });
+      res.json({
+        success: true,
+        message: "Delete Successfully",
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Patient not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
       exeption: err,
     });
   }

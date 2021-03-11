@@ -30,6 +30,29 @@ exports.add = async function (req, res) {
     });
   }
 };
+exports.detail = async function (req, res) {
+  try {
+    const practice = await practiceModel.findById(req.params.practice_id);
+    if (practice) {
+      res.json({
+        success: true,
+        practice: practice,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Practice not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Find practice failed",
+      exeption: err,
+    });
+  }
+};
+
 exports.update = async function (req, res) {
   try {
     const practiceInfo = req.body;
@@ -50,6 +73,7 @@ exports.update = async function (req, res) {
     res.json({
       success: false,
       message: "Update failed",
+      exeption: err,
     });
   }
 };
@@ -58,11 +82,13 @@ exports.delete = async function (req, res) {
     await practiceModel.deleteOne({_id: req.params.practice_id});
     res.json({
       success: true,
+      message: "Delete Successfully",
     });
   } catch (err) {
     res.json({
       success: false,
       message: "Delete failed",
+      exeption: err,
     });
   }
 };

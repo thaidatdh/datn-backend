@@ -31,7 +31,70 @@ exports.add = async function (req, res) {
     });
   }
 };
-
+exports.procedure_by_id = async function (req, res) {
+  try {
+    const procedure = await procedureModel.findById(req.params.procedure_id);
+    if (procedure) {
+      res.json({
+        success: true,
+        procedure_code: procedure,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Procedure not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Find Procedure failed",
+      exeption: err,
+    });
+  }
+};
+exports.update_procedure = async function (req, res) {
+  try {
+    const procedureInfo = req.body;
+    const procedure = await procedureModel.findById(req.params.procedure_id);
+    if (procedure) {
+      const result = await procedureModel.updateProcedure(
+        procedure,
+        procedureInfo
+      );
+      res.json({
+        success: true,
+        procedure_code: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Procedure not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Find Procedure failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete_procedure = async function (req, res) {
+  try {
+    await procedureModel.deleteOne({ _id: req.params.procedure_id });
+    res.json({
+      success: true,
+      message: "Delete Successfully",
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
+      exeption: err,
+    });
+  }
+};
 //category
 //For index
 exports.index_category = async function (req, res) {
@@ -96,6 +159,51 @@ exports.add_category = async function (req, res) {
     return res.json({
       success: false,
       message: "Insert procedure category failed",
+      exeption: err,
+    });
+  }
+};
+exports.update_category = async function (req, res) {
+  try {
+    const category = await categoryModel.findById(req.params.category_id);
+    if (category) {
+      category.name =
+        req.body.name !== undefined ? req.body.name : category.name;
+      category.icon =
+        req.body.icon !== undefined ? req.body.icon : category.icon;
+      res.json({
+        success: true,
+        category: category,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete_category = async function (req, res) {
+  try {
+    await categoryModel.deleteOne({ _id: req.params.category_id });
+    await procedureModel.updateMany(
+      { category: req.params.category_id },
+      { $set: { category: null } }
+    );
+    res.json({
+      success: true,
+      message: "Delete Successfully",
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
       exeption: err,
     });
   }

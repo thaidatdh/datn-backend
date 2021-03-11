@@ -61,13 +61,13 @@ module.exports.insert = async function (procedureCodeInfo) {
     : null;
   proc.procedure_fee = procedureCodeInfo.procedure_fee
     ? procedureCodeInfo.procedure_fee
-    : null;
+    : 0;
   proc.procedure_type = procedureCodeInfo.procedure_type
     ? procedureCodeInfo.procedure_type
     : null;
   proc.procedure_time = procedureCodeInfo.procedure_time
     ? procedureCodeInfo.procedure_time
-    : null;
+    : 15;
   proc.category = procedureCodeInfo.category
     ? procedureCodeInfo.category
     : null;
@@ -94,4 +94,69 @@ module.exports.insert = async function (procedureCodeInfo) {
     ? procedureCodeInfo.recall_interval
     : null;
   return await proc.save();
+};
+module.exports.updateProcedure = async function (procedure, procedureCodeInfo) {
+  procedure.procedure_code =
+    procedureCodeInfo.procedure_code !== undefined
+      ? procedureCodeInfo.procedure_code
+      : procedure.procedure_code;
+  procedure.abbreviation =
+    procedureCodeInfo.abbreviation !== undefined
+      ? procedureCodeInfo.abbreviation
+      : procedure.abbreviation;
+  procedure.description =
+    procedureCodeInfo.description !== undefined
+      ? procedureCodeInfo.description
+      : procedure.description;
+  procedure.procedure_type =
+    procedureCodeInfo.procedure_type !== undefined
+      ? procedureCodeInfo.procedure_type
+      : procedure.procedure_type;
+  procedure.procedure_fee =
+    procedureCodeInfo.procedure_fee !== undefined
+      ? procedureCodeInfo.procedure_fee
+      : procedure.procedure_fee;
+  procedure.procedure_type =
+    procedureCodeInfo.procedure_type !== undefined
+      ? procedureCodeInfo.procedure_type
+      : procedure.procedure_type;
+  procedure.procedure_time =
+    procedureCodeInfo.procedure_time !== undefined
+      ? procedureCodeInfo.procedure_time
+      : procedure.procedure_time;
+  procedure.category =
+    procedureCodeInfo.category !== undefined
+      ? procedureCodeInfo.category
+      : procedure.category;
+  procedure.is_show =
+    procedureCodeInfo.is_show != undefined ? procedureCodeInfo.is_show : false;
+  procedure.tooth_select =
+    procedureCodeInfo.tooth_select !== undefined
+      ? procedureCodeInfo.tooth_select
+      : procedure.tooth_select;
+  procedure.surface_number =
+    procedureCodeInfo.surface_number !== undefined
+      ? procedureCodeInfo.surface_number
+      : procedure.surface_number;
+  procedure.mark_type =
+    procedureCodeInfo.mark_type !== undefined
+      ? procedureCodeInfo.mark_type
+      : procedure.mark_type;
+  procedure.tooth_type =
+    procedureCodeInfo.tooth_type !== undefined
+      ? procedureCodeInfo.tooth_type
+      : procedure.tooth_type;
+  procedure.auto_progress_note =
+    procedureCodeInfo.auto_progress_note != undefined
+      ? procedureCodeInfo.auto_progress_note
+      : procedure.auto_progress_note;
+  procedure.auto_recall =
+    procedureCodeInfo.auto_recall != undefined
+      ? procedureCodeInfo.auto_recall
+      : procedure.auto_recall;
+  procedure.recall_interval =
+    procedureCodeInfo.recall_interval !== undefined
+      ? procedureCodeInfo.recall_interval
+      : procedure.recall_interval;
+  return await procedure.save();
 };

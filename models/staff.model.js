@@ -85,7 +85,55 @@ module.exports.insert = async function (staffInfo) {
   result.user = await Object.assign({}, insertedUser._doc);
   return result;
 };
-
+module.exports.updateStaff = async function (staff, staffInfo) {
+  staffInfo.user_type =
+    staffInfo.staff_type !== undefined
+      ? staffInfo.staff_type
+      : staff.staff_type;
+  const updatedUser = await User.updateUser(staff.user, staffInfo);
+  staff.display_id =
+    staffInfo.display_id !== undefined
+      ? staffInfo.display_id
+      : staff.display_id;
+  staff.is_active =
+    staffInfo.is_active != undefined ? staffInfo.is_active : staff.is_active;
+  staff.provider_color =
+    staffInfo.provider_color !== undefined
+      ? staffInfo.provider_color
+      : staff.provider_color;
+  staff.staff_type =
+    staffInfo.staff_type !== undefined
+      ? staffInfo.staff_type
+      : staff.staff_type;
+  staff.drug_lic =
+    staffInfo.drug_lic !== undefined ? staffInfo.drug_lic : staff.drug_lic;
+  staff.specialist = staffInfo.specialist
+    ? mongoose.Types.ObjectId(staffInfo.specialist)
+    : staff.specialist;
+  staff.access_group = staffInfo.access_group
+    ? mongoose.Types.ObjectId(staffInfo.access_group)
+    : staff.access_group;
+  staff.start_date = staffInfo.start_date
+    ? Date.parse(staffInfo.start_date)
+    : staff.start_date;
+  staff.npi = staffInfo.npi !== undefined ? staffInfo.npi : staffInfo.npi;
+  staff.notify_staff_msg =
+    staffInfo.notify_staff_msg != undefined
+      ? staffInfo.notify_staff_msg
+      : taff.notify_staff_msg;
+  staff.notify_patient_msg =
+    staffInfo.notify_patient_msg != undefined
+      ? staffInfo.notify_patient_msg
+      : staff.notify_patient_msg;
+  staff.notify_meeting =
+    staffInfo.notify_meeting != undefined
+      ? staffInfo.notify_meeting
+      : staff.notify_meeting;
+  const updatedStaff = await staff.save();
+  const result = await Object.assign({}, updatedStaff._doc);
+  result.user = await Object.assign({}, updatedUser._doc);
+  return result;
+};
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = StaffModel.find(query);

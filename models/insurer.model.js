@@ -33,16 +33,16 @@ module.exports.insert = async function (insurerInfo) {
 };
 module.exports.updateInsurer = async function (insurer, insurerInfo) {
   insurer.name =
-    insurerInfo.name != undefined ? insurerInfo.name : insurer.name;
+    insurerInfo.name !== undefined ? insurerInfo.name : insurer.name;
   insurer.address =
-    insurerInfo.address != undefined ? insurerInfo.address : insurer.address;
+    insurerInfo.address !== undefined ? insurerInfo.address : insurer.address;
   insurer.phone =
-    insurerInfo.phone != undefined ? insurerInfo.phone : insurer.phone;
-  insurer.fax = insurerInfo.fax != undefined ? insurerInfo.fax : insurer.fax;
+    insurerInfo.phone !== undefined ? insurerInfo.phone : insurer.phone;
+  insurer.fax = insurerInfo.fax !== undefined ? insurerInfo.fax : insurer.fax;
   insurer.email =
-    insurerInfo.email != undefined ? insurerInfo.email : insurer.email;
+    insurerInfo.email !== undefined ? insurerInfo.email : insurer.email;
   insurer.max_coverage =
-    insurerInfo.max_coverage != undefined
+    insurerInfo.max_coverage
       ? insurerInfo.max_coverage
       : insurer.max_coverage;
   return await insurer.save();

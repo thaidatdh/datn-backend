@@ -1,0 +1,286 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "description": "ADC RESTful API.",
+    "version": "1.0.0",
+    "title": "ADC RESTful API."
+  },
+  "servers": [{ "url": "http://localhost:3000/api" }],
+  "components": {
+    "schemas": {
+      "Practice": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "address": {
+            "type": "string",
+            "example": "string"
+          },
+          "pnone": {
+            "type": "string",
+            "example": "string"
+          },
+          "fax": {
+            "type": "string",
+            "example": "string"
+          },
+          "default_provider": {
+            "type": "string",
+            "example": null
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Practice",
+      "description": "Everything about Practice"
+    },
+    {
+      "name": "Patient",
+      "description": "Access to Petstore orders"
+    },
+    {
+      "name": "Staff",
+      "description": "Operations about user"
+    }
+  ],
+  "paths": {
+    "/practice": {
+      "get": {
+        "tags": ["Practice"],
+        "summary": "Retrieve a list of practices",
+        "description": "Retrieve a list of practices from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "practices": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Practice"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Practice"],
+        "summary": "Insert new practice",
+        "description": "Insert new practice",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "fax": {
+                    "type": "string"
+                  },
+                  "default_provider": {
+                    "type": "string",
+                    "example": "60488f2d8d74df3204f559d8",
+                    "description": "ObjectID. Id of provider (staff)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Practice"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/practice/{practice_id}": {
+      "get": {
+        "tags": ["Practice"],
+        "summary": "Get practice detail",
+        "description": "Get practice detail",
+        "parameters": [
+          {
+            "name": "practice_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Practice"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Practice"],
+        "summary": "Update practice",
+        "description": "Update practice",
+        "parameters": [
+          {
+            "name": "practice_id",
+            "in": "path",
+            "description": "Practice ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "fax": {
+                    "type": "string"
+                  },
+                  "default_provider": {
+                    "type": "string",
+                    "example": "60488f2d8d74df3204f559d8",
+                    "description": "ObjectID. Id of provider (staff)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Practice"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Practice"],
+        "summary": "Delete practice",
+        "description": "Delete practice",
+        "parameters": [
+          {
+            "name": "practice_id",
+            "in": "path",
+            "description": "Practice ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

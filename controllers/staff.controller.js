@@ -79,3 +79,77 @@ exports.add = async function (req, res) {
     });
   }
 };
+exports.staff = async function (req, res) {
+  try {
+    const options = {
+      get_access_group: req.query.get_access_group,
+      get_specialist: req.query.get_specialist,
+    };
+    const staff = await StaffModel.get({ _id: req.params.staff_id }, options);
+    if (staff && staff.length > 0) {
+      res.json({
+        success: true,
+        staff: staff[0],
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Staff not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Find Staff failed",
+      exeption: err,
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const staffInfo = req.body;
+    const staffs = await StaffModel.get({ _id: req.params.staff_id }, {});
+    if (staffs && staffs.length > 0) {
+      const updatedStaff = await StaffModel.updateStaff(staffs[0], staffInfo);
+      res.json({
+        success: true,
+        staff: updatedStaff,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Staff not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Find Staff failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete = async function (req, res) {
+  try {
+    const staff = await StaffModel.findById(req.params.staff_id);
+    if (staff) {
+      await StaffModel.deleteOne({ _id: req.params.staff_id });
+      await userModel.delete({ _id: staff.user });
+      res.json({
+        success: true,
+        message: "Delete Successfully",
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Staff not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
+      exeption: err,
+    });
+  }
+};
