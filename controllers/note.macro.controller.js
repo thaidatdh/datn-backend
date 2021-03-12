@@ -33,3 +33,66 @@ exports.add = async function (req, res) {
     });
   }
 };
+exports.detail = async function (req, res) {
+  try {
+    const macro = await NoteMacroModel.findById(req.params.note_id);
+    if (macro) {
+      res.json({
+        success: true,
+        note: macro,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Note Macro not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const macro = await NoteMacroModel.findById(req.params.note_id);
+    if (macro) {
+      macro.content = req.body.content !== undefined ? req.body.content : null;
+      macro.note_type = req.body.note_type
+        ? req.body.note_type
+        : macro.note_type;
+      const result = await macro.save();
+      res.json({
+        success: true,
+        note: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Macro not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete = async function (req, res) {
+  try {
+    await NoteMacroModel.findByIdAndDelete(req.params.note_id);
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
+      exeption: err,
+    });
+  }
+};

@@ -63,26 +63,85 @@ exports.patient_document = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    let document = new documentModel();
-    document.name = req.body.name
-      ? req.body.name
-      : Date.now().toString("dd/mm/yyyy");
-    document.patient = req.body.patient ? req.body.patient : null;
-    document.filepath = req.body.filepath ? req.body.filepath : null;
-    document.description = req.body.description ? req.body.description : null;
-    document.category = req.body.category ? req.body.category : null;
-    if (document.filepath == null) {
+    if (req.body.filepath == null) {
       return res.json({
         success: false,
         message: "Insert document failed. Require file path",
       });
     }
-    const rs = await document.save();
+    const rs = await documentModel.insert(req.body);
     return res.json({ success: true, document: rs });
   } catch (err) {
     return res.json({
       success: false,
       message: "Insert document failed",
+      exeption: err,
+    });
+  }
+};
+exports.detail = async function (req, res) {
+  try {
+    const document = await documentModel.findById(req.params.document_id);
+    if (document) {
+      res.json({
+        success: true,
+        document: document,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Document not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const document = await documentModel.findById(req.params.document_id);
+    if (document) {
+      const result = await documentModel.updateDocument(document, req.body);
+      res.json({
+        success: true,
+        document: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Document not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete = async function (req, res) {
+  try {
+    const document = documentModel.findById(req.params.document_id);
+    if (document) {
+      await documentModel.deleteOne({ _id: req.params.document_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Document not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
       exeption: err,
     });
   }

@@ -22,13 +22,93 @@ exports.chair_index = async function (req, res) {
 exports.add_chair = async function (req, res) {
   try {
     let chair = new chairModel();
-    chair.name = req.body.name;
-    const rs = await chair.save();
-    return res.json({ success: true, chair: rs });
+    chair.name = req.body.name ? req.body.name : null;
+    if (chair.name) {
+      const rs = await chair.save();
+      return res.json({ success: true, chair: rs });
+    }
+    else {
+      return res.json({
+        success: false,
+        message: "Chair name can not be empty",
+        exeption: err,
+      });
+    }
   } catch (err) {
     return res.json({
       success: false,
       message: "Insert chair failed",
+      exeption: err,
+    });
+  }
+};
+exports.chair_info = async function (req, res) {
+  const chair_id = req.params.chair_id;
+  try {
+    const chair = await chairModel.findById(chair_id);
+    if (chair) {
+      res.json({
+        success: true,
+        chair: chair,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Chair not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Get Chair " + chair_id + " failed",
+      exeption: err,
+    });
+  }
+};
+exports.update_chair = async function (req, res) {
+  const chair_id = req.params.chair_id;
+  try {
+    const chair = await chairModel.findById(chair_id);
+    if (chair) {
+      chair.name = req.body.name !== undefined ? req.body.name : chair.name;
+      const result = await chair.save();
+      res.json({
+        success: true,
+        chair: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Chair not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Get Chair " + chair_id + " failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete_chair = async function (req, res) {
+  const chair_id = req.params.chair_id;
+  try {
+    const chair = await chairModel.findById(chair_id);
+    if (chair) {
+      await chairModel.deleteOne({ _id: chair_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Chair not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete Chair " + chair_id + " failed",
       exeption: err,
     });
   }

@@ -1,20 +1,22 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Patient = require("./patient.model");
-const ImagesSchema = mongoose.Schema({
-   patient: {
+const ImagesSchema = mongoose.Schema(
+  {
+    patient: {
       type: mongoose.Types.ObjectId,
-      ref: 'patient',
+      ref: "patient",
       required: false,
-   },
-   image_path: String,
-   thumbnail_path: String,
+    },
+    image_path: String,
+    thumbnail_path: String,
+  },
+  {
+    timestamps: true,
+    collection: "images",
+  }
+);
 
-}, {
-   timestamps: true,
-   collection: 'images'
-});
-
-const ImageModel = module.exports = mongoose.model('image', ImagesSchema);
+const ImageModel = (module.exports = mongoose.model("image", ImagesSchema));
 
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
@@ -34,5 +36,16 @@ module.exports.insert = async function (imageInfo) {
   image.thumbnail_path = imageInfo.thumbnail_path
     ? imageInfo.thumbnail_path
     : null;
+  return await image.save();
+};
+module.exports.updateImage = async function (image, imageInfo) {
+  image.patient =
+    imageInfo.patient !== undefined ? imageInfo.patient : image.patient;
+  image.image_path = imageInfo.image_path
+    ? imageInfo.image_path
+    : image.image_path;
+  image.thumbnail_path = imageInfo.thumbnail_path
+    ? imageInfo.thumbnail_path
+    : image.thumbnail_path;
   return await image.save();
 };

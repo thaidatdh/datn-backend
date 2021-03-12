@@ -1,10 +1,6 @@
 let router = require("express").Router();
 let appointmentController = require("../controllers/appointment.controller");
 router
-  .route("/chair")
-  .get(appointmentController.chair_index)
-  .post(appointmentController.add_chair);
-router
   .route("/")
   .get(appointmentController.appointments_index)
   .post(appointmentController.add_appointment);
@@ -16,7 +12,15 @@ router
 router
   .route("/patient/:patient_id")
   .get(appointmentController.appointments_of_patient);
-
+router
+  .route("/chair")
+  .get(appointmentController.chair_index)
+  .post(appointmentController.add_chair);
+router
+  .route("/chair/:chair_id")
+  .get(appointmentController.chair_info)
+  .post(appointmentController.update_chair)
+  .delete(appointmentController.delete_chair);
 router
   .route("/block")
   .get(appointmentController.block_index)

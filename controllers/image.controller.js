@@ -53,3 +53,70 @@ exports.add = async function (req, res) {
     });
   }
 };
+exports.detail = async function (req, res) {
+  try {
+    const image = await imageModel.findById(req.params.image_id);
+    if (image) {
+      res.json({
+        success: true,
+        image: image,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Image not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const image = await imageModel.findById(req.params.image_id);
+    if (image) {
+      const result = await imageModel.updateImage(image, req.body);
+      res.json({
+        success: true,
+        image: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Image not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete = async function (req, res) {
+  try {
+    const image = imageModel.findById(req.params.image_id);
+    if (image) {
+      await imageModel.deleteOne({ _id: req.params.image_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Image not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
+      exeption: err,
+    });
+  }
+};

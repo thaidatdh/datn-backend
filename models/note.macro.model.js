@@ -11,4 +11,4 @@ const NoteMacroSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("note_macro", NoteMacroSchema);
+const NoteMacroModel = module.exports = mongoose.model("note_macro", NoteMacroSchema);

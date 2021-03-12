@@ -48,32 +48,85 @@ exports.patient_referral = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    let document = new referralModel();
-    document.referral_date = req.body.referral_date
-      ? Date.parse(req.body.referral_date)
-      : Date.now();
-    document.patient = req.body.patient ? req.body.patient : null;
-    document.ref_patient = req.body.ref_patient ? req.body.ref_patient : null;
-    document.referral_source = req.body.referral_source
-      ? req.body.referral_source
-      : null;
-    document.ref_staff = req.body.ref_staff ? req.body.ref_staff : null;
-    document.referral_type = req.body.referral_type
-      ? req.body.referral_type
-      : "TO";
-    
-    if (document.patient == null) {
+    if (req.body.patient == null) {
       return res.json({
         success: false,
-        message: "Insert referrao failed. Require patient",
+        message: "Insert referral failed. Require patient",
       });
     }
-    const rs = await document.save();
-    return res.json({ success: true, document: rs });
+    const rs = referralModel.insert(req.body);
+    return res.json({ success: true, referral: rs });
   } catch (err) {
     return res.json({
       success: false,
-      message: "Insert document failed",
+      message: "Insert referral failed",
+      exeption: err,
+    });
+  }
+};
+exports.detail = async function (req, res) {
+  try {
+    const referral = await referralModel.findById(req.params.referral_id);
+    if (referral) {
+      res.json({
+        success: true,
+        referral: referral,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Referral not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.update = async function (req, res) {
+  try {
+    const referral = await referralModel.findById(req.params.referral_id);
+    if (referral) {
+      const result = await referralModel.updateReferral(referral, req.body);
+      res.json({
+        success: true,
+        referral: result,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Referral not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Update failed",
+      exeption: err,
+    });
+  }
+};
+exports.delete = async function (req, res) {
+  try {
+    const referral = referralModel.findById(req.params.referral_id);
+    if (referral) {
+      await referralModel.deleteOne({ _id: req.params.referral_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Referral not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      success: false,
+      message: "Delete failed",
       exeption: err,
     });
   }

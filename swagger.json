@@ -23,7 +23,7 @@
             "type": "string",
             "example": "string"
           },
-          "pnone": {
+          "phone": {
             "type": "string",
             "example": "string"
           },
