@@ -44,6 +44,1246 @@
             "example": "string"
           }
         }
+      },
+      "Users": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "string"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "string"
+          },
+          "fax": {
+            "type": "string",
+            "example": "string"
+          },
+          "mobile_phone": {
+            "type": "string",
+            "example": "string"
+          },
+          "home_phone": {
+            "type": "string",
+            "example": "string"
+          },
+          "facebook": {
+            "type": "string",
+            "example": null
+          },
+          "email": {
+            "type": "string",
+            "example": "string"
+          },
+          "username": {
+            "type": "string",
+            "example": null
+          },
+          "password": {
+            "type": "string",
+            "example": null
+          },
+          "user_type": {
+            "type": "string",
+            "example": "PATIENT"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Staffs": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "user": {
+            "type": "string",
+            "description": "ObjectID. Link to user. If get staff. it will be json of user",
+            "example": "string"
+          },
+          "display_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "is_active": {
+            "type": "boolean",
+            "example": true
+          },
+          "provider_color": {
+            "type": "string",
+            "example": "#FFFFFF"
+          },
+          "staff_type": {
+            "type": "string",
+            "example": "PROVIDER"
+          },
+          "druc_lic": {
+            "type": "string",
+            "example": "string"
+          },
+          "npi": {
+            "type": "string",
+            "description": "National Provider Identifier",
+            "example": "string"
+          },
+          "specialist": {
+            "type": "string",
+            "description": "ObjectID",
+            "example": null
+          },
+          "access_group": {
+            "type": "string",
+            "description": "ObjectID",
+            "example": null
+          },
+          "start_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "notify_staff_msg": {
+            "type": "boolean",
+            "example": true
+          },
+          "notify_patient_msg": {
+            "type": "boolean",
+            "example": true
+          },
+          "notify_meeting": {
+            "type": "boolean",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Patients": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "user": {
+            "type": "string",
+            "description": "ObjectID. Link to user. If get staff. it will be json of user",
+            "example": "string"
+          },
+          "patient_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "is_active": {
+            "type": "boolean",
+            "example": true
+          },
+          "active_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "head_of_household": {
+            "type": "string",
+            "example": "string",
+            "description": "ObjectId of other Patient. can be null"
+          },
+          "patient_type": {
+            "type": "string",
+            "example": "PATIENT"
+          },
+          "new_patient": {
+            "type": "boolean",
+            "example": true
+          },
+          "medical_alert": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient_note": {
+            "type": "string",
+            "example": "string"
+          },
+          "marital_status": {
+            "type": "string",
+            "example": "NOT_SPECIFY"
+          },
+          "other_info": {
+            "type": "string",
+            "example": "string"
+          },
+          "dob": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "provider": {
+            "type": "string",
+            "description": "ObjectID. Link to staff type PROVIDER. If get staff. it will be json of staff",
+            "example": "string"
+          },
+          "email_recall": {
+            "type": "boolean",
+            "example": true
+          },
+          "appt_reminder": {
+            "type": "boolean",
+            "example": true
+          },
+          "gender": {
+            "type": "string",
+            "example": "NOT_SPECIFY"
+          },
+          "patient_photo": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient_balance": {
+            "type": "number",
+            "example": 0.0
+          },
+          "insurance_balance": {
+            "type": "number",
+            "example": 0.0
+          },
+          "credit_amount": {
+            "type": "number",
+            "example": 0.0
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Access_group": {
+        "type": "object",
+        "description": "For Authorization data",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "value": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Appointments": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "provider": {
+            "type": "string",
+            "example": "string"
+          },
+          "assistant": {
+            "type": "string",
+            "example": "null"
+          },
+          "chair": {
+            "type": "string",
+            "example": "string"
+          },
+          "appointment_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "appointment_time": {
+            "type": "string",
+            "example": "string"
+          },
+          "duration": {
+            "type": "string",
+            "example": "string"
+          },
+          "note": {
+            "type": "string",
+            "example": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Appointment_blocks": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "provider": {
+            "type": "string",
+            "example": "string"
+          },
+          "chair": {
+            "type": "string",
+            "example": "string"
+          },
+          "block_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "block_time": {
+            "type": "string",
+            "example": "string"
+          },
+          "duration": {
+            "type": "string",
+            "example": "string"
+          },
+          "note": {
+            "type": "string",
+            "example": "string"
+          },
+          "repeat_pattern": {
+            "type": "string",
+            "example": "string"
+          },
+          "end_date": {
+            "type": "string",
+            "example": "string"
+          },
+          "block_color": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Appointment_request": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "request_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "string"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "string"
+          },
+          "address": {
+            "type": "string",
+            "example": "string"
+          },
+          "email": {
+            "type": "string",
+            "example": "string"
+          },
+          "phone": {
+            "type": "string",
+            "example": "string"
+          },
+          "note": {
+            "type": "string",
+            "example": "string"
+          },
+          "availability": {
+            "type": "string",
+            "example": "string"
+          },
+          "is_new_patient": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "Chairs": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "order": {
+            "type": "string",
+            "example": "string"
+          },
+          "color": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Documents": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "filepath": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "description": {
+            "type": "string",
+            "example": "string"
+          },
+          "category": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Document_category": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Drugs": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "description": {
+            "type": "string",
+            "example": "string"
+          },
+          "refill": {
+            "type": "string",
+            "example": "string"
+          },
+          "dispensed": {
+            "type": "string",
+            "example": "string"
+          },
+          "quantity": {
+            "type": "string",
+            "example": "string"
+          },
+          "note": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Holiday": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "day": {
+            "type": "string",
+            "example": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "end_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          }
+        }
+      },
+      "Image_mouth": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "note": {
+            "type": "string",
+            "example": "string"
+          },
+          "entry_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "thumbnail": {
+            "type": "string",
+            "example": "string"
+          },
+          "created_by": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Image_frame": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "image_mouth_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "image": {
+            "type": "string",
+            "example": "string"
+          },
+          "order": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "width_ratio": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "height_ratio": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "x_ratio": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "y_ratio": {
+            "type": "number",
+            "example": "0.0"
+          }
+        }
+      },
+      "Image_mouth_template": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "thumbnail": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Image_frame_template": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "image_mouth_template_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "order": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "width_ratio": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "height_ratio": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "x_ratio": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "y_ratio": {
+            "type": "number",
+            "example": "0.0"
+          }
+        }
+      },
+      "Images": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "image_path": {
+            "type": "string",
+            "example": "string"
+          },
+          "thumbnail_path": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Insurers": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "address": {
+            "type": "string",
+            "example": "string"
+          },
+          "phone": {
+            "type": "string",
+            "example": "string"
+          },
+          "fax": {
+            "type": "string",
+            "example": "string"
+          },
+          "email": {
+            "type": "string",
+            "example": "string"
+          },
+          "max_coverage": {
+            "type": "number",
+            "example": "0.0"
+          }
+        }
+      },
+      "Note_macro": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "content": {
+            "type": "string",
+            "example": "string"
+          },
+          "note_type": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Patient_insurance": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "insurer": {
+            "type": "string",
+            "example": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "reset_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          }
+        }
+      },
+      "Periodontal": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "provider": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "date": {
+            "type": "string",
+            "example": "2021-01-01"
+          }
+        }
+      },
+      "Periodontal_detail": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "periodontal": {
+            "type": "string",
+            "example": "string"
+          },
+          "tooth": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "value1": {
+            "type": "string",
+            "example": "string"
+          },
+          "value2": {
+            "type": "string",
+            "example": "string"
+          },
+          "value3": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Practice_working_time": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "day": {
+            "type": "string",
+            "example": "string"
+          },
+          "start_time": {
+            "type": "string",
+            "example": "string"
+          },
+          "end_time": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Prescription": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "provider": {
+            "type": "string",
+            "example": "string"
+          },
+          "prescription_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          }
+        }
+      },
+      "Prescription_detail": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "prescription": {
+            "type": "string",
+            "example": "string"
+          },
+          "is_deleted": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "string",
+            "example": "string"
+          },
+          "drug": {
+            "type": "string",
+            "example": "string"
+          },
+          "refill": {
+            "type": "string",
+            "example": "string"
+          },
+          "dispensed": {
+            "type": "string",
+            "example": "string"
+          },
+          "quantity": {
+            "type": "string",
+            "example": "string"
+          },
+          "description": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Procedure_category": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "icon": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Procedure_code": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "procedure_code": {
+            "type": "string",
+            "example": "string"
+          },
+          "abbreviation": {
+            "type": "string",
+            "example": "string"
+          },
+          "description": {
+            "type": "string",
+            "example": "string"
+          },
+          "procedure_type": {
+            "type": "string",
+            "example": "string"
+          },
+          "procedure_fee": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "procedure_time": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "category": {
+            "type": "string",
+            "example": "string"
+          },
+          "is_show": {
+            "type": "boolean",
+            "example": "false"
+          },
+          "tooth_select": {
+            "type": "string",
+            "example": "string"
+          },
+          "surface_number": {
+            "type": "string",
+            "example": "string"
+          },
+          "mark_type": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "tooth_type": {
+            "type": "string",
+            "example": "DEFAULT"
+          },
+          "auto_progress_note": {
+            "type": "boolean",
+            "example": "false"
+          },
+          "auto_recall": {
+            "type": "boolean",
+            "example": "false"
+          },
+          "recall_interval": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Progress_note": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "provider": {
+            "type": "string",
+            "example": "string"
+          },
+          "content": {
+            "type": "string",
+            "example": "string"
+          },
+          "note_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "tooth": {
+            "type": "string",
+            "example": "string"
+          },
+          "surface": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Provider_working_time": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "provider": {
+            "type": "string",
+            "example": "string"
+          },
+          "day": {
+            "type": "string",
+            "example": "string"
+          },
+          "start_time": {
+            "type": "string",
+            "example": "string"
+          },
+          "end_time": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Recalls": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "treatment": {
+            "type": "string",
+            "example": "string"
+          },
+          "appointment": {
+            "type": "string",
+            "example": "string"
+          },
+          "procedure": {
+            "type": "string",
+            "example": "string"
+          },
+          "interval": {
+            "type": "string",
+            "example": "string"
+          },
+          "recall_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          },
+          "is_active": {
+            "type": "boolean",
+            "example": true
+          },
+          "note": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Referral": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "ref_patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "referral_source": {
+            "type": "string",
+            "example": "string"
+          },
+          "ref_staff": {
+            "type": "string",
+            "example": "string"
+          },
+          "referral_type": {
+            "type": "string",
+            "example": "string"
+          },
+          "referral_date": {
+            "type": "string",
+            "example": "2021-01-01"
+          }
+        }
+      },
+      "Referral_source": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "address": {
+            "type": "string",
+            "example": "string"
+          },
+          "phone": {
+            "type": "string",
+            "example": "string"
+          },
+          "fax": {
+            "type": "string",
+            "example": "string"
+          },
+          "email": {
+            "type": "string",
+            "example": "string"
+          },
+          "additional_info": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Specialists": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Tooth": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "tooth_number": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "tooth_note": {
+            "type": "string",
+            "example": "string"
+          },
+          "tooth_type": {
+            "type": "string",
+            "example": "ADULT"
+          }
+        }
+      },
+      "Treatments": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "provider": {
+            "type": "string",
+            "example": "string"
+          },
+          "assistant": {
+            "type": "string",
+            "example": "string"
+          },
+          "procedure_code": {
+            "type": "string",
+            "example": "string"
+          },
+          "ada_code": {
+            "type": "string",
+            "example": "string"
+          },
+          "tooth": {
+            "type": "string",
+            "example": "string"
+          },
+          "surface": {
+            "type": "string",
+            "example": "string"
+          },
+          "fee": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "insurance_percent": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "discount": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "insurance_amount": {
+            "type": "number",
+            "example": "0.0"
+          },
+          "description": {
+            "type": "string",
+            "example": "string"
+          },
+          "note": {
+            "type": "string",
+            "example": "string"
+          },
+          "treatment_plan": {
+            "type": "string",
+            "example": "string"
+          },
+          "appointment": {
+            "type": "string",
+            "example": "string"
+          },
+          "mark_type": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Treatment_plans": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "patient": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "description": {
+            "type": "string",
+            "example": "string"
+          }
+        }
       }
     }
   },
@@ -54,11 +1294,11 @@
     },
     {
       "name": "Patient",
-      "description": "Access to Petstore orders"
+      "description": "Everything about Patient Info"
     },
     {
       "name": "Staff",
-      "description": "Operations about user"
+      "description": "Everything about Staff and Provider"
     }
   ],
   "paths": {

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Treatment = require("./treatment.model");
 const TreatmentPlanSchema = mongoose.Schema(
   {
-    patient_id: mongoose.Types.ObjectId,
+    patient: mongoose.Types.ObjectId,
     name: String,
     description: String,
   },
