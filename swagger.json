@@ -1299,6 +1299,18 @@
     {
       "name": "Staff",
       "description": "Everything about Staff and Provider"
+    },
+    {
+      "name": "Appointments",
+      "description": "Everything about Appointment"
+    },
+    {
+      "name": "Appointment Chairs",
+      "description": "Everything about Chairs. Show in Appointment Board"
+    },
+    {
+      "name": "Appointment Blocks",
+      "description": "Everything about Appointment Blocks.\nAppointment block prevent user create appointment in that time or serve as note"
     }
   ],
   "paths": {
@@ -1493,6 +1505,780 @@
             "name": "practice_id",
             "in": "path",
             "description": "Practice ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment": {
+      "get": {
+        "tags": ["Appointments"],
+        "summary": "Retrieve a list of appointments",
+        "description": "Retrieve a list of appointments from database.",
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "practices": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Appointments"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Appointments"],
+        "summary": "Insert new appointment",
+        "description": "Insert new appointment",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string"
+                  },
+                  "provider": {
+                    "type": "string"
+                  },
+                  "assistant": {
+                    "type": "string"
+                  },
+                  "chair": {
+                    "type": "string"
+                  },
+                  "appointment_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "appointment_time": {
+                    "type": "string",
+                    "example": "0800"
+                  },
+                  "duration": {
+                    "type": "string",
+                    "example": "15"
+                  },
+                  "note": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "NEW"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Appointments"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment/{appointment_id}": {
+      "get": {
+        "tags": ["Appointments"],
+        "summary": "Get appointment detail",
+        "description": "Get appointment detail",
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "appointment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Appointments"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Appointments"],
+        "summary": "Update Appointment",
+        "description": "Update Appointment",
+        "parameters": [
+          {
+            "name": "appointment_id",
+            "in": "path",
+            "description": "Appointment ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string"
+                  },
+                  "provider": {
+                    "type": "string"
+                  },
+                  "assistant": {
+                    "type": "string"
+                  },
+                  "chair": {
+                    "type": "string"
+                  },
+                  "appointment_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "appointment_time": {
+                    "type": "string",
+                    "example": "0800"
+                  },
+                  "duration": {
+                    "type": "string",
+                    "example": "15"
+                  },
+                  "note": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "NEW"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Appointments"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Appointments"],
+        "summary": "Delete appointment",
+        "description": "Delete appointment",
+        "parameters": [
+          {
+            "name": "appointment_id",
+            "in": "path",
+            "description": "Appointment ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment/patient/{patient_id}": {
+      "get": {
+        "tags": ["Appointments"],
+        "summary": "Retrieve a list of appointments of a patient",
+        "description": "Retrieve a list of appointments of patient from database.",
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "patient_id",
+            "in": "path",
+            "description": "Patient ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "practices": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Appointments"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment/chair": {
+      "get": {
+        "tags": ["Appointment Chairs"],
+        "summary": "Retrieve a list of chairs",
+        "description": "Retrieve a list of chairs from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "practices": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Chairs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Appointment Chairs"],
+        "summary": "Insert new chair",
+        "description": "Insert new chair",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "order": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "#FFFFFF"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Chairs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment/chair/{chair_id}": {
+      "get": {
+        "tags": ["Appointment Chairs"],
+        "summary": "Get chair detail",
+        "description": "Get chair detail",
+        "parameters": [
+          {
+            "name": "chair_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Chairs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Appointment Chairs"],
+        "summary": "Update Chair",
+        "description": "Update Chair",
+        "parameters": [
+          {
+            "name": "chair_id",
+            "in": "path",
+            "description": "Chair ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "order": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "#FFFFFF"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Chairs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Appointment Chairs"],
+        "summary": "Delete chair",
+        "description": "Delete chair",
+        "parameters": [
+          {
+            "name": "chair_id",
+            "in": "path",
+            "description": "Chair ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment/block": {
+      "get": {
+        "tags": ["Appointment Blocks"],
+        "summary": "Retrieve a list of appointment blocks",
+        "description": "Retrieve a list of appointments from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "practices": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Appointment_blocks"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Appointment Blocks"],
+        "summary": "Insert new appointment block",
+        "description": "Insert new appointment block",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "provider": {
+                    "type": "string"
+                  },
+                  "chair": {
+                    "type": "string"
+                  },
+                  "block_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "block_time": {
+                    "type": "string",
+                    "example": "0800"
+                  },
+                  "duration": {
+                    "type": "string",
+                    "example": "15"
+                  },
+                  "note": {
+                    "type": "string"
+                  },
+                  "repeat_pattern": {
+                    "type": "string",
+                    "example": "2,3,4,5,6,7"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "example": "2021-12-31"
+                  },
+                  "block_color": {
+                    "type": "string",
+                    "example": "#FFFFFF"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Appointments"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment/block/{appointment_block_id}": {
+      "get": {
+        "tags": ["Appointment Blocks"],
+        "summary": "Get appointment block detail",
+        "description": "Get appointment block detail",
+        "parameters": [
+          {
+            "name": "appointment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Appointment_blocks"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Appointment Blocks"],
+        "summary": "Update Appointment block",
+        "description": "Update Appointment block",
+        "parameters": [
+          {
+            "name": "appointment_block_id",
+            "in": "path",
+            "description": "Appointment Block ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "provider": {
+                    "type": "string"
+                  },
+                  "chair": {
+                    "type": "string"
+                  },
+                  "block_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "block_time": {
+                    "type": "string",
+                    "example": "0800"
+                  },
+                  "duration": {
+                    "type": "string",
+                    "example": "15"
+                  },
+                  "note": {
+                    "type": "string"
+                  },
+                  "repeat_pattern": {
+                    "type": "string",
+                    "example": "2,3,4,5,6,7"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "example": "2021-12-31"
+                  },
+                  "block_color": {
+                    "type": "string",
+                    "example": "#FFFFFF"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "practice": {
+                      "$ref": "#/components/schemas/Appointment_blocks"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Appointment Blocks"],
+        "summary": "Delete appointment block",
+        "description": "Delete appointment block",
+        "parameters": [
+          {
+            "name": "appointment_block_id",
+            "in": "path",
+            "description": "Appointment Block ID",
             "required": true,
             "schema": {
               "type": "string"

@@ -18,7 +18,7 @@ const AppointmentBlockSchema = mongoose.Schema(
     duration: String,
     note: String,
     repeat_pattern: String,
-    end_date: String,
+    end_date: Date,
     block_color: String,
   },
   {
@@ -42,7 +42,9 @@ module.exports.insert = async function (apptInfo) {
   appointment.repeat_pattern = apptInfo.repeat_pattern
     ? apptInfo.repeat_pattern
     : null;
-  appointment.end_date = apptInfo.end_date ? apptInfo.end_date : null;
+  appointment.end_date = apptInfo.end_date
+    ? apptInfo.end_date
+    : appointment.block_date;
   appointment.block_color = apptInfo.block_color ? apptInfo.block_color : null;
   const rs = await appointment.save();
   return rs;

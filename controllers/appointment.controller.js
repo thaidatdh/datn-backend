@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const chairModel = require("../models/chair.model");
 const appointmentModel = require("../models/appointment.model");
 const blockModel = require("../models/appointment.block.model");
+const { RANDOM_COLOR } = require("../constants/constants");
 //Chair
 exports.chair_index = async function (req, res) {
   try {
@@ -23,11 +24,12 @@ exports.add_chair = async function (req, res) {
   try {
     let chair = new chairModel();
     chair.name = req.body.name ? req.body.name : null;
+    chair.order = req.body.order ? req.body.order : null;
+    chair.color = req.body.color ? req.body.color : RANDOM_COLOR();
     if (chair.name) {
       const rs = await chair.save();
       return res.json({ success: true, chair: rs });
-    }
-    else {
+    } else {
       return res.json({
         success: false,
         message: "Chair name can not be empty",
@@ -71,6 +73,8 @@ exports.update_chair = async function (req, res) {
     const chair = await chairModel.findById(chair_id);
     if (chair) {
       chair.name = req.body.name !== undefined ? req.body.name : chair.name;
+      chair.order = req.body.name !== undefined ? req.body.order : chair.order;
+      chair.color = req.body.color !== undefined ? req.body.color : chair.color;
       const result = await chair.save();
       res.json({
         success: true,
@@ -116,7 +120,10 @@ exports.delete_chair = async function (req, res) {
 //Appointments
 exports.appointments_index = async function (req, res) {
   try {
-    const appointments = await appointmentModel.get({}, {});
+    const options = {
+      limit: req.query.limit,
+    };
+    const appointments = await appointmentModel.get({}, options);
     res.json({
       success: true,
       appointments: appointments,
@@ -132,9 +139,12 @@ exports.appointments_index = async function (req, res) {
 exports.appointments_of_patient = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
+    const options = {
+      limit: req.query.limit,
+    };
     const appointments = await appointmentModel.get(
       { patient: patient_id },
-      {}
+      options
     );
     res.json({
       success: true,
@@ -151,7 +161,10 @@ exports.appointments_of_patient = async function (req, res) {
 exports.appointment_info = async function (req, res) {
   const appointment_id = req.params.appointment_id;
   try {
-    const appointment = await appointmentModel.getById(appointment_id, {});
+    const options = {
+      limit: req.query.limit,
+    };
+    const appointment = await appointmentModel.getById(appointment_id, options);
     if (appointment) {
       res.json({
         success: true,

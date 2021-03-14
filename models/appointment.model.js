@@ -102,7 +102,7 @@ module.exports.insert = async function(apptInfo) {
   appointment.assistant = apptInfo.assistant ? apptInfo.assistant : null;
   appointment.chair = apptInfo.chair ? apptInfo.chair : null;
   appointment.appointment_date = apptInfo.appointment_date
-    ? apptInfo.appointment_date
+    ? Date.parse(apptInfo.appointment_date)
     : Date.now();
   appointment.appointment_time = apptInfo.appointment_time
     ? apptInfo.appointment_time
