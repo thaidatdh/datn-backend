@@ -10,10 +10,10 @@ exports.index = async function (req, res) {
     const images = await imageModel.get({}, options);
     res.json({
       success: true,
-      images: images,
+      payload: images,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get image list failed",
       exeption: err,
@@ -30,10 +30,10 @@ exports.image_of_patient = async function (req, res) {
     const images = await imageModel.get({ patient: patient_id }, options);
     res.json({
       success: true,
-      images: images,
+      payload: images,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get image list of patient " + patient_id + " failed",
       exeption: err,
@@ -44,9 +44,9 @@ exports.add = async function (req, res) {
   try {
     const imageInfo = req.body;
     const rs = await imageModel.insert(imageInfo);
-    return res.json({ success: true, image: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert image failed",
       exeption: err,
@@ -59,16 +59,16 @@ exports.detail = async function (req, res) {
     if (image) {
       res.json({
         success: true,
-        image: image,
+        payload: image,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Image not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -82,16 +82,16 @@ exports.update = async function (req, res) {
       const result = await imageModel.updateImage(image, req.body);
       res.json({
         success: true,
-        image: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Image not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -107,13 +107,13 @@ exports.delete = async function (req, res) {
         success: true,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Image not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

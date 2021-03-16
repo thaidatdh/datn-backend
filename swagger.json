@@ -1330,7 +1330,7 @@
                     "success": {
                       "type": "boolean"
                     },
-                    "practices": {
+                    "payload": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/Practice"
@@ -1386,7 +1386,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Practice"
                     }
                   }
@@ -1423,7 +1423,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Practice"
                     }
                   }
@@ -1486,7 +1486,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Practice"
                     }
                   }
@@ -1505,6 +1505,935 @@
             "name": "practice_id",
             "in": "path",
             "description": "Practice ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/insurer": {
+      "get": {
+        "tags": ["Insurer"],
+        "summary": "Retrieve a list of insurers",
+        "description": "Retrieve a list of insurers from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Insurers"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Insurer"],
+        "summary": "Insert new insurer",
+        "description": "Insert new insurer",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "fax": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "max_coverage": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Insurers"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/insurer/{insurer_id}": {
+      "get": {
+        "tags": ["Insurer"],
+        "summary": "Get insurer detail",
+        "description": "Get insurer detail",
+        "parameters": [
+          {
+            "name": "insurer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Insurers"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Insurer"],
+        "summary": "Update Insurer",
+        "description": "Update Insurer",
+        "parameters": [
+          {
+            "name": "insurer_id",
+            "in": "path",
+            "description": "Insurer ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "fax": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "max_coverage": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Insurers"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Insurer"],
+        "summary": "Delete Insurer",
+        "description": "Delete Insurer",
+        "parameters": [
+          {
+            "name": "insurer_id",
+            "in": "path",
+            "description": "Insurer ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/referral_source": {
+      "get": {
+        "tags": ["Referral Source"],
+        "summary": "Retrieve a list of Referral Sources",
+        "description": "Retrieve a list of Referral Sources from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Referral_source"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Referral Source"],
+        "summary": "Insert new Referral Source",
+        "description": "Insert new Referral Source",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "fax": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "additional_info": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Referral_source"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/referral_source/{source_id}": {
+      "get": {
+        "tags": ["Referral Source"],
+        "summary": "Get Referral Source detail",
+        "description": "Get Referral Source detail",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Referral_source"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Referral Source"],
+        "summary": "Update Referral Source",
+        "description": "Update Referral Source",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "description": "Referral Source ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "fax": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "additional_info": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Referral_source"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Referral Source"],
+        "summary": "Delete Referral Source",
+        "description": "Delete Referral Source",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "description": "Referral Source ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/referral": {
+      "get": {
+        "tags": ["Patient Referral"],
+        "summary": "Retrieve a list of Referral",
+        "description": "Retrieve a list of Referral from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Referral"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Referral"],
+        "summary": "Insert new Referral",
+        "description": "Insert new Referral",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "ref_patient": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "Can be null. not null if referred by patient"
+                  },
+                  "referral_source": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "Can be null. not null if referred by a source"
+                  },
+                  "ref_staff": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "Can be null. not null if referred by a staff"
+                  },
+                  "referral_type": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "PATIENT/SOURCE/STAFF"
+                  },
+                  "referral_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Referral"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/referral/{referral_id}": {
+      "get": {
+        "tags": ["Patient Referral"],
+        "summary": "Get Referral detail",
+        "description": "Get Referral detail",
+        "parameters": [
+          {
+            "name": "referral_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Referral"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Referral"],
+        "summary": "Update Referral",
+        "description": "Update Referral",
+        "parameters": [
+          {
+            "name": "referral_id",
+            "in": "path",
+            "description": "Referral ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "ref_patient": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "Can be null. not null if referred by patient"
+                  },
+                  "referral_source": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "Can be null. not null if referred by a source"
+                  },
+                  "ref_staff": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "Can be null. not null if referred by a staff"
+                  },
+                  "referral_type": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "PATIENT/SOURCE/STAFF"
+                  },
+                  "referral_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Referral"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Patient Referral"],
+        "summary": "Delete Referral ",
+        "description": "Delete Referral",
+        "parameters": [
+          {
+            "name": "referral_id",
+            "in": "path",
+            "description": "Referral ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/referral/patient/{patient_id}": {
+      "get": {
+        "tags": ["Patient Referral"],
+        "summary": "Retrieve a list of Referral of a Patient",
+        "description": "Retrieve a list of Referral of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Referral"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/specialist": {
+      "get": {
+        "tags": ["Specialists"],
+        "summary": "Retrieve a list of specialists",
+        "description": "Retrieve a list of specialists from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Specialists"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Specialists"],
+        "summary": "Insert new specialist",
+        "description": "Insert new specialist",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Specialists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/specialist/{specialist_id}": {
+      "get": {
+        "tags": ["Specialists"],
+        "summary": "Get specialist detail",
+        "description": "Get specialist detail",
+        "parameters": [
+          {
+            "name": "specialist_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Specialists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Specialists"],
+        "summary": "Update specialist",
+        "description": "Update specialist",
+        "parameters": [
+          {
+            "name": "specialist_id",
+            "in": "path",
+            "description": "Specialist ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Specialists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Specialists"],
+        "summary": "Delete specialist",
+        "description": "Delete specialist",
+        "parameters": [
+          {
+            "name": "specialist_id",
+            "in": "path",
+            "description": "Specialist ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -1560,7 +2489,7 @@
                     "success": {
                       "type": "boolean"
                     },
-                    "practices": {
+                    "payload": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/Appointments"
@@ -1630,7 +2559,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Appointments"
                     }
                   }
@@ -1676,7 +2605,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Appointments"
                     }
                   }
@@ -1753,7 +2682,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Appointments"
                     }
                   }
@@ -1836,7 +2765,7 @@
                     "success": {
                       "type": "boolean"
                     },
-                    "practices": {
+                    "payload": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/Appointments"
@@ -1866,7 +2795,7 @@
                     "success": {
                       "type": "boolean"
                     },
-                    "practices": {
+                    "payload": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/Chairs"
@@ -1915,7 +2844,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Chairs"
                     }
                   }
@@ -1952,7 +2881,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Chairs"
                     }
                   }
@@ -2008,7 +2937,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Chairs"
                     }
                   }
@@ -2072,7 +3001,7 @@
                     "success": {
                       "type": "boolean"
                     },
-                    "practices": {
+                    "payload": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/Appointment_blocks"
@@ -2144,7 +3073,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Appointments"
                     }
                   }
@@ -2181,7 +3110,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Appointment_blocks"
                     }
                   }
@@ -2260,7 +3189,7 @@
                       "type": "boolean",
                       "default": true
                     },
-                    "practice": {
+                    "payload": {
                       "$ref": "#/components/schemas/Appointment_blocks"
                     }
                   }

@@ -7,10 +7,10 @@ exports.index = async function (req, res) {
     const drugs = await drugModel.find();
     res.json({
       success: true,
-      drugs: drugs,
+      payload: drugs,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get drugs list failed",
       exeption: err,
@@ -21,9 +21,9 @@ exports.add = async function (req, res) {
   try {
     const drugInfo = req.body;
     const rs = await drugModel.insert(drugInfo);
-    return res.json({ success: true, drug: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert drugs failed",
       exeption: err,
@@ -37,16 +37,16 @@ exports.drug = async function (req, res) {
     if (drug) {
       res.json({
         success: true,
-        drug: drug,
+        payload: drug,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Drug not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -61,16 +61,16 @@ exports.update = async function (req, res) {
       const result = await drugModel.updateDrug(drug, drugInfo);
       res.json({
         success: true,
-        drug: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Drug not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -84,7 +84,7 @@ exports.delete = async function (req, res) {
       success: true,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

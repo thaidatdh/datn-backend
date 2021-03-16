@@ -16,7 +16,7 @@ exports.index = async function (req, res) {
       referrals: referrals,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get referral list failed",
       exeption: err,
@@ -36,10 +36,10 @@ exports.patient_referral = async function (req, res) {
     const referrals = await referralModel.get({ patient: patient_id }, options);
     res.json({
       success: true,
-      referrals: referrals,
+      payload: referrals,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get referral list of patient " + patient_id + "failed",
       exeption: err,
@@ -55,9 +55,9 @@ exports.add = async function (req, res) {
       });
     }
     const rs = referralModel.insert(req.body);
-    return res.json({ success: true, referral: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert referral failed",
       exeption: err,
@@ -70,16 +70,16 @@ exports.detail = async function (req, res) {
     if (referral) {
       res.json({
         success: true,
-        referral: referral,
+        payload: referral,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Referral not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -93,16 +93,16 @@ exports.update = async function (req, res) {
       const result = await referralModel.updateReferral(referral, req.body);
       res.json({
         success: true,
-        referral: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Referral not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -118,13 +118,13 @@ exports.delete = async function (req, res) {
         success: true,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Referral not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

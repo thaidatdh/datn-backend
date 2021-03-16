@@ -12,7 +12,7 @@ exports.index = async function (req, res) {
   );
   res.json({
     success: true,
-    users,
+    payload: users,
   });
 };
 exports.add = async function (req, res) {
@@ -23,5 +23,5 @@ exports.add = async function (req, res) {
     password: "test",
   };
   const rs = await patientModel.insert(staffinfo);
-  return res.json({ staff: rs });
+  return res.json({ payload: rs });
 };

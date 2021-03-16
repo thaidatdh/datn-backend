@@ -10,10 +10,10 @@ exports.index = async function (req, res) {
     );
     res.json({
       success: true,
-      patients: patientList,
+      payload: patientList,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get patient list failed",
       exeption: err,
@@ -25,9 +25,9 @@ exports.add = async function (req, res) {
   try {
     const patientInfo = Object.assign({}, req.body);
     const rs = await PatientModel.insert(patientInfo);
-    return res.json({ success: true, patient: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert patient failed",
       exeption: err,
@@ -43,15 +43,15 @@ exports.patient = async function (req, res) {
     };
     const rs = await PatientModel.get({ _id: patient_id }, options);
     if (rs != null && rs.length > 0) {
-      return res.json({ success: true, patient: rs[0] });
+      return res.json({ success: true, payload: rs[0] });
     } else {
-      return res.json({
+      return res.status(404).json({
         success: false,
         message: "Patient not found",
       });
     }
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Get patient failed",
       exeption: err,
@@ -64,15 +64,15 @@ exports.update = async function (req, res) {
     const patientInfo = Object.assign({}, req.body);
     const rs = await PatientModel.updatePatient(patient_id, patientInfo);
     if (rs) {
-      return res.json({ success: true, patient: rs });
+      return res.json({ success: true, payload: rs });
     } else {
-      return res.json({
+      return res.status(404).json({
         success: false,
         message: "Patient not found",
       });
     }
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Update patient failed",
       exeption: err,
@@ -90,13 +90,13 @@ exports.delete = async function (req, res) {
         message: "Delete Successfully",
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Patient not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

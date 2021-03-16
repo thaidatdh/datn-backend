@@ -7,10 +7,10 @@ exports.index = async function (req, res) {
     const noteMacroList = await NoteMacroModel.find();
     res.json({
       success: true,
-      notes: noteMacroList,
+      payload: noteMacroList,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get note macro list failed",
       exeption: err,
@@ -24,9 +24,9 @@ exports.add = async function (req, res) {
     note.content = req.body.content ? req.body.content : null;
     note.note_type = req.body.note_type ? req.body.note_type : null;
     const rs = await note.save();
-    return res.json({ success: true, note: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert note macro failed",
       exeption: err,
@@ -39,16 +39,16 @@ exports.detail = async function (req, res) {
     if (macro) {
       res.json({
         success: true,
-        note: macro,
+        payload: macro,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Note Macro not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -66,16 +66,16 @@ exports.update = async function (req, res) {
       const result = await macro.save();
       res.json({
         success: true,
-        note: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Macro not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -89,7 +89,7 @@ exports.delete = async function (req, res) {
       success: true,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

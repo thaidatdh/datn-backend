@@ -7,10 +7,10 @@ exports.index = async function (req, res) {
     const access = await accessModel.find();
     res.json({
       success: true,
-      access: access,
+      payload: access,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get access group list failed",
       exeption: err,
@@ -23,9 +23,9 @@ exports.add = async function (req, res) {
     access.name = req.body.name ? req.body.name : null;
     access.value = req.body.value ? req.body.value : null;
     const rs = await access.save();
-    return res.json({ success: true, access: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert access group failed",
       exeption: err,

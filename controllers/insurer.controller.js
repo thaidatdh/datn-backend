@@ -7,10 +7,10 @@ exports.index = async function (req, res) {
     const insurerList = await InsurerModel.find();
     res.json({
       success: true,
-      insurers: insurerList,
+      payload: insurerList,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get insurer list failed",
       exeption: err,
@@ -22,9 +22,9 @@ exports.add = async function (req, res) {
   try {
     const insurerInfo = Object.assign({}, req.body);
     const rs = await InsurerModel.insert(insurerInfo);
-    return res.json({ success: true, insurer: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert insurer failed",
       exeption: err,
@@ -37,16 +37,16 @@ exports.insurer = async function (req, res) {
     if (insurer) {
       res.json({
         success: true,
-        insurer: insurer,
+        payload: insurer,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Insurer not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get failed",
       exeption: err,
@@ -61,16 +61,16 @@ exports.update = async function (req, res) {
       const result = await InsurerModel.updateInsurer(insurer, insurerInfo);
       res.json({
         success: true,
-        insurer: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Insurer not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -84,7 +84,7 @@ exports.delete = async function (req, res) {
       success: true,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

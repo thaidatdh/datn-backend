@@ -7,10 +7,10 @@ exports.index = async function (req, res) {
     const specialists = await specialistModel.find();
     res.json({
       success: true,
-      specialists: specialists,
+      payload: specialists,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get specialist list failed",
       exeption: err,
@@ -22,9 +22,9 @@ exports.add = async function (req, res) {
     let specialist = new specialistModel();
     specialist.name = req.body.name;
     const rs = await specialist.save();
-    return res.json({ success: true, specialist: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert specialist failed",
       exeption: err,
@@ -37,16 +37,16 @@ exports.specialist = async function (req, res) {
     if (specialist) {
       res.json({
         success: true,
-        specialist: specialist,
+        payload: specialist,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Specialist not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -61,16 +61,16 @@ exports.update = async function (req, res) {
       const result = await specialist.save();
       res.json({
         success: true,
-        specialist: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Specialist not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -84,7 +84,7 @@ exports.delete = async function (req, res) {
       success: true,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

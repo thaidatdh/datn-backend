@@ -11,10 +11,10 @@ exports.index = async function (req, res) {
     );
     res.json({
       success: true,
-      staffs: staffList,
+      payload: staffList,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get staff list failed",
       exeption: err,
@@ -33,10 +33,10 @@ exports.index_provider = async function (req, res) {
     );
     res.json({
       success: true,
-      providers: providerList,
+      payload: providerList,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get provider list failed",
       exeption: err,
@@ -55,10 +55,10 @@ exports.index_staff = async function (req, res) {
     );
     res.json({
       success: true,
-      staffs: staffList,
+      payload: staffList,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get staff list failed",
       exeption: err,
@@ -70,9 +70,9 @@ exports.add = async function (req, res) {
   try {
     const staffInfo = Object.assign({}, req.body);
     const rs = await StaffModel.insert(staffInfo);
-    return res.json({ success: true, staff: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert staff failed",
       exeption: err,
@@ -89,16 +89,16 @@ exports.staff = async function (req, res) {
     if (staff && staff.length > 0) {
       res.json({
         success: true,
-        staff: staff[0],
+        payload: staff[0],
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Staff not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Find Staff failed",
       exeption: err,
@@ -113,16 +113,16 @@ exports.update = async function (req, res) {
       const updatedStaff = await StaffModel.updateStaff(staffs[0], staffInfo);
       res.json({
         success: true,
-        staff: updatedStaff,
+        payload: updatedStaff,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Staff not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Find Staff failed",
       exeption: err,
@@ -140,13 +140,13 @@ exports.delete = async function (req, res) {
         message: "Delete Successfully",
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Staff not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

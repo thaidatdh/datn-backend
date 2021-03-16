@@ -11,7 +11,7 @@ exports.verifyUser = (request, response, next) => {
     jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
       if (err) {
         console.log(err);
-        response.status(401).send({ message: "Access Denied" });
+        response.status(403).send({ message: "Access Denied" });
       } else {
         request.user = decoded;
         request.is_logged_in = true;
@@ -19,6 +19,6 @@ exports.verifyUser = (request, response, next) => {
       }
     });
   } catch (err) {
-    return response.status(400).send({ message: "Invalid Token" });
+    return response.status(401).send({ message: "Invalid Token" });
   }
 };

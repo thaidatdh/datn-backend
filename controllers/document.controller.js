@@ -11,10 +11,10 @@ exports.index = async function (req, res) {
     const documents = await documentModel.get({}, options);
     res.json({
       success: true,
-      documents: documents,
+      payload: documents,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get document list failed",
       exeption: err,
@@ -30,10 +30,10 @@ exports.practice_document = async function (req, res) {
     const documents = await documentModel.get({ patient: null }, options);
     res.json({
       success: true,
-      documents: documents,
+      payload: documents,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get practice document list failed",
       exeption: err,
@@ -51,10 +51,10 @@ exports.patient_document = async function (req, res) {
     const documents = await documentModel.get({ patient: patient_id }, options);
     res.json({
       success: true,
-      documents: documents,
+      payload: documents,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get document list of patient " + patient_id + "failed",
       exeption: err,
@@ -70,9 +70,9 @@ exports.add = async function (req, res) {
       });
     }
     const rs = await documentModel.insert(req.body);
-    return res.json({ success: true, document: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert document failed",
       exeption: err,
@@ -85,16 +85,16 @@ exports.detail = async function (req, res) {
     if (document) {
       res.json({
         success: true,
-        document: document,
+        payload: document,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Document not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -108,16 +108,16 @@ exports.update = async function (req, res) {
       const result = await documentModel.updateDocument(document, req.body);
       res.json({
         success: true,
-        document: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Document not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -133,13 +133,13 @@ exports.delete = async function (req, res) {
         success: true,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Document not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

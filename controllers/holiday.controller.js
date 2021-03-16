@@ -7,10 +7,10 @@ exports.index = async function (req, res) {
     const holidays = await holidayModel.find();
     res.json({
       success: true,
-      holidays: holidays,
+      payload: holidays,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get holiday list failed",
       exeption: err,
@@ -24,9 +24,9 @@ exports.add = async function (req, res) {
     holiday.start_date = req.body.start_date ? req.body.start_date : null;
     holiday.end_date = req.body.end_date ? req.body.end_date : null;
     const rs = await holiday.save();
-    return res.json({ success: true, access: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert holiday failed",
       exeption: err,

@@ -7,10 +7,10 @@ exports.index = async function (req, res) {
     const categories = await documentCategoryModel.find();
     res.json({
       success: true,
-      categories: categories,
+      payload: categories,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get document category list failed",
       exeption: err,
@@ -22,9 +22,9 @@ exports.add = async function (req, res) {
     let category = new documentCategoryModel();
     category.name = req.body.name;
     const rs = await category.save();
-    return res.json({ success: true, category: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert document category failed",
       exeption: err,
@@ -39,10 +39,10 @@ exports.detail = async function (req, res) {
     if (category) {
       res.json({
         success: true,
-        category: category,
+        payload: category,
       });
     } else {
-      res.json({
+      res.status(500).json({
         success: false,
         message: "Document category not found",
       });
@@ -50,7 +50,7 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.json({
       success: false,
-      message: "Update failed",
+      message: "Get failed",
       exeption: err,
     });
   }
@@ -65,16 +65,16 @@ exports.update = async function (req, res) {
       const result = await category.save();
       res.json({
         success: true,
-        category: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Document Category not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -83,12 +83,22 @@ exports.update = async function (req, res) {
 };
 exports.delete = async function (req, res) {
   try {
-    await documentCategoryModel.deleteOne({ _id: req.params.category_id });
-    res.json({
-      success: true,
-    });
+    const category = await documentCategoryModel.findById(
+      req.params.category_id
+    );
+    if (category) {
+      await documentCategoryModel.deleteOne({ _id: req.params.category_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "Document Category not found",
+      });
+    }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,

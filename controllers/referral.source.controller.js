@@ -7,10 +7,10 @@ exports.index = async function (req, res) {
     const source = await referralSourceModel.find();
     res.json({
       success: true,
-      referral_sources: source,
+      payload: source,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Get referral source list failed",
       exeption: err,
@@ -21,9 +21,9 @@ exports.add = async function (req, res) {
   try {
     const sourceInfo = req.body;
     const rs = await referralSourceModel.insert(sourceInfo);
-    return res.json({ success: true, referral_source: rs });
+    return res.json({ success: true, payload: rs });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Insert referral source failed",
       exeption: err,
@@ -37,16 +37,16 @@ exports.source = async function (req, res) {
     if (source) {
       res.json({
         success: true,
-        referral_source: source,
+        payload: source,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Referral source not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -56,21 +56,21 @@ exports.source = async function (req, res) {
 exports.update = async function (req, res) {
   try {
     const sourceInfo = req.body;
-    const source = await referralSourceModel.findById(req.params.insurer_id);
+    const source = await referralSourceModel.findById(req.params.source_id);
     if (source) {
       const result = await referralSourceModel.updateSource(source, sourceInfo);
       res.json({
         success: true,
-        referral_source: result,
+        payload: result,
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "Referral source not found",
       });
     }
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Update failed",
       exeption: err,
@@ -84,7 +84,7 @@ exports.delete = async function (req, res) {
       success: true,
     });
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Delete failed",
       exeption: err,
