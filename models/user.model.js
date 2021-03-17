@@ -19,6 +19,8 @@ const UserSchema = mongoose.Schema(
       default: null,
     },
     user_type: String,
+    theme: Number,
+    language: String,
   },
   {
     timestamps: true,

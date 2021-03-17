@@ -112,7 +112,8 @@
           "user": {
             "type": "string",
             "description": "ObjectID. Link to user. If get staff. it will be json of user",
-            "example": "string"
+            "example": "string",
+            "$ref": "#/components/schemas/Users"
           },
           "display_id": {
             "type": "string",
@@ -185,7 +186,8 @@
           "user": {
             "type": "string",
             "description": "ObjectID. Link to user. If get staff. it will be json of user",
-            "example": "string"
+            "example": "string",
+            "$ref": "#/components/schemas/Users"
           },
           "patient_id": {
             "type": "string",
@@ -1293,12 +1295,40 @@
       "description": "Everything about Practice"
     },
     {
-      "name": "Patient",
+      "name": "Patients",
       "description": "Everything about Patient Info"
     },
     {
-      "name": "Staff",
+      "name": "Staffs",
       "description": "Everything about Staff and Provider"
+    },
+    {
+      "name": "Drugs",
+      "description": "Everything about Drug template"
+    },
+    {
+      "name": "Images",
+      "description": "Everything about Images"
+    },
+    {
+      "name": "Specialists",
+      "description": "Everything about Provider's specialist"
+    },
+    {
+      "name": "Referral Source",
+      "description": "Everything about Referral Source"
+    },
+    {
+      "name": "Patient Referral",
+      "description": "Everything about Patient Referral"
+    },
+    {
+      "name": "Specialists",
+      "description": "Everything about Provider's specialist"
+    },
+    {
+      "name": "Insurer",
+      "description": "Everything about Insurer"
     },
     {
       "name": "Appointments",
@@ -1727,6 +1757,1642 @@
             "name": "insurer_id",
             "in": "path",
             "description": "Insurer ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/note-macro": {
+      "get": {
+        "tags": ["Note Macro"],
+        "summary": "Retrieve a list of Note Macro",
+        "description": "Retrieve a list of Note Macro from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Note_macro"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Note Macro"],
+        "summary": "Insert new Note Macro",
+        "description": "Insert new Note Macro",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "note_type": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Note_macro"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/note-macro/{note_id}": {
+      "get": {
+        "tags": ["Note Macro"],
+        "summary": "Get Note Macro detail",
+        "description": "Get Note Macro detail",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Note_macro"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Note Macro"],
+        "summary": "Update Note Macro",
+        "description": "Update Note Macro",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "description": "Note Macro ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "note_type": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Note_macro"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Note Macro"],
+        "summary": "Delete Note Macro",
+        "description": "Delete Note Macro",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "description": "Note Macro ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image": {
+      "get": {
+        "tags": ["Images"],
+        "summary": "Retrieve a list of Images",
+        "description": "Retrieve a list of Images from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Images"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Images"],
+        "summary": "Insert new Image",
+        "description": "Insert new Image",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "image_path": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "thumbnail_path": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Images"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image/{image_id}": {
+      "get": {
+        "tags": ["Images"],
+        "summary": "Get image detail",
+        "description": "Get image detail",
+        "parameters": [
+          {
+            "name": "image_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Images"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Images"],
+        "summary": "Update Image",
+        "description": "Update Image",
+        "parameters": [
+          {
+            "name": "image_id",
+            "in": "path",
+            "description": "Image ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "image_path": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "thumbnail_path": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Images"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Images"],
+        "summary": "Delete image",
+        "description": "Delete image",
+        "parameters": [
+          {
+            "name": "image_id",
+            "in": "path",
+            "description": "image ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drug": {
+      "get": {
+        "tags": ["Drugs"],
+        "summary": "Retrieve a list of Drugs",
+        "description": "Retrieve a list of Drugs from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Drugs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Drugs"],
+        "summary": "Insert new drug",
+        "description": "Insert new drug",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "refill": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "dispensed": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "quantity": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Drugs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drug/{drug_id}": {
+      "get": {
+        "tags": ["Drugs"],
+        "summary": "Get drug detail",
+        "description": "Get drug detail",
+        "parameters": [
+          {
+            "name": "drug_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Drugs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Drugs"],
+        "summary": "Update Image",
+        "description": "Update Image",
+        "parameters": [
+          {
+            "name": "drug_id",
+            "in": "path",
+            "description": "Image ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "refill": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "dispensed": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "quantity": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Drugs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Drugs"],
+        "summary": "Delete image",
+        "description": "Delete image",
+        "parameters": [
+          {
+            "name": "drug_id",
+            "in": "path",
+            "description": "image ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/patient": {
+      "get": {
+        "tags": ["Patients"],
+        "summary": "Retrieve a list of patients",
+        "description": "Retrieve a list of patients from database.",
+        "parameters": [
+          {
+            "name": "get_hohh",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get head_of_household as json object"
+          },
+          {
+            "name": "get_provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get provider as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Patients"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patients"],
+        "summary": "Insert new patient",
+        "description": "Insert new patient",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient_id": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "active_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "head_of_household": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "ObjectId of other Patient. can be null"
+                  },
+                  "patient_type": {
+                    "type": "string",
+                    "example": "PATIENT"
+                  },
+                  "new_patient": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "medical_alert": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "patient_note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "marital_status": {
+                    "type": "string",
+                    "example": "NOT_SPECIFY"
+                  },
+                  "other_info": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "description": "ObjectID. Link to staff type PROVIDER. If get staff. it will be json of staff",
+                    "example": "string"
+                  },
+                  "email_recall": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "appt_reminder": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "NOT_SPECIFY"
+                  },
+                  "patient_photo": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "patient_balance": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "insurance_balance": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "credit_amount": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "fax": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "mobile_phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "home_phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "facebook": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "user_type": {
+                    "type": "string",
+                    "example": "PATIENT"
+                  },
+                  "theme": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string",
+                    "example": "EN"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Patients"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/patient/{patient_id}": {
+      "get": {
+        "tags": ["Patients"],
+        "summary": "Get patient detail",
+        "description": "Get patient detail",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "get_hohh",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get head_of_household as json object"
+          },
+          {
+            "name": "get_provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get provider as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Patients"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patients"],
+        "summary": "Update patient",
+        "description": "Update patient",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "description": "Patient ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient_id": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "active_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "head_of_household": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "ObjectId of other Patient. can be null"
+                  },
+                  "patient_type": {
+                    "type": "string",
+                    "example": "PATIENT"
+                  },
+                  "new_patient": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "medical_alert": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "patient_note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "marital_status": {
+                    "type": "string",
+                    "example": "NOT_SPECIFY"
+                  },
+                  "other_info": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "description": "ObjectID. Link to staff type PROVIDER. If get staff. it will be json of staff",
+                    "example": "string"
+                  },
+                  "email_recall": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "appt_reminder": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "NOT_SPECIFY"
+                  },
+                  "patient_photo": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "patient_balance": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "insurance_balance": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "credit_amount": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "fax": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "mobile_phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "home_phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "facebook": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "user_type": {
+                    "type": "string",
+                    "example": "PATIENT"
+                  },
+                  "theme": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string",
+                    "example": "EN"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Patients"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Patients"],
+        "summary": "Delete patient",
+        "description": "Delete patient",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "description": "Staff ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff": {
+      "get": {
+        "tags": ["Staffs"],
+        "summary": "Retrieve a list of staffs and providers",
+        "description": "Retrieve a list of staffs and providers from database.",
+        "parameters": [
+          {
+            "name": "get_access_group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get access_group as json object"
+          },
+          {
+            "name": "get_specialist",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get specialist as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Staffs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Staffs"],
+        "summary": "Insert new staff",
+        "description": "Insert new staff",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "display_id": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "provider_color": {
+                    "type": "string",
+                    "example": "#FFFFFF"
+                  },
+                  "staff_type": {
+                    "type": "string",
+                    "example": "PROVIDER"
+                  },
+                  "druc_lic": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "npi": {
+                    "type": "string",
+                    "description": "National Provider Identifier",
+                    "example": "string"
+                  },
+                  "specialist": {
+                    "type": "string",
+                    "description": "ObjectID",
+                    "example": null
+                  },
+                  "access_group": {
+                    "type": "string",
+                    "description": "ObjectID",
+                    "example": null
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "notify_staff_msg": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "notify_patient_msg": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "notify_meeting": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "fax": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "mobile_phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "home_phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "facebook": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "user_type": {
+                    "type": "string",
+                    "example": "PATIENT"
+                  },
+                  "theme": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string",
+                    "example": "EN"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Staffs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/staff": {
+      "get": {
+        "tags": ["Staffs"],
+        "summary": "Retrieve a list of staffs",
+        "description": "Retrieve a list of staffs from database.",
+        "parameters": [
+          {
+            "name": "get_access_group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get access_group as json object"
+          },
+          {
+            "name": "get_specialist",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get specialist as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Staffs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/provider": {
+      "get": {
+        "tags": ["Staffs"],
+        "summary": "Retrieve a list of providers",
+        "description": "Retrieve a list of providers from database.",
+        "parameters": [
+          {
+            "name": "get_access_group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get access_group as json object"
+          },
+          {
+            "name": "get_specialist",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get specialist as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Staffs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/{patient_id}": {
+      "get": {
+        "tags": ["Staffs"],
+        "summary": "Get staff detail",
+        "description": "Get staff detail",
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "get_access_group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get access_group as json object"
+          },
+          {
+            "name": "get_specialist",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get specialist as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Staffs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Staffs"],
+        "summary": "Update staff",
+        "description": "Update staff",
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "description": "Staff ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "display_id": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "provider_color": {
+                    "type": "string",
+                    "example": "#FFFFFF"
+                  },
+                  "staff_type": {
+                    "type": "string",
+                    "example": "PROVIDER"
+                  },
+                  "druc_lic": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "npi": {
+                    "type": "string",
+                    "description": "National Provider Identifier",
+                    "example": "string"
+                  },
+                  "specialist": {
+                    "type": "string",
+                    "description": "ObjectID",
+                    "example": null
+                  },
+                  "access_group": {
+                    "type": "string",
+                    "description": "ObjectID",
+                    "example": null
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "notify_staff_msg": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "notify_patient_msg": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "notify_meeting": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "fax": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "mobile_phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "home_phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "facebook": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "user_type": {
+                    "type": "string",
+                    "example": "PATIENT"
+                  },
+                  "theme": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string",
+                    "example": "EN"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Staffs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Staffs"],
+        "summary": "Delete staff",
+        "description": "Delete staff",
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "description": "Staff ID",
             "required": true,
             "schema": {
               "type": "string"

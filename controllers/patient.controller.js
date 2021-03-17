@@ -4,9 +4,13 @@ const PatientModel = require("../models/patient.model");
 //For index
 exports.index = async function (req, res) {
   try {
+    const options = {
+      get_hohh: req.query.get_hohh,
+      get_provider: req.query.get_provider,
+    };
     const patientList = await PatientModel.get(
       {},
-      { get_hohh: true, get_provider: true }
+      options
     );
     res.json({
       success: true,

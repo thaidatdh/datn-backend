@@ -5,9 +5,13 @@ const StaffModel = require("../models/staff.model");
 //For index
 exports.index = async function (req, res) {
   try {
+    const options = {
+      get_access_group: req.query.get_access_group,
+      get_specialist: req.query.get_specialist,
+    };
     const staffList = await StaffModel.get(
       {},
-      { get_access_group: true, get_specialist: true }
+      options
     );
     res.json({
       success: true,
