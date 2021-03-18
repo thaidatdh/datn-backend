@@ -6,7 +6,116 @@
     "title": "ADC RESTful API."
   },
   "servers": [{ "url": "http://localhost:3000/api" }],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "responses": {
+      "403_Unauthorized": {
+        "description": "Unauthorized access. Access denied",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Unauthorized access. Access denied"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401_AccessDenied": {
+        "description": "No token provided. Access denied",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Unauthorized access. Access denied"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404_NotFound": {
+        "description": "[Something] not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "message": {
+                  "type": "string",
+                  "default": "[Something] not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500_ActionFailed": {
+        "description": "[Something] failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "message": {
+                  "type": "string",
+                  "default": "[Something] failed"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Lack of required field",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Lack of required field"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "schemas": {
       "Practice": {
         "type": "object",
@@ -1291,6 +1400,10 @@
   },
   "tags": [
     {
+      "name": "Authorization",
+      "description": "Everything about Authorization"
+    },
+    {
       "name": "Practice",
       "description": "Everything about Practice"
     },
@@ -1323,6 +1436,10 @@
       "description": "Everything about Patient Referral"
     },
     {
+      "name": "Patient Recall",
+      "description": "Everything about Patient Recall"
+    },
+    {
       "name": "Specialists",
       "description": "Everything about Provider's specialist"
     },
@@ -1341,6 +1458,26 @@
     {
       "name": "Appointment Blocks",
       "description": "Everything about Appointment Blocks.\nAppointment block prevent user create appointment in that time or serve as note"
+    },
+    {
+      "name": "Note Macro",
+      "description": "Everything about Note Macro. It included Treatment Note, Progress Note, Medical Alert,..."
+    },
+    {
+      "name": "Document",
+      "description": "Everything about Document"
+    },
+    {
+      "name": "Document Category",
+      "description": "Everything about Document Category"
+    },
+    {
+      "name": "Procedure",
+      "description": "Everything about Procedure Code"
+    },
+    {
+      "name": "Procedure Category",
+      "description": "Everything about Procedure Category"
     }
   ],
   "paths": {
@@ -1358,7 +1495,8 @@
                 "schema": {
                   "properties": {
                     "success": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "default": true
                     },
                     "payload": {
                       "type": "array",
@@ -1370,6 +1508,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -1423,6 +1570,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -1460,6 +1616,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -1523,6 +1691,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -1560,6 +1740,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -1590,6 +1782,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -1644,6 +1845,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -1681,6 +1891,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -1745,6 +1967,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -1782,6 +2016,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -1812,6 +2058,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -1856,6 +2111,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -1893,6 +2157,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -1947,6 +2223,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -1984,6 +2272,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -2014,6 +2314,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -2062,6 +2371,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -2099,6 +2417,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -2157,6 +2487,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -2194,6 +2536,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -2224,6 +2578,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -2284,6 +2647,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -2321,6 +2693,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -2391,6 +2775,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -2428,6 +2824,1266 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/document": {
+      "get": {
+        "tags": ["Document"],
+        "summary": "Retrieve a list of Documents",
+        "description": "Retrieve a list of Documents from database.",
+        "parameters": [
+          {
+            "name": "get_patient",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get patient as json object"
+          },
+          {
+            "name": "get_category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get category as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Documents"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Document"],
+        "summary": "Insert new Document",
+        "description": "Insert new Document",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "null if is practice document"
+                  },
+                  "filepath": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Documents"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/document/practice": {
+      "get": {
+        "tags": ["Document"],
+        "summary": "Retrieve a list of Practice's Documents",
+        "description": "Retrieve a list of Practice's Documents from database.",
+        "parameters": [
+          {
+            "name": "get_category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get category as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Documents"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/document/patient/{patient_id}": {
+      "get": {
+        "tags": ["Document"],
+        "summary": "Retrieve a list of a Patient's Documents",
+        "description": "Retrieve a list of a Patient's Documents from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "get_patient",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get patient as json object"
+          },
+          {
+            "name": "get_category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get category as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Documents"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/document/{document_id}": {
+      "get": {
+        "tags": ["Document"],
+        "summary": "Get Document detail",
+        "description": "Get Document detail",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "get_patient",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get patient as json object"
+          },
+          {
+            "name": "get_category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get category as json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Documents"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Document"],
+        "summary": "Update Document",
+        "description": "Update Document",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "null if is practice document"
+                  },
+                  "filepath": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Documents"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Document"],
+        "summary": "Delete Document",
+        "description": "Delete Document",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/document/category": {
+      "get": {
+        "tags": ["Document Category"],
+        "summary": "Retrieve a list of Document category",
+        "description": "Retrieve a list of Document category from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Document_category"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Document Category"],
+        "summary": "Insert new Document category",
+        "description": "Insert new Document category",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Document_category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/document/category/{category_id}": {
+      "get": {
+        "tags": ["Document Category"],
+        "summary": "Get Document category detail",
+        "description": "Get Document category detail",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Document_category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Document Category"],
+        "summary": "Update Document category",
+        "description": "Update Document category",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "description": "Document category ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Document_category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Document Category"],
+        "summary": "Delete Document category",
+        "description": "Delete Document category",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "description": "Document category ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/procedure": {
+      "get": {
+        "tags": ["Procedure"],
+        "summary": "Retrieve a list of Procedures",
+        "description": "Retrieve a list of Procedures from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Procedure_code"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Procedure"],
+        "summary": "Insert new Procedure",
+        "description": "Insert new Procedure",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "null if is practice document"
+                  },
+                  "filepath": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Procedure_code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/procedure/{procedure_id}": {
+      "get": {
+        "tags": ["Procedure"],
+        "summary": "Get Procedure detail",
+        "description": "Get Procedure detail",
+        "parameters": [
+          {
+            "name": "procedure_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Procedure_code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Procedure"],
+        "summary": "Update Procedure",
+        "description": "Update Procedure",
+        "parameters": [
+          {
+            "name": "procedure_id",
+            "in": "path",
+            "description": "Procedure ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string",
+                    "description": "null if is practice document"
+                  },
+                  "filepath": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Procedure_code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Procedure"],
+        "summary": "Delete Procedure",
+        "description": "Delete Procedure",
+        "parameters": [
+          {
+            "name": "procedure_id",
+            "in": "path",
+            "description": "Procedure ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/procedure/category": {
+      "get": {
+        "tags": ["Procedure Category"],
+        "summary": "Retrieve a list of Procedure category",
+        "description": "Retrieve a list of Procedure category from database.",
+        "parameters": [
+          {
+            "name": "get_codes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get procedure_code as array of json object"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "limit record"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Procedure_category"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Procedure Category"],
+        "summary": "Insert new Procedure category",
+        "description": "Insert new Procedure category",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Procedure_category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/procedure/category/{category_id}": {
+      "get": {
+        "tags": ["Procedure Category"],
+        "summary": "Get Procedure category detail",
+        "description": "Get Procedure category detail",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "get_codes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True would get procedure_code as array of json object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Procedure_category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Procedure Category"],
+        "summary": "Update Procedure category",
+        "description": "Update Procedure category",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "description": "Procedure category ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Procedure_category"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Procedure Category"],
+        "summary": "Delete Procedure category",
+        "description": "Delete Procedure category",
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "path",
+            "description": "Procedure category ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -2477,6 +4133,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -2638,6 +4303,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -2693,6 +4367,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -2864,6 +4550,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -2896,6 +4594,210 @@
                     "message": {
                       "type": "string",
                       "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/authorization/signin": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "[Web] Sign In",
+        "description": "Sign In for web",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/Staffs"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Invalid request body",
+                      "description": "depend on what type"
+                    },
+                    "param": {
+                      "type": "string",
+                      "example": "password(nullable)",
+                      "description": "nullable"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "password(nullable)",
+                      "description": "nullable"
+                    },
+                    "location": {
+                      "type": "string",
+                      "example": "body(nullable)",
+                      "description": "nullable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorization/refresh-token": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "[Web] Refresh Token",
+        "description": "Refresh Token for web",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/Staffs"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No token found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid refresh token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Invalid refresh token"
                     }
                   }
                 }
@@ -2950,6 +4852,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -3084,6 +4995,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -3133,6 +5053,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -3182,11 +5111,20 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
     },
-    "/staff/{patient_id}": {
+    "/staff/{staff_id}": {
       "get": {
         "tags": ["Staffs"],
         "summary": "Get staff detail",
@@ -3237,6 +5175,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -3381,6 +5331,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -3418,6 +5380,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -3448,6 +5422,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -3508,6 +5491,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -3545,6 +5537,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -3615,6 +5619,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -3652,6 +5668,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -3682,6 +5710,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -3746,6 +5783,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -3783,6 +5829,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -3857,6 +5915,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -3894,6 +5964,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -3933,6 +6015,367 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/recall": {
+      "get": {
+        "tags": ["Patient Recall"],
+        "summary": "Retrieve a list of Recall",
+        "description": "Retrieve a list of Recall from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Recalls"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Recall"],
+        "summary": "Insert new Recall",
+        "description": "Insert new Recall",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "treatment": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "appointment": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "procedure": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "interval": {
+                    "type": "string",
+                    "example": "0y1m0w0d"
+                  },
+                  "recall_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Recalls"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/recall/{recall_id}": {
+      "get": {
+        "tags": ["Patient Recall"],
+        "summary": "Get Recall detail",
+        "description": "Get Recall detail",
+        "parameters": [
+          {
+            "name": "recall_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Recalls"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Recall"],
+        "summary": "Update Recall",
+        "description": "Update Recall",
+        "parameters": [
+          {
+            "name": "recall_id",
+            "in": "path",
+            "description": "Recall ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "treatment": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "appointment": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "procedure": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "interval": {
+                    "type": "string",
+                    "example": "0y1m0w0d"
+                  },
+                  "recall_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Recalls"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Patient Recall"],
+        "summary": "Delete Recall ",
+        "description": "Delete Recall",
+        "parameters": [
+          {
+            "name": "recall_id",
+            "in": "path",
+            "description": "Recall ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Delete Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/recall/patient/{patient_id}": {
+      "get": {
+        "tags": ["Patient Recall"],
+        "summary": "Retrieve a list of Recall of a Patient",
+        "description": "Retrieve a list of Recall of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Recalls"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -3963,6 +6406,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -4002,6 +6454,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -4039,6 +6500,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -4088,6 +6561,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -4125,6 +6610,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -4165,6 +6662,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -4232,6 +6738,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -4278,6 +6793,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -4355,6 +6882,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -4392,6 +6931,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -4441,6 +6992,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -4471,6 +7031,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -4517,6 +7086,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -4554,6 +7132,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -4610,6 +7200,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -4647,6 +7249,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -4677,6 +7291,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       },
@@ -4746,6 +7369,15 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
           }
         }
       }
@@ -4783,6 +7415,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -4862,6 +7506,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       },
@@ -4899,6 +7555,18 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }

@@ -1,47 +1,49 @@
 //Import User Model
 const mongoose = require("mongoose");
-const referralModel = require("../models/referral.model");
+const RecallModel = require("../models/recall.model");
 //For index
 exports.index = async function (req, res) {
   try {
     const options = {
       get_patient: req.query.get_patient,
-      get_staff: req.query.get_staff,
-      get_source: req.query.get_source,
+      get_treatment: req.query.get_treatment,
+      get_appointment: req.query.get_appointment,
+      get_procedure: req.query.get_procedure,
       limit: req.query.limit,
     };
-    const referrals = await referralModel.get({}, options);
+    const recall = await RecallModel.get({}, options);
     res.json({
       success: true,
-      payload: referrals,
+      payload: recall,
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get referral list failed",
+      message: "Get recall list failed",
       exeption: err,
     });
   }
 };
-exports.patient_referral = async function (req, res) {
+exports.patient_recall = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
       get_patient: req.query.get_patient,
-      get_staff: req.query.get_staff,
-      get_source: req.query.get_source,
+      get_treatment: req.query.get_treatment,
+      get_appointment: req.query.get_appointment,
+      get_procedure: req.query.get_procedure,
       limit: req.query.limit,
     };
 
-    const referrals = await referralModel.get({ patient: patient_id }, options);
+    const recalls = await RecallModel.get({ patient: patient_id }, options);
     res.json({
       success: true,
-      payload: referrals,
+      payload: recalls,
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get referral list of patient " + patient_id + "failed",
+      message: "Get recall list of patient " + patient_id + "failed",
       exeption: err,
     });
   }
@@ -51,31 +53,31 @@ exports.add = async function (req, res) {
     if (req.body.patient == null) {
       return res.json({
         success: false,
-        message: "Insert referral failed. Require patient",
+        message: "Insert recall failed. Require patient",
       });
     }
-    const rs = referralModel.insert(req.body);
+    const rs = RecallModel.insert(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert referral failed",
+      message: "Insert recall failed",
       exeption: err,
     });
   }
 };
 exports.detail = async function (req, res) {
   try {
-    const referral = await referralModel.findById(req.params.referral_id);
-    if (referral) {
+    const recall = await RecallModel.findById(req.params.recall_id);
+    if (recall) {
       res.json({
         success: true,
-        payload: referral,
+        payload: recall,
       });
     } else {
       res.status(404).json({
         success: false,
-        message: "Referral not found",
+        message: "Recall not found",
       });
     }
   } catch (err) {
@@ -88,9 +90,9 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const referral = await referralModel.findById(req.params.referral_id);
-    if (referral) {
-      const result = await referralModel.updateReferral(referral, req.body);
+    const recall = await RecallModel.findById(req.params.recall_id);
+    if (recall) {
+      const result = await RecallModel.updateRecall(recall, req.body);
       res.json({
         success: true,
         payload: result,
@@ -111,16 +113,16 @@ exports.update = async function (req, res) {
 };
 exports.delete = async function (req, res) {
   try {
-    const referral = referralModel.findById(req.params.referral_id);
-    if (referral) {
-      await referralModel.deleteOne({ _id: req.params.referral_id });
+    const recall = RecallModel.findById(req.params.recall_id);
+    if (recall) {
+      await RecallModel.deleteOne({ _id: req.params.recall_id });
       res.json({
         success: true,
       });
     } else {
       res.status(404).json({
         success: false,
-        message: "Referral not found",
+        message: "Recall not found",
       });
     }
   } catch (err) {

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Patient = require("./patient.model");
 const Staff = require("./staff.model");
 const ReferralSource = require("./referral.source.model");
-const UserSchema = mongoose.Schema(
+const ReferralSchema = mongoose.Schema(
   {
     patient: {
       type: mongoose.Types.ObjectId,
@@ -29,11 +29,10 @@ const UserSchema = mongoose.Schema(
   }
 );
 
-const ReferralModel = (module.exports = mongoose.model("referral", UserSchema));
+const ReferralModel = (module.exports = mongoose.model("referral", ReferralSchema));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = ReferralModel.find(query);
-  promise.populate("user");
   // Limit
   if (populateOptions.limit) {
     promise.limit(limit);
@@ -50,30 +49,15 @@ module.exports.get = async function (query, populateOptions) {
   const resultQuery = await promise.exec();
   return resultQuery;
 };
-module.exports.insert = async function (referralInfo) {
+module.exports.insert = async function (referralinfo) {
   let referral = new ReferralModel();
   referral.referral_date = referralinfo.referral_date
     ? Date.parse(referralinfo.referral_date)
     : Date.now();
   referral.patient = referralinfo.patient ? referralinfo.patient : null;
-  referral.ref_patient = referralinfo.ref_patient ? referralinfo.ref_patient : null;
-  referral.referral_source = referralinfo.referral_source
-    ? referralinfo.referral_source
+  referral.ref_patient = referralinfo.ref_patient
+    ? referralinfo.ref_patient
     : null;
-  referral.ref_staff = referralinfo.ref_staff ? referralinfo.ref_staff : null;
-  referral.referral_type = referralinfo.referral_type
-    ? referralinfo.referral_type
-    : "TO";
-
-  const rs = await referral.save();
-}
-module.exports.insert = async function (referralInfo) {
-  let referral = new ReferralModel();
-  referral.referral_date = referralinfo.referral_date
-    ? Date.parse(referralinfo.referral_date)
-    : Date.now();
-  referral.patient = referralinfo.patient ? referralinfo.patient : null;
-  referral.ref_patient = referralinfo.ref_patient ? referralinfo.ref_patient : null;
   referral.referral_source = referralinfo.referral_source
     ? referralinfo.referral_source
     : null;
@@ -82,8 +66,8 @@ module.exports.insert = async function (referralInfo) {
     ? referralinfo.referral_type
     : "TO";
   return await referral.save();
-}
-module.exports.updateReferral = async function (referral, referralInfo) {
+};
+module.exports.updateReferral = async function (referral, referralinfo) {
   referral.referral_date = referralinfo.referral_date
     ? Date.parse(referralinfo.referral_date)
     : referral.referral_date;
@@ -99,9 +83,10 @@ module.exports.updateReferral = async function (referral, referralInfo) {
     referralinfo.referral_source !== undefined
       ? referralinfo.referral_source
       : referral.referral_source;
-  referral.ref_staff = referralinfo.ref_staff !== undefined
-    ? referralinfo.ref_staff
-    : referral.ref_staff;
+  referral.ref_staff =
+    referralinfo.ref_staff !== undefined
+      ? referralinfo.ref_staff
+      : referral.ref_staff;
   referral.referral_type = referralinfo.referral_type
     ? referralinfo.referral_type
     : referral.referral_type;

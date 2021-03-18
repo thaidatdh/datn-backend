@@ -2,23 +2,28 @@ const jwt = require("jsonwebtoken");
 const config = {
   secret: "secret-backend",
 };
-exports.verifyUser = (request, response, next) => {
+exports.verifyUser = async (request, response, next) => {
   let token = request.header("Authorization");
-  if (!token) return response.status(401).send("Access Denied");
+  if (!token)
+    token =
+      request.body.token ||
+      request.query.token ||
+      request.headers["x-access-token"];
+  if (!token)
+    return response
+      .status(403)
+      .send({ success: false, message: "No token provided. Access denied" });
   token = token.replace("Bearer ", "");
 
   try {
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
-      if (err) {
-        console.log(err);
-        response.status(403).send({ message: "Access Denied" });
-      } else {
-        request.user = decoded;
-        request.is_logged_in = true;
-        next();
-      }
-    });
+    const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
+    request.decoded = decoded;
+    next();
   } catch (err) {
-    return response.status(401).send({ message: "Invalid Token" });
+    console.error(err);
+    return response.status(401).send({
+      success: false,
+      message: "Unauthorized access. Access denied",
+    });
   }
 };

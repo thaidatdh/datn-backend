@@ -81,11 +81,18 @@ exports.add = async function (req, res) {
 };
 exports.detail = async function (req, res) {
   try {
-    const document = await documentModel.findById(req.params.document_id);
-    if (document) {
+    const options = {
+      get_patient: req.query.get_patient,
+      get_category: req.query.get_category,
+    };
+    const document = await documentModel.get(
+      { _id: req.params.document_id },
+      options
+    );
+    if (document && document.length > 0) {
       res.json({
         success: true,
-        payload: document,
+        payload: document[0],
       });
     } else {
       res.status(404).json({

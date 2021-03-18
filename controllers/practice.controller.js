@@ -32,7 +32,9 @@ exports.add = async function (req, res) {
 };
 exports.detail = async function (req, res) {
   try {
+    console.log(req.params.practice_id);
     const practice = await practiceModel.findById(req.params.practice_id);
+    console.log(practice);
     if (practice) {
       res.json({
         success: true,

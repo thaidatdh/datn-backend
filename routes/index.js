@@ -13,7 +13,7 @@ const insurerRouter = require("./insurer.route");
 const noteMacroRouter = require("./note.macro.route");
 const procedureRouter = require("./procedure.code.route");
 const referralRouter = require("./referral.route");
-
+const recallRouter = require("./recall.route");
 router.use("/patient", patientRouter);
 router.use("/staff", staffRouter);
 router.use("/specialist", specialistRouter);
@@ -28,4 +28,5 @@ router.use("/insurer", insurerRouter);
 router.use("/note-macro", noteMacroRouter);
 router.use("/procedure", procedureRouter);
 router.use("/referral", referralRouter);
+router.use("/recall", recallRouter);
 module.exports = router;
