@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const UserModel = require("../models/user.model");
 const StaffModel = require("../models/staff.model");
-const tokenList = {};
+let tokenList = {};
 exports.signin_staff = async function (req, res) {
   try {
     const user = await UserModel.findOne({
@@ -34,14 +34,28 @@ exports.signin_staff = async function (req, res) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
             const returnUser = Object.assign(user, {password: undefined});
+            const expiredTimeToken = process.env.TOKEN_EXPIRE
+              ? process.env.TOKEN_EXPIRE
+              : 3600;
+            let expiredDateToken = new Date();
+            expiredDateToken.setTime(
+              expiredDateToken.getTime() + expiredTimeToken*1000
+            );
             const token = jwt.sign(user.toJSON(), process.env.TOKEN_SECRET, {
-              expiresIn: 3600, //1h
+              expiresIn: expiredTimeToken, //1h
             });
+            const expiredTimeRefreshToken = process.env.TOKEN_EXPIRE_REFRESH
+              ? process.env.TOKEN_EXPIRE_REFRESH
+              : 86400;
+            let expiredDateRefreshToken = new Date();
+            expiredDateRefreshToken.setTime(
+              expiredDateRefreshToken.getTime() + expiredTimeRefreshToken * 1000
+            );
             const refreshToken = jwt.sign(
               user.toJSON(),
-              process.env.TOKEN_SECRET + "_REFRESH",
+              process.env.TOKEN_SECRET_REFRESH,
               {
-                expiresIn: 86400, //1d
+                expiresIn: expiredTimeRefreshToken, //1d
               }
             );
             tokenList[refreshToken] = user;
@@ -51,6 +65,8 @@ exports.signin_staff = async function (req, res) {
               user: returnUser,
               token: token,
               refreshToken: refreshToken,
+              expirationTime: expiredDateToken,
+              expirationRefreshTime: expiredDateRefreshToken,
             });
           } else {
             return res.status(403).send({
@@ -123,9 +139,9 @@ exports.refresh_token = async function (req, res) {
   const { refreshToken } = req.body;
   if (refreshToken && refreshToken in tokenList) {
     try {
-      await utils.verifyJwtToken(
+      await jwt.verify(
         refreshToken,
-        process.env.TOKEN_SECRET + "_REFRESH"
+        process.env.TOKEN_SECRET_REFRESH
       );
       const user = tokenList[refreshToken];
       if (!user) {
@@ -134,12 +150,20 @@ exports.refresh_token = async function (req, res) {
           message: "Invalid refresh token",
         });
       }
-      const token = jwt.sign(user, config.secret, {
-        expiresIn: 3600, //1h
+      const expiredTimeToken = process.env.TOKEN_EXPIRE
+        ? process.env.TOKEN_EXPIRE
+        : 3600;
+      let expiredDateToken = new Date();
+      expiredDateToken.setTime(
+        expiredDateToken.getTime() + expiredTimeToken * 1000
+      );
+      const token = jwt.sign(user.toJSON(), expiredTimeToken, {
+        expiresIn: expiredTimeToken, //1h
       });
       const response = {
         success: true,
         token: token,
+        expirationTime: expiredDateToken,
       };
       res.status(200).json(response);
     } catch (err) {

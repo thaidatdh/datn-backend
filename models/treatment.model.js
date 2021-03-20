@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-require("./treatment.plan.model")
+require("./treatment.plan.model");
 const Patient = require("./patient.model");
 const Staff = require("./staff.model");
-const Procedure = require("./procedure.code.model");
+const ProcedureModel = require("./procedure.code.model");
 const Appointment = require("./appointment.model");
 const TreatmentSchema = mongoose.Schema(
   {
@@ -26,6 +26,7 @@ const TreatmentSchema = mongoose.Schema(
       ref: "procedure_code",
       required: true,
     },
+    treatment_date: Date,
     ada_code: String,
     tooth: String,
     surface: String,
@@ -53,4 +54,138 @@ const TreatmentSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("treatment", TreatmentSchema);
+const TreatmentModel = (module.exports = mongoose.model(
+  "treatment",
+  TreatmentSchema
+));
+module.exports.get = async function (query, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = TreatmentModel.find(query);
+  // Limit
+  if (populateOptions.limit) {
+    promise.limit(Number.parseInt(populateOptions.limit));
+  }
+  if (populateOptions.get_plan) {
+    promise.populate({
+      path: "treatment_plan",
+      select: { _id: 1, name: 1, description: 1 },
+    });
+  }
+  if (populateOptions.get_patient) {
+    promise.populate({
+      path: "patient",
+      populate: {
+        path: "user",
+        select: {
+          _id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    });
+  }
+  if (populateOptions.get_staff) {
+    promise.populate({
+      path: "assistant",
+      select: {
+        staff_type: 1,
+        display_id: 1,
+        is_active: 1,
+        user: 1,
+      },
+      populate: {
+        path: "user",
+        select: {
+          _id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    });
+    promise.populate({
+      path: "provider",
+      select: {
+        staff_type: 1,
+        display_id: 1,
+        is_active: 1,
+        user: 1,
+      },
+      populate: {
+        path: "user",
+        select: {
+          _id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    });
+  }
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};
+module.exports.insert = async function (req) {
+  const Procedure = await ProcedureModel.findById(req.procedure_code);
+  if (!Procedure) {
+    return null;
+  }
+  let treatment = new TreatmentModel();
+  treatment.treatment_date = req.treatment_date
+    ? Date.parse(req.treatment_date)
+    : Date.now();
+  treatment.patient = req.patient ? req.patient : null;
+  treatment.assistant = req.assistant ? req.assistant : null;
+  treatment.provider = req.provider ? req.provider : null;
+  treatment.procedure_code = req.procedure_code ? req.procedure_code : null;
+  treatment.tooth = req.tooth ? req.tooth : null;
+  treatment.surface = req.surface ? req.surface : null;
+  treatment.discount = req.discount ? req.discount : 0;
+  treatment.insurance_amount = req.insurance_amount
+    ? req.insurance_amount
+    : null;
+  treatment.note = req.note ? req.note : null;
+  treatment.treatment_plan = req.treatment_plan ? req.treatment_plan : null;
+  treatment.appointment = req.appointment ? req.appointment : null;
+  treatment.ada_code = Procedure.ada_code;
+  treatment.fee = Procedure.fee;
+  treatment.insurance_percent = Procedure.insurance_percent;
+  treatment.description = Procedure.description;
+  treatment.mark_type = Procedure.mark_type;
+  return await treatment.save();
+};
+module.exports.updateTreatment = async function (treatment, req) {
+  const Procedure = await ProcedureModel.findById(req.procedure_code);
+  if (req.procedure_code && !Procedure) {
+    return null;
+  }
+  treatment.treatment_date = req.treatment_date
+    ? Date.parse(req.treatment_date)
+    : treatment.treatment_date;
+  treatment.patient = req.patient ? req.patient : treatment.patient;
+  treatment.assistant = req.assistant ? req.assistant : treatment.assistant;
+  treatment.provider = req.provider ? req.provider : treatment.provider;
+  treatment.procedure_code =
+    req.procedure_code && Procedure
+      ? req.procedure_code
+      : treatment.procedure_code;
+  treatment.tooth = req.tooth ? req.tooth : treatment.tooth;
+  treatment.surface = req.surface ? req.surface : treatment.surface;
+  treatment.discount = req.discount ? req.discount : treatment.discount;
+  treatment.insurance_amount = req.insurance_amount
+    ? req.insurance_amount
+    : treatment.insurance_amount;
+  treatment.note = req.note ? req.note : treatment.note;
+  treatment.treatment_plan = req.treatment_plan
+    ? req.treatment_plan
+    : treatment.treatment_plan;
+  treatment.appointment = req.appointment
+    ? req.appointment
+    : treatment.appointment;
+  if (Procedure) {
+    treatment.ada_code = Procedure.ada_code;
+    treatment.fee = Procedure.fee;
+    treatment.insurance_percent = Procedure.insurance_percent;
+    treatment.description = Procedure.description;
+    treatment.mark_type = Procedure.mark_type;
+  }
+  return await treatment.save();
+};

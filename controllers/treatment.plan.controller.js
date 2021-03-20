@@ -104,7 +104,7 @@ exports.update = async function (req, res) {
   try {
     const plan = await TreatmentPlanModel.findById(req.params.plan_id);
     if (plan) {
-      const result = await TreatmentPlanModel.updateProgressNote(plan, req.body);
+      const result = await TreatmentPlanModel.updatePlan(plan, req.body);
       res.json({
         success: true,
         payload: result,
