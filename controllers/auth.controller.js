@@ -4,6 +4,7 @@ let jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const UserModel = require("../models/user.model");
+const StaffModel = require("../models/staff.model");
 const tokenList = {};
 exports.signin_staff = async function (req, res) {
   try {
@@ -32,10 +33,11 @@ exports.signin_staff = async function (req, res) {
         user.comparePassword(req.body.password, function (err, isMatch) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
-            let token = jwt.sign(user.toJSON(), process.env.TOKEN_SECRET, {
+            const returnUser = Object.assign(user, {password: undefined});
+            const token = jwt.sign(user.toJSON(), process.env.TOKEN_SECRET, {
               expiresIn: 3600, //1h
             });
-            let refreshToken = jwt.sign(
+            const refreshToken = jwt.sign(
               user.toJSON(),
               process.env.TOKEN_SECRET + "_REFRESH",
               {
@@ -46,7 +48,7 @@ exports.signin_staff = async function (req, res) {
             // return the information including token as JSON
             return res.json({
               success: true,
-              user: user,
+              user: returnUser,
               token: token,
               refreshToken: refreshToken,
             });
@@ -76,48 +78,37 @@ exports.signin_patient = async function (req, res) {
     if (!user) {
       return res.status(403).send({
         success: false,
-        errors: [
-          {
-            msg:
-              "The username that you've entered doesn't match any patient account.",
-            param: "emailNotRegistered",
-          },
-        ],
+        message:
+          "The username that you've entered doesn't match any patient account.",
+        param: "emailNotRegistered",
       });
     } else {
       // check if password matches
       if (req.body.password.length < 8) {
         return res.status(422).send({
           success: false,
-          errors: [
-            {
-              value: req.body.password,
-              msg: "Password must be at least 8 chars long",
-              param: "password",
-              location: "body",
-            },
-          ],
+          value: req.body.password,
+          message: "Password must be at least 8 chars long",
+          param: "password",
+          location: "body",
         });
       } else {
         user.comparePassword(req.body.password, function (err, isMatch) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
-            let token = jwt.sign(JSON.stringify(user));
+            const returnUser = Object.assign(user, { password: undefined });
+            const token = jwt.sign(user.toJSON());
             // return the information including token as JSON
             return res.json({
               success: true,
-              user: user,
+              user: returnUser,
               token: token,
             });
           } else {
             return res.status(403).send({
               success: false,
-              errors: [
-                {
-                  msg: "Email or password is not correct",
-                  param: "emailPassword",
-                },
-              ],
+              message: "Email or password is not correct",
+              param: "emailPassword",
             });
           }
         });
