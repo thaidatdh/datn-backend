@@ -137,10 +137,26 @@ module.exports.updateStaff = async function (staff, staffInfo) {
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = StaffModel.find(query);
-  promise.populate("user");
+  promise.populate({
+    path: "user",
+    select: {
+      _id: 1,
+      first_name: 1,
+      last_name: 1,
+      fax: 1,
+      mobile_phone: 1,
+      home_phone: 1,
+      facebook: 1,
+      email: 1,
+      username: 1,
+      user_type: 1,
+      theme: 1,
+      language: 1,
+    },
+  });
   // Limit
   if (populateOptions.limit) {
-    promise.limit(limit);
+    promise.limit(Number.parseInt(populateOptions.limit));
   }
   // Access group
   if (populateOptions.get_access_group) {

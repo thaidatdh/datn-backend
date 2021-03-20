@@ -7,6 +7,8 @@ exports.index = async function (req, res) {
     const options = {
       get_hohh: req.query.get_hohh,
       get_provider: req.query.get_provider,
+      limit: req.query.limit,
+      page: req.query.page
     };
     const patientList = await PatientModel.get(
       {},

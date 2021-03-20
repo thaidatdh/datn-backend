@@ -107,7 +107,7 @@ exports.index_category = async function (req, res) {
     const result = [...categories];
     if (options.get_codes) {
       for (let i = 0; i < categories.length; i++) {
-        result[i].procedure_code = categories[i].procedure_code;
+        result[i].procedure_code = [...categories[i].procedure_code];
       }
     }
     res.json({
@@ -135,7 +135,7 @@ exports.category_by_id = async function (req, res) {
           ? Object.assign({}, category[0]._doc)
           : null;
       if (options.get_codes && result) {
-        result.procedure_code = category.procedure_code;
+        result.procedure_code = [...category.procedure_code];
       }
       res.json({
         success: true,

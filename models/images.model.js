@@ -23,7 +23,7 @@ module.exports.get = async function (query, populateOptions) {
   const promise = ImageModel.find(query);
   // Limit
   if (populateOptions.limit) {
-    promise.limit(limit);
+    promise.limit(Number.parseInt(populateOptions.limit));
   }
   const resultQuery = await promise.exec();
   return resultQuery;

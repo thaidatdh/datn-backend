@@ -30,6 +30,15 @@ module.exports.insert = async function (toothInfo) {
   tooth.tooth_type = toothInfo.tooth_type ? toothInfo.tooth_type : "ADULT";
   return await tooth.save();
 };
+module.exports.updateTooth = async function (tooth, toothInfo) {
+  tooth.tooth_note = toothInfo.tooth_note !== undefined
+    ? toothInfo.tooth_note
+    : tooth.tooth_note;
+  tooth.tooth_type = toothInfo.tooth_type
+    ? toothInfo.tooth_type
+    : tooth.tooth_type;
+  return await tooth.save();
+};
 
 module.exports.init_tooth_for_patient = async function (patient_id, tooth_type) {
   let toothList = [];

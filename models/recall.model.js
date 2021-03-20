@@ -42,10 +42,20 @@ module.exports.get = async function (query, populateOptions) {
   const promise = RecallModel.find(query);
   // Limit
   if (populateOptions.limit) {
-    promise.limit(limit);
+    promise.limit(Number.parseInt(populateOptions.limit));
   }
   if (populateOptions.get_patient) {
-    promise.populate("patient");
+    promise.populate({
+      path: "patient",
+      populate: {
+        path: "user",
+        select: {
+          _id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    });
   }
   if (populateOptions.get_treatment) {
     promise.populate("treatment");

@@ -35,13 +35,39 @@ module.exports.get = async function (query, populateOptions) {
   const promise = ReferralModel.find(query);
   // Limit
   if (populateOptions.limit) {
-    promise.limit(limit);
+    promise.limit(Number.parseInt(populateOptions.limit));
   }
   if (populateOptions.get_patient) {
-    promise.populate("patient");
+    promise.populate({
+      path: "patient",
+      populate: {
+        path: "user",
+        select: {
+          _id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    });
   }
   if (populateOptions.get_staff) {
-    promise.populate("staff");
+    promise.populate({
+      path: "staff",
+      select: {
+        staff_type: 1,
+        display_id: 1,
+        is_active: 1,
+        user: 1,
+      },
+      populate: {
+        path: "user",
+        select: {
+          _id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    });
   }
   if (populateOptions.get_source) {
     promise.populate("referral_source");

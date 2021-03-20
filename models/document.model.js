@@ -63,7 +63,7 @@ module.exports.get = async function (query, populateOptions) {
   const promise = DocumentModel.find(query);
   // Limit
   if (populateOptions.limit) {
-    promise.limit(limit);
+    promise.limit(Number.parseInt(populateOptions.limit));
   }
   if (populateOptions.get_patient) {
     promise.populate({

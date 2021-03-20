@@ -114,6 +114,25 @@
             }
           }
         }
+      },
+      "200_Delete": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Delete Successfully"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "schemas": {
@@ -1290,7 +1309,7 @@
           },
           "tooth_number": {
             "type": "number",
-            "example": "0.0"
+            "example": 1
           },
           "tooth_note": {
             "type": "string",
@@ -1438,6 +1457,10 @@
     {
       "name": "Patient Recall",
       "description": "Everything about Patient Recall"
+    },
+    {
+      "name": "Patient Tooth",
+      "description": "Everything about Patient Tooth"
     },
     {
       "name": "Specialists",
@@ -1723,23 +1746,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -1999,23 +2006,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -2255,23 +2246,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -2519,23 +2494,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -2807,23 +2766,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -3241,23 +3184,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -3489,23 +3416,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -3771,23 +3682,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -4055,23 +3950,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -4101,7 +3980,7 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "True would get head_of_household as json object"
+            "description": "True would get head_of_household as json object (optional)"
           },
           {
             "name": "get_provider",
@@ -4110,7 +3989,25 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "True would get provider as json object"
+            "description": "True would get provider as json object (optional)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "number of record (optional)"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "page index (optional - null if get all)"
           }
         ],
         "responses": {
@@ -4582,23 +4479,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -5363,23 +5244,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -5651,23 +5516,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -5947,23 +5796,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -6024,6 +5857,443 @@
           },
           "403": {
             "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/tooth": {
+      "get": {
+        "tags": ["Patient Tooth"],
+        "summary": "Retrieve a list of tooth",
+        "description": "Retrieve a list of tooth from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Tooth"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Tooth"],
+        "summary": "Insert new tooth",
+        "description": "Insert new tooth",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "tooth_number": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "tooth_note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "tooth_type": {
+                    "type": "string",
+                    "example": "ADULT"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Referral"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/tooth/{tooth_id}": {
+      "get": {
+        "tags": ["Patient Tooth"],
+        "summary": "Get tooth detail",
+        "description": "Get tooth detail",
+        "parameters": [
+          {
+            "name": "tooth_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Tooth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Tooth"],
+        "summary": "Update tooth",
+        "description": "Update tooth",
+        "parameters": [
+          {
+            "name": "tooth_id",
+            "in": "path",
+            "description": "Tooth ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "tooth_number": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "tooth_note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "tooth_type": {
+                    "type": "string",
+                    "example": "ADULT"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Tooth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Patient Tooth"],
+        "summary": "Delete tooth ",
+        "description": "Delete tooth",
+        "parameters": [
+          {
+            "name": "tooth_id",
+            "in": "path",
+            "description": "Tooth ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/tooth/patient/{patient_id}": {
+      "get": {
+        "tags": ["Patient Tooth"],
+        "summary": "Retrieve a list of tooth of a Patient",
+        "description": "Retrieve a list of tooth of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Tooth"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/tooth/patient/{patient_id}/{tooth_number}": {
+      "get": {
+        "tags": ["Patient Tooth"],
+        "summary": "Retrieve a tooth of a Patient",
+        "description": "Retrieve a tooth of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tooth_number",
+            "in": "path",
+            "required": true,
+            "description": "Tooth Number from 1 to 32",
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Tooth"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Tooth"],
+        "summary": "Update a tooth of a Patient",
+        "description": "Update a tooth of a Patient",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tooth_number",
+            "in": "path",
+            "required": true,
+            "description": "Tooth Number from 1 to 32",
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "tooth_note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "tooth_type": {
+                    "type": "string",
+                    "example": "ADULT"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Tooth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
           }
         }
       }
@@ -6299,23 +6569,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -6593,23 +6847,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -6914,23 +7152,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -6974,24 +7196,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "payload": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Appointments"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -7232,23 +7437,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"
@@ -7538,23 +7727,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "default": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "default": "Delete Successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/200_Delete"
           },
           "500": {
             "$ref": "#/components/responses/500_ActionFailed"

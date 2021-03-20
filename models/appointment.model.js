@@ -64,7 +64,7 @@ module.exports.get = async function (query, populateOptions) {
   promise.populate("chair");
   // Limit
   if (populateOptions.limit) {
-    promise.limit(limit);
+    promise.limit(Number.parseInt(populateOptions.limit));
   }
 
   const resultQuery = await promise.exec();
@@ -88,7 +88,7 @@ module.exports.getById = async function (id, populateOptions) {
   promise.populate("chair");
   // Limit
   if (populateOptions.limit) {
-    promise.limit(limit);
+    promise.limit(Number.parseInt(populateOptions.limit));
   }
 
   const resultQuery = await promise.exec();
