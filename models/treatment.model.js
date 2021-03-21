@@ -160,26 +160,31 @@ module.exports.updateTreatment = async function (treatment, req) {
   treatment.treatment_date = req.treatment_date
     ? Date.parse(req.treatment_date)
     : treatment.treatment_date;
-  treatment.patient = req.patient ? req.patient : treatment.patient;
-  treatment.assistant = req.assistant ? req.assistant : treatment.assistant;
-  treatment.provider = req.provider ? req.provider : treatment.provider;
+  treatment.patient = req.patient !== undefined ? req.patient : treatment.patient;
+  treatment.assistant =
+    req.assistant !== undefined ? req.assistant : treatment.assistant;
+  treatment.provider =
+    req.provider !== undefined ? req.provider : treatment.provider;
   treatment.procedure_code =
     req.procedure_code && Procedure
       ? req.procedure_code
       : treatment.procedure_code;
-  treatment.tooth = req.tooth ? req.tooth : treatment.tooth;
-  treatment.surface = req.surface ? req.surface : treatment.surface;
-  treatment.discount = req.discount ? req.discount : treatment.discount;
-  treatment.insurance_amount = req.insurance_amount
-    ? req.insurance_amount
-    : treatment.insurance_amount;
-  treatment.note = req.note ? req.note : treatment.note;
-  treatment.treatment_plan = req.treatment_plan
-    ? req.treatment_plan
-    : treatment.treatment_plan;
-  treatment.appointment = req.appointment
-    ? req.appointment
-    : treatment.appointment;
+  treatment.tooth = req.tooth !== undefined ? req.tooth : treatment.tooth;
+  treatment.surface =
+    req.surface !== undefined ? req.surface : treatment.surface;
+  treatment.discount =
+    req.discount !== undefined ? req.discount : treatment.discount;
+  treatment.insurance_amount =
+    req.insurance_amount !== undefined
+      ? req.insurance_amount
+      : treatment.insurance_amount;
+  treatment.note = req.note !== undefined ? req.note : treatment.note;
+  treatment.treatment_plan =
+    req.treatment_plan !== undefined
+      ? req.treatment_plan
+      : treatment.treatment_plan;
+  treatment.appointment =
+    req.appointment !== undefined ? req.appointment : treatment.appointment;
   if (Procedure) {
     treatment.ada_code = Procedure.ada_code;
     treatment.fee = Procedure.fee;
