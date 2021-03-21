@@ -122,7 +122,15 @@ exports.appointments_index = async function (req, res) {
     const options = {
       limit: req.query.limit,
     };
-    const appointments = await appointmentModel.get({}, options);
+    let query = {};
+    if (req.query.date) {
+      const startDate = new Date(req.query.date);
+      const endDate = startDate.setDate(startDate.getDate() + 1);
+      query = {
+        appointment_date: { $gte: startDate, $lt: endDate },
+      };
+    }
+    const appointments = await appointmentModel.get(query, options);
     res.json({
       success: true,
       payload: appointments,
@@ -247,7 +255,15 @@ exports.delete_appointment = async function (req, res) {
 //Appointment Blocks
 exports.block_index = async function (req, res) {
   try {
-    const blocks = await blockModel.find();
+    let query = {};
+    if (req.query.date) {
+      const startDate = new Date(req.query.date);
+      const endDate = startDate.setDate(startDate.getDate() + 1);
+      query = {
+        block_date: { $gte: startDate, $lt: endDate },
+      };
+    }
+    const blocks = await blockModel.find(query);
     res.json({
       success: true,
       payload: blocks,

@@ -1,5 +1,5 @@
 let router = require("express").Router();
-let MouthTemplateController = require("../controllers/mouth.template..controller");
+let MouthTemplateController = require("../controllers/mouth.template.controller");
 router.route("/").get(MouthTemplateController.index).post(MouthTemplateController.add);
 router
   .route("/:mouth_id")

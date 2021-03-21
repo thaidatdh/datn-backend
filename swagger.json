@@ -6878,6 +6878,16 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "date",
+            "description": "Appointment Date - Optional. Null if get all. Set if want to get specific date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2021-01-01"
+            }
           }
         ],
         "responses": {
@@ -7459,7 +7469,27 @@
         "tags": ["Appointment Blocks"],
         "summary": "Retrieve a list of appointment blocks",
         "description": "Retrieve a list of appointments from database.",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "date",
+            "description": "Appointment Date - Optional. Null if get all. Set if want to get specific date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2021-01-01"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
