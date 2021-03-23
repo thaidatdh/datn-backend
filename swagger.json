@@ -5861,6 +5861,1633 @@
         }
       }
     },
+    "/insurance": {
+      "get": {
+        "tags": ["Patient Insurance"],
+        "summary": "Retrieve a list of Insurance",
+        "description": "Retrieve a list of Insurance from database.",
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_insurer",
+            "description": "Get insurer as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Patient_insurance"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Insurance"],
+        "summary": "Insert new Insurance",
+        "description": "Insert new Insurance",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "insurer": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "reset_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Patient_insurance"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/insurance/{insurance_id}": {
+      "get": {
+        "tags": ["Patient Insurance"],
+        "summary": "Get Insurance detail",
+        "description": "Get Insurance detail",
+        "parameters": [
+          {
+            "name": "insurance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_insurer",
+            "description": "Get insurer as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Patient_insurance"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Patient Insurance"],
+        "summary": "Update Insurance",
+        "description": "Update Insurance",
+        "parameters": [
+          {
+            "name": "insurance_id",
+            "in": "path",
+            "description": "Insurance ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "insurer": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "reset_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Patient_insurance"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Patient Referral"],
+        "summary": "Delete Referral ",
+        "description": "Delete Referral",
+        "parameters": [
+          {
+            "name": "referral_id",
+            "in": "path",
+            "description": "Referral ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/insurance/patient/{patient_id}": {
+      "get": {
+        "tags": ["Patient Insurance"],
+        "summary": "Retrieve a list of Insurance of a Patient",
+        "description": "Retrieve a list of Insurance of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_insurer",
+            "description": "Get insurer as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Patient_insurance"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/treatment-plan": {
+      "get": {
+        "tags": ["Treatment Plans"],
+        "summary": "Retrieve a list of Treatment Plans",
+        "description": "Retrieve a list of Treatment Plans from database.",
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_treatment",
+            "description": "Get treatment list as json array",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Treatment_plans"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Treatment Plans"],
+        "summary": "Insert new Treatment Plan",
+        "description": "Insert new Treatment Plan",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Treatment_plans"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/treatment-plan/{plan_id}": {
+      "get": {
+        "tags": ["Treatment Plans"],
+        "summary": "Get Treatment Plan detail",
+        "description": "Get Treatment Plan detail",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_treatment",
+            "description": "Get treatment list as json array",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Treatment_plans"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Treatment Plans"],
+        "summary": "Update Treatment Plan",
+        "description": "Update Treatment Plan",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "description": "Treatment Plan ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Treatment_plans"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Treatment Plans"],
+        "summary": "Delete Treatment Plan ",
+        "description": "Delete Treatment Plan",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "description": "Treatment Plan ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/treatment-plan/patient/{patient_id}": {
+      "get": {
+        "tags": ["Treatment Plans"],
+        "summary": "Retrieve a list of Treatment Plans of a Patient",
+        "description": "Retrieve a list of Treatment Plans of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_treatment",
+            "description": "Get treatment list as json array",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Treatment_plans"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/treatment": {
+      "get": {
+        "tags": ["Treatments"],
+        "summary": "Retrieve a list of Treatment",
+        "description": "Retrieve a list of Treatment from database.",
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_staff",
+            "description": "Get Provider/assistant as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_plan",
+            "description": "Get plan as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Treatments"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Treatments"],
+        "summary": "Insert new Treatment",
+        "description": "Insert new Treatment",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "assistant": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "procedure_code": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "tooth": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "surface": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "treatment_plan": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "appointment": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Treatments"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/treatment/{treatment_id}": {
+      "get": {
+        "tags": ["Treatments"],
+        "summary": "Get Treatment detail",
+        "description": "Get Treatment detail",
+        "parameters": [
+          {
+            "name": "treatment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_staff",
+            "description": "Get Provider/assistant as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_plan",
+            "description": "Get plan as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Treatments"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Treatments"],
+        "summary": "Update Treatment",
+        "description": "Update Treatment",
+        "parameters": [
+          {
+            "name": "treatment_id",
+            "in": "path",
+            "description": "Treatment ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "assistant": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "procedure_code": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "tooth": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "surface": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "treatment_plan": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "appointment": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Treatments"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Treatments"],
+        "summary": "Delete Treatment ",
+        "description": "Delete Treatment",
+        "parameters": [
+          {
+            "name": "treatment_id",
+            "in": "path",
+            "description": "Treatment ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/treatment/patient/{patient_id}": {
+      "get": {
+        "tags": ["Treatments"],
+        "summary": "Retrieve a list of Treatments of a Patient",
+        "description": "Retrieve a list of Treatments of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_staff",
+            "description": "Get Provider/assistant as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_plan",
+            "description": "Get plan as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Treatments"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/progress-note": {
+      "get": {
+        "tags": ["Progress Note"],
+        "summary": "Retrieve a list of Progress Note",
+        "description": "Retrieve a list of Progress Note from database.",
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_provider",
+            "description": "Get provider as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Progress_note"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Progress Note"],
+        "summary": "Insert new Progress Note",
+        "description": "Insert new Progress Note",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "note_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "tooth": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "surface": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Progress_note"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/progress-note/{note_id}": {
+      "get": {
+        "tags": ["Progress Note"],
+        "summary": "Get Progress Note detail",
+        "description": "Get Progress Note detail",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_provider",
+            "description": "Get provider as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Progress_note"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Progress Note"],
+        "summary": "Update Progress Note",
+        "description": "Update Progress Note",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "description": "Progress Note ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "note_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "tooth": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "surface": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Progress_note"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Progress Note"],
+        "summary": "Delete Progress Note ",
+        "description": "Delete Progress Note",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "description": "Progress Note ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/progress-note/patient/{patient_id}": {
+      "get": {
+        "tags": ["Progress Note"],
+        "summary": "Retrieve a list of Progress Note of a Patient",
+        "description": "Retrieve a list of Progress Note of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of record - Optional",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "get_patient",
+            "description": "Get Patient as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "get_provider",
+            "description": "Get provider as json object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Progress_note"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
     "/tooth": {
       "get": {
         "tags": ["Patient Tooth"],

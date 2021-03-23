@@ -7,7 +7,7 @@ router
   .post(TreatmentController.update)
   .delete(TreatmentController.delete);
 router.route("/patient/:patient_id").get(TreatmentController.patient_treatment);
-router
+/*router
   .route("/patient/:patient_id/:plan_id")
-  .get(TreatmentController.patient_treatment_plan);
+  .get(TreatmentController.patient_treatment_plan);*/
 module.exports = router;

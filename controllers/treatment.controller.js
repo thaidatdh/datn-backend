@@ -49,7 +49,7 @@ exports.patient_treatment = async function (req, res) {
     });
   }
 };
-exports.patient_treatment_plan = async function (req, res) {
+/*exports.patient_treatment_plan = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
@@ -74,7 +74,7 @@ exports.patient_treatment_plan = async function (req, res) {
       exeption: err,
     });
   }
-};
+};*/
 exports.add = async function (req, res) {
   try {
     if (req.body.patient == null || req.body.procedure_code == null) {
