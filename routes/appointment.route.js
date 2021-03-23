@@ -1,17 +1,14 @@
 let router = require("express").Router();
 let appointmentController = require("../controllers/appointment.controller");
 router
-  .route("/")
-  .get(appointmentController.appointments_index)
-  .post(appointmentController.add_appointment);
+  .route("/block")
+  .get(appointmentController.block_index)
+  .post(appointmentController.add_block);
 router
-  .route("/:appointment_id")
-  .get(appointmentController.appointment_info)
-  .post(appointmentController.update_appointment)
-  .delete(appointmentController.delete_appointment);
-router
-  .route("/patient/:patient_id")
-  .get(appointmentController.appointments_of_patient);
+  .route("/block/:appointment_block_id")
+  .get(appointmentController.block_info)
+  .post(appointmentController.update_block)
+  .delete(appointmentController.delete_block);
 router
   .route("/chair")
   .get(appointmentController.chair_index)
@@ -22,12 +19,15 @@ router
   .post(appointmentController.update_chair)
   .delete(appointmentController.delete_chair);
 router
-  .route("/block")
-  .get(appointmentController.block_index)
-  .post(appointmentController.add_block);
+  .route("/patient/:patient_id")
+  .get(appointmentController.appointments_of_patient);
 router
-  .route("/block/:appointment_block_id")
-  .get(appointmentController.block_info)
-  .post(appointmentController.update_block)
-  .delete(appointmentController.delete_block);
+  .route("/")
+  .get(appointmentController.appointments_index)
+  .post(appointmentController.add_appointment);
+router
+  .route("/:appointment_id")
+  .get(appointmentController.appointment_info)
+  .post(appointmentController.update_appointment)
+  .delete(appointmentController.delete_appointment);
 module.exports = router;

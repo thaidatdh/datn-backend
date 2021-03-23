@@ -280,10 +280,17 @@ exports.block_info = async function (req, res) {
   const appointment_id = req.params.appointment_block_id;
   try {
     const block = await blockModel.findById(appointment_id);
-    res.json({
-      success: true,
-      payload: block,
-    });
+    if (block) {
+      return res.json({
+        success: true,
+        payload: block,
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment Block not found",
+      });
+    }
   } catch (err) {
     res.status(500).json({
       success: false,
