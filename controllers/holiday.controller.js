@@ -1,6 +1,7 @@
 //Import User Model
 const mongoose = require("mongoose");
 const holidayModel = require("../models/holiday.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -12,7 +13,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get holiday list failed",
+      message: await translator.Translate("Get holiday list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -28,7 +29,7 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert holiday failed",
+      message: await translator.Translate("Insert holiday failed", req.query.lang),
       exeption: err,
     });
   }

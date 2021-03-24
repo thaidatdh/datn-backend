@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const MouthTemplateModel = require("../models/image.mouth.template.model");
 const FrameTemplateModel = require("../models/image.frame.template.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -23,7 +24,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get mouth list failed",
+      message: await translator.Translate("Get mouth list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -33,7 +34,7 @@ exports.add = async function (req, res) {
     if (req.body.patient == null) {
       return res.status(400).json({
         success: false,
-        message: "Insert mouth failed. Require patient",
+        message: await translator.Translate("Insert mouth failed. Require patient", req.query.lang),
       });
     }
     const rs = MouthTemplateModel.insertWithFrames(req.body);
@@ -41,7 +42,7 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert mouth failed",
+      message: await translator.Translate("Insert mouth failed", req.query.lang),
       exeption: err,
     });
   }
@@ -60,13 +61,13 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Image Mouth not found",
+        message: await translator.Translate("Image Mouth not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message: await translator.Translate("Get detail failed", req.query.lang),
       exeption: err,
     });
   }
@@ -83,13 +84,13 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Image Mouth not found",
+        message: await translator.Translate("Image Mouth not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message:  await translator.Translate("Update failed", req.query.lang),
       exeption: err,
     });
   }
@@ -105,13 +106,13 @@ exports.delete = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Image Mouth not found",
+        message: await translator.Translate("Image Mouth not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Delete failed",
+      message: await translator.Translate("Delete failed", req.query.lang),
       exeption: err,
     });
   }
@@ -121,7 +122,7 @@ exports.add_frame = async function (req, res) {
     if (req.body.patient == null) {
       return res.status(400).json({
         success: false,
-        message: "Insert frame failed. Require patient",
+        message: await translator.Translate("Insert frame failed. Require patient", req.query.lang),
       });
     }
     const rs = FrameTemplateModel.insert(req.body);
@@ -129,7 +130,7 @@ exports.add_frame = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert frame failed",
+      message: await translator.Translate("Insert frame failed", req.query.lang),
       exeption: err,
     });
   }
@@ -145,13 +146,13 @@ exports.detail_frame = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Image Frame not found",
+        message: await translator.Translate("Image Frame not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message: await translator.Translate("Get detail failed", req.query.lang),
       exeption: err,
     });
   }
@@ -168,13 +169,13 @@ exports.update_frame = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Image Frame not found",
+        message: await translator.Translate("Image Frame not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message:  await translator.Translate("Update failed", req.query.lang),
       exeption: err,
     });
   }
@@ -190,13 +191,13 @@ exports.delete_frame = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Image Frame not found",
+        message: await translator.Translate("Image Frame not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Delete failed",
+      message: await translator.Translate("Delete failed", req.query.lang),
       exeption: err,
     });
   }

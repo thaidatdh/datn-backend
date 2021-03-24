@@ -1,6 +1,7 @@
 //Import User Model
 const mongoose = require("mongoose");
 const TreatmentModel = require("../models/treatment.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -18,7 +19,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get Treatment list failed",
+      message: await translator.Translate("Get Treatment list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -44,7 +45,7 @@ exports.patient_treatment = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get Treatment list of patient " + patient_id + "failed",
+      message: await translator.Translate("Get Treatment list of patient " + patient_id + "failed", req.query.lang),
       exeption: err,
     });
   }
@@ -70,7 +71,7 @@ exports.patient_treatment = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get Treatment list of Plan of patient " + patient_id + "failed",
+      message: await translator.Translate("Get Treatment list of Plan of patient " + patient_id + "failed", req.query.lang),
       exeption: err,
     });
   }
@@ -80,7 +81,7 @@ exports.add = async function (req, res) {
     if (req.body.patient == null || req.body.procedure_code == null) {
       return res.status(400).json({
         success: false,
-        message: "Insert Treatment failed. Require patient and procedure",
+        message: await translator.Translate("Insert Treatment failed. Require patient and procedure", req.query.lang),
       });
     }
     const rs = TreatmentModel.insert(req.body);
@@ -89,13 +90,13 @@ exports.add = async function (req, res) {
     } else {
       return res.status(400).json({
         success: false,
-        message: "Insert Treatment failed. Require procedure",
+        message: await translator.Translate("Insert Treatment failed. Require procedure", req.query.lang),
       });
     }
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert Treatment failed",
+      message: await translator.Translate("Insert Treatment failed", req.query.lang),
       exeption: err,
     });
   }
@@ -119,13 +120,13 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Treatment not found",
+        message: await translator.Translate("Treatment not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message: await translator.Translate("Get detail failed", req.query.lang),
       exeption: err,
     });
   }
@@ -143,19 +144,19 @@ exports.update = async function (req, res) {
       } else {
         return res.status(400).json({
           success: false,
-          message: "Insert Treatment failed. Require valid procedure",
+          message: await translator.Translate("Insert Treatment failed. Require valid procedure", req.query.lang),
         });
       }
     } else {
       res.status(404).json({
         success: false,
-        message: "Treatment not found",
+        message: await translator.Translate("Treatment not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message:  await translator.Translate("Update failed", req.query.lang),
       exeption: err,
     });
   }
@@ -171,13 +172,13 @@ exports.delete = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Treatment not found",
+        message: await translator.Translate("Treatment not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Delete failed",
+      message: await translator.Translate("Delete failed", req.query.lang),
       exeption: err,
     });
   }

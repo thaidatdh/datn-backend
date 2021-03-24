@@ -1,6 +1,7 @@
 //Import User Model
 const mongoose = require("mongoose");
 const NoteMacroModel = require("../models/note.macro.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -12,7 +13,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get note macro list failed",
+      message: await translator.Translate("Get note macro list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -28,7 +29,7 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert note macro failed",
+      message: await translator.Translate("Insert note macro failed", req.query.lang),
       exeption: err,
     });
   }
@@ -44,13 +45,13 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Note Macro not found",
+        message: await translator.Translate("Note Macro not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message: await translator.Translate("Get detail failed", req.query.lang),
       exeption: err,
     });
   }
@@ -71,13 +72,13 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Macro not found",
+        message: await translator.Translate("Macro not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message:  await translator.Translate("Update failed", req.query.lang),
       exeption: err,
     });
   }
@@ -91,7 +92,7 @@ exports.delete = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Delete failed",
+      message: await translator.Translate("Delete failed", req.query.lang),
       exeption: err,
     });
   }

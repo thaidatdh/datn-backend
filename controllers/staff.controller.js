@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const StaffModel = require("../models/staff.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -20,7 +21,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get staff list failed",
+      message: await translator.Translate("Get staff list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -42,7 +43,7 @@ exports.index_provider = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get provider list failed",
+      message: await translator.Translate("Get provider list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -64,7 +65,7 @@ exports.index_staff = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get staff list failed",
+      message: await translator.Translate("Get staff list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -78,7 +79,7 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert staff failed",
+      message: await translator.Translate("Insert staff failed", req.query.lang),
       exeption: err,
     });
   }
@@ -98,13 +99,13 @@ exports.staff = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Staff not found",
+        message: await translator.Translate("Staff not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Find Staff failed",
+      message: await translator.Translate("Find Staff failed", req.query.lang),
       exeption: err,
     });
   }
@@ -122,13 +123,13 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Staff not found",
+        message: await translator.Translate("Staff not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Find Staff failed",
+      message: await translator.Translate("Find Staff failed", req.query.lang),
       exeption: err,
     });
   }
@@ -141,18 +142,18 @@ exports.delete = async function (req, res) {
       await userModel.delete({ _id: staff.user });
       res.json({
         success: true,
-        message: "Delete Successfully",
+        message: await translator.Translate("Delete Successfully", req.query.lang),
       });
     } else {
       res.status(404).json({
         success: false,
-        message: "Staff not found",
+        message: await translator.Translate("Staff not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Delete failed",
+      message: await translator.Translate("Delete failed", req.query.lang),
       exeption: err,
     });
   }

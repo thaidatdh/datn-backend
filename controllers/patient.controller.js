@@ -1,6 +1,7 @@
 //Import User Model
 const mongoose = require("mongoose");
 const PatientModel = require("../models/patient.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -21,7 +22,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get patient list failed",
+      message: await translator.Translate("Get patient list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -35,7 +36,7 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert patient failed",
+      message: await translator.Translate("Insert patient failed", req.query.lang),
       exeption: err,
     });
   }
@@ -53,13 +54,13 @@ exports.patient = async function (req, res) {
     } else {
       return res.status(404).json({
         success: false,
-        message: "Patient not found",
+        message: await translator.Translate("Patient not found", req.query.lang),
       });
     }
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Get patient failed",
+      message: await translator.Translate("Get patient faile", req.query.lang),//"d",
       exeption: err,
     });
   }
@@ -74,13 +75,13 @@ exports.update = async function (req, res) {
     } else {
       return res.status(404).json({
         success: false,
-        message: "Patient not found",
+        message: await translator.Translate("Patient not found", req.query.lang),
       });
     }
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Update patient failed",
+      message: await translator.Translate("Update patient failed", req.query.lang),
       exeption: err,
     });
   }
@@ -93,18 +94,18 @@ exports.delete = async function (req, res) {
       await userModel.delete({ _id: patient.user });
       res.json({
         success: true,
-        message: "Delete Successfully",
+        message: await translator.Translate("Delete Successfully", req.query.lang),
       });
     } else {
       res.status(404).json({
         success: false,
-        message: "Patient not found",
+        message: await translator.Translate("Patient not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Delete failed",
+      message: await translator.Translate("Delete failed", req.query.lang),
       exeption: err,
     });
   }

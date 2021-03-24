@@ -12,7 +12,13 @@ exports.verifyUser = async (request, response, next) => {
   if (!token)
     return response
       .status(403)
-      .send({ success: false, message: "No token provided. Access denied" });
+      .send({
+        success: false,
+        message: await translator.Translate(
+          "No token provided. Access denied",
+          request.query.lang
+        ),
+      });
   token = token.replace("Bearer ", "");
 
   try {
@@ -23,7 +29,10 @@ exports.verifyUser = async (request, response, next) => {
     console.error(err);
     return response.status(401).send({
       success: false,
-      message: "Unauthorized access. Access denied",
+      message: await translator.Translate(
+        "Unauthorized access. Access denied",
+        request.query.lang
+      ),
     });
   }
 };

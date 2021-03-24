@@ -1,6 +1,7 @@
 //Import User Model
 const mongoose = require("mongoose");
 const RecallModel = require("../models/recall.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -19,7 +20,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get recall list failed",
+      message: await translator.Translate("Get recall list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -43,7 +44,7 @@ exports.patient_recall = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get recall list of patient " + patient_id + "failed",
+      message: await translator.Translate("Get recall list of patient " + patient_id + "failed", req.query.lang),
       exeption: err,
     });
   }
@@ -53,7 +54,7 @@ exports.add = async function (req, res) {
     if (req.body.patient == null) {
       return res.json({
         success: false,
-        message: "Insert recall failed. Require patient",
+        message: await translator.Translate("Insert recall failed. Require patient", req.query.lang),
       });
     }
     const rs = RecallModel.insert(req.body);
@@ -61,7 +62,7 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert recall failed",
+      message: await translator.Translate("Insert recall failed", req.query.lang),
       exeption: err,
     });
   }
@@ -77,13 +78,13 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Recall not found",
+        message: await translator.Translate("Recall not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message: await translator.Translate("Get detail failed", req.query.lang),
       exeption: err,
     });
   }
@@ -100,13 +101,13 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Referral not found",
+        message: await translator.Translate("Recall not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message:  await translator.Translate("Update failed", req.query.lang),
       exeption: err,
     });
   }
@@ -122,13 +123,13 @@ exports.delete = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Recall not found",
+        message: await translator.Translate("Recall not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Delete failed",
+      message: await translator.Translate("Delete failed", req.query.lang),
       exeption: err,
     });
   }

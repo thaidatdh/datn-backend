@@ -1,6 +1,7 @@
 //Import User Model
 const mongoose = require("mongoose");
 const accessModel = require("../models/access.group.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -12,7 +13,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get access group list failed",
+      message: await translator.Translate("Get access group list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -27,7 +28,7 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert access group failed",
+      message: await translator.Translate("Insert access group failed", req.query.lang),
       exeption: err,
     });
   }

@@ -1,6 +1,7 @@
 //Import User Model
 const mongoose = require("mongoose");
 const referralSourceModel = require("../models/referral.source.model");
+const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -12,7 +13,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Get referral source list failed",
+      message: await translator.Translate("Get referral source list failed", req.query.lang),
       exeption: err,
     });
   }
@@ -25,7 +26,7 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Insert referral source failed",
+      message: await translator.Translate("Insert referral source failed", req.query.lang),
       exeption: err,
     });
   }
@@ -42,13 +43,13 @@ exports.source = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Referral source not found",
+        message: await translator.Translate("Referral source not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message: await translator.Translate("Get detail failed", req.query.lang),
       exeption: err,
     });
   }
@@ -66,13 +67,13 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: "Referral source not found",
+        message: await translator.Translate("Referral source not found", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Update failed",
+      message:  await translator.Translate("Update failed", req.query.lang),
       exeption: err,
     });
   }
@@ -86,7 +87,7 @@ exports.delete = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Delete failed",
+      message: await translator.Translate("Delete failed", req.query.lang),
       exeption: err,
     });
   }

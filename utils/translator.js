@@ -1,3 +1,5 @@
+const translatte = require("translatte");
+const languages = require("translatte/languages");
 const Dictionary = (module.exports = {
   en: {
     FAILED: "failed",
@@ -23,6 +25,13 @@ const Dictionary = (module.exports = {
   },
 });
 const SUPPORTED_LANGUAGES = ["en", "vi"];
+const getValidLanguage = (module.exports.validLanguage = (lang) => {
+  let language = lang;
+  if (!language || !languages.isSupported(lang)) {
+    language = "en";
+  }
+  return language;
+});
 module.exports.FailedMessage = (action, object, lang) => {
   const elements = [
     Dictionary[lang][action],
@@ -35,10 +44,12 @@ module.exports.NotFoundMessage = (object, lang) => {
   const elements = [object, Dictionary[lang]["NOT_FOUND"]];
   return elements.join(" ");
 };
-module.exports.isValidLanguage = (lang) => {
-  let language = lang;
-  if (!language) {
-    language = "en";
+module.exports.Translate = async (text, lang) => {
+  try {
+    const result = await translatte(text, { from: "en", to: getValidLanguage(lang) });
+    return result.text;
+  } catch (err) {
+    console.log(err);
+    return text;
   }
-  return SUPPORTED_LANGUAGES.includes(language.toLowerCase());
 };

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const UserModel = require("../models/user.model");
 const StaffModel = require("../models/staff.model");
+const translator = require("../utils/translator");
 let tokenList = {};
 exports.signin_staff = async function (req, res) {
   try {
@@ -25,7 +26,7 @@ exports.signin_staff = async function (req, res) {
         return res.status(422).send({
           success: false,
           value: req.body.password,
-          message: "Password must be at least 8 chars long",
+          message: await translator.Translate("Password must be at least 8 chars long", req.query.lang),
           param: "password",
           location: "body",
         });
@@ -71,7 +72,7 @@ exports.signin_staff = async function (req, res) {
           } else {
             return res.status(403).send({
               success: false,
-              message: "Email or password is not correct",
+              message: await translator.Translate("Email or password is not correct", req.query.lang),
               param: "emailPassword",
             });
           }
@@ -81,7 +82,7 @@ exports.signin_staff = async function (req, res) {
   } catch (err) {
     return res.status(500).send({
       success: false,
-      message: "Internal server error",
+      message: await translator.Translate("Internal server error", req.query.lang),
     });
   }
 };
@@ -104,7 +105,7 @@ exports.signin_patient = async function (req, res) {
         return res.status(422).send({
           success: false,
           value: req.body.password,
-          message: "Password must be at least 8 chars long",
+          message: await translator.Translate("Password must be at least 8 chars long", req.query.lang),
           param: "password",
           location: "body",
         });
@@ -123,7 +124,7 @@ exports.signin_patient = async function (req, res) {
           } else {
             return res.status(403).send({
               success: false,
-              message: "Email or password is not correct",
+              message: await translator.Translate("Email or password is not correct", req.query.lang),
               param: "emailPassword",
             });
           }
@@ -147,7 +148,7 @@ exports.refresh_token = async function (req, res) {
       if (!user) {
         return res.status(403).json({
           success: false,
-          message: "Invalid refresh token",
+          message: await translator.Translate("Invalid refresh token", req.query.lang),
         });
       }
       const expiredTimeToken = process.env.TOKEN_EXPIRE
@@ -170,13 +171,13 @@ exports.refresh_token = async function (req, res) {
       console.error(err);
       res.status(403).json({
         success: false,
-        message: "Invalid refresh token",
+        message: await translator.Translate("Invalid refresh token", req.query.lang),
       });
     }
   } else {
     res.status(400).json({
       success: false,
-      message: "Invalid request",
+      message: await translator.Translate("Invalid request", req.query.lang),
     });
   }
 };
