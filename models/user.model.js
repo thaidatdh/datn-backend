@@ -52,13 +52,13 @@ UserSchema.pre("save", function (next) {
   }
 });
 
-UserSchema.methods.comparePassword = function (pwd, callback) {
-  bcrypt.compare(pwd, this.password, function (err, isMatch) {
-    if (err) {
-      return callback(err, null);
-    }
-    callback(null, isMatch);
-  });
+UserSchema.methods.comparePassword = async function (pwd) {
+   return await new Promise((resolve, reject) => {
+     bcrypt.compare(pwd, this.password, function (err, hash) {
+       if (err) reject(err);
+       resolve(hash);
+     });
+   });
 };
 const UserModel = (module.exports = mongoose.model("user", UserSchema));
 module.exports.insert = async function (userInfo) {
