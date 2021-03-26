@@ -208,6 +208,10 @@
             "type": "string",
             "example": "string"
           },
+          "address": {
+            "type": "string",
+            "example": "string"
+          },
           "username": {
             "type": "string",
             "example": null
@@ -219,6 +223,63 @@
           "user_type": {
             "type": "string",
             "example": "PATIENT"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Multi_Code": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "description": {
+            "type": "string",
+            "example": "string"
+          },
+          "icon": {
+            "type": "string",
+            "example": "string"
+          },
+          "procedures": {
+            "$ref": "#/components/schemas/Multi_Code_Detail"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "Multi_Code_Detail": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "multi_code_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "procedure": {
+            "type": "string",
+            "example": "string"
           },
           "createdAt": {
             "type": "string",
@@ -1412,6 +1473,12 @@
           "description": {
             "type": "string",
             "example": "string"
+          },
+          "treatments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Treatments"
+            }
           }
         }
       }
@@ -5818,6 +5885,1222 @@
         "tags": ["Patient Referral"],
         "summary": "Retrieve a list of Referral of a Patient",
         "description": "Retrieve a list of Referral of a Patient from database.",
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Referral"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/multi-code": {
+      "get": {
+        "tags": ["Multi Code"],
+        "summary": "Retrieve a list of Multi Code",
+        "description": "Retrieve a list of Multi Code from database.",
+        "parameters": [
+          {
+            "name": "get_procedures",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Multi_Code"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/multi-code/{multicode_id}": {
+      "get": {
+        "tags": ["Multi Code"],
+        "summary": "Retrieve Multi Code Detail",
+        "description": "Retrieve Multi Code Detail.",
+        "parameters": [
+          {
+            "name": "get_procedures",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "multicode_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Multi_Code"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/image-mouth-template": {
+      "get": {
+        "tags": ["Image Mouth"],
+        "summary": "Retrieve a list of Image Mouth",
+        "description": "Retrieve a list of Image Mouth from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Image_mouth_template"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Image Mouth"],
+        "summary": "Insert new Image Mouth",
+        "description": "Insert new Image Mouth",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "thumbnail": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "frames": {
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "order": {
+                          "type": "number",
+                          "example": "0.0"
+                        },
+                        "width_ratio": {
+                          "type": "number",
+                          "example": "0.0"
+                        },
+                        "height_ratio": {
+                          "type": "number",
+                          "example": "0.0"
+                        },
+                        "x_ratio": {
+                          "type": "number",
+                          "example": "0.0"
+                        },
+                        "y_ratio": {
+                          "type": "number",
+                          "example": "0.0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_mouth_template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/image-mouth-template/{mouth_id}": {
+      "get": {
+        "tags": ["Image Mouth"],
+        "summary": "Get Image Mouth detail",
+        "description": "Get Image Mouth detail",
+        "parameters": [
+          {
+            "name": "mouth_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_mouth_template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Image Mouth"],
+        "summary": "Update Image Mouth",
+        "description": "Update Image Mouth",
+        "parameters": [
+          {
+            "name": "mouth_id",
+            "in": "path",
+            "description": "Image Mouth ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "thumbnail": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_mouth_template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Image Mouth"],
+        "summary": "Delete Image Mouth ",
+        "description": "Delete Image Mouth",
+        "parameters": [
+          {
+            "name": "mouth_id",
+            "in": "path",
+            "description": "Image Mouth ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/image-mouth-template/frame/{frame_id}": {
+      "get": {
+        "tags": ["Image Mouth Template"],
+        "summary": "Get Image Frame Template detail",
+        "description": "Get Image Frame Template detail",
+        "parameters": [
+          {
+            "name": "frame_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_frame_template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Image Mouth Template"],
+        "summary": "Update Image Frame Template",
+        "description": "Update Image Frame Template",
+        "parameters": [
+          {
+            "name": "frame_id",
+            "in": "path",
+            "description": "Image Frame ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "image_mouth_template_id": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "order": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "width_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "height_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "x_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "y_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_frame_template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Image Mouth Template"],
+        "summary": "Delete Image Frame Template",
+        "description": "Delete Image Frame Template",
+        "parameters": [
+          {
+            "name": "frame_id",
+            "in": "path",
+            "description": "Image Frame ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/image-mouth-template/frame": {
+      "post": {
+        "tags": ["Image Mouth Template"],
+        "summary": "Update Image Frame Template",
+        "description": "Update Image Frame Template",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "image_mouth_template_id": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "order": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "width_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "height_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "x_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "y_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_frame_template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/image-mouth": {
+      "get": {
+        "tags": ["Image Mouth"],
+        "summary": "Retrieve a list of Image Mouth",
+        "description": "Retrieve a list of Image Mouth from database.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Image_mouth"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Image Mouth"],
+        "summary": "Insert new Image Mouth",
+        "description": "Insert new Image Mouth",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "entry_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "thumbnail": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "created_by": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "frames": {
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "image": {
+                          "type": "string",
+                          "example": "string - Object ID"
+                        },
+                        "order": {
+                          "type": "number",
+                          "example": "0.0"
+                        },
+                        "width_ratio": {
+                          "type": "number",
+                          "example": "0.0"
+                        },
+                        "height_ratio": {
+                          "type": "number",
+                          "example": "0.0"
+                        },
+                        "x_ratio": {
+                          "type": "number",
+                          "example": "0.0"
+                        },
+                        "y_ratio": {
+                          "type": "number",
+                          "example": "0.0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_mouth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          }
+        }
+      }
+    },
+    "/image-mouth/{mouth_id}": {
+      "get": {
+        "tags": ["Image Mouth"],
+        "summary": "Get Image Mouth detail",
+        "description": "Get Image Mouth detail",
+        "parameters": [
+          {
+            "name": "mouth_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_mouth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Image Mouth"],
+        "summary": "Update Image Mouth",
+        "description": "Update Image Mouth",
+        "parameters": [
+          {
+            "name": "mouth_id",
+            "in": "path",
+            "description": "Image Mouth ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "note": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "entry_date": {
+                    "type": "string",
+                    "example": "2021-01-01"
+                  },
+                  "thumbnail": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "created_by": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "patient": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_mouth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Image Mouth"],
+        "summary": "Delete Image Mouth ",
+        "description": "Delete Image Mouth",
+        "parameters": [
+          {
+            "name": "mouth_id",
+            "in": "path",
+            "description": "Image Mouth ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/image-mouth/frame/{frame_id}": {
+      "get": {
+        "tags": ["Image Mouth"],
+        "summary": "Get Image Frame detail",
+        "description": "Get Image Frame detail",
+        "parameters": [
+          {
+            "name": "frame_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_frame"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Image Mouth"],
+        "summary": "Update Image Frame",
+        "description": "Update Image Frame",
+        "parameters": [
+          {
+            "name": "frame_id",
+            "in": "path",
+            "description": "Image Frame ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "example": "string - Object ID"
+                  },
+                  "order": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "width_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "height_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "x_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "y_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_frame"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Image Mouth"],
+        "summary": "Delete Image Frame ",
+        "description": "Delete Image Frame",
+        "parameters": [
+          {
+            "name": "frame_id",
+            "in": "path",
+            "description": "Image Frame ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200_Delete"
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/image-mouth/{mouth_id}/frame": {
+      "post": {
+        "tags": ["Image Mouth"],
+        "summary": "Update Image Frame",
+        "description": "Update Image Frame",
+        "parameters": [
+          {
+            "name": "mouth_id",
+            "in": "path",
+            "description": "Image Mouth ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "example": "string - Object ID"
+                  },
+                  "order": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "width_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "height_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "x_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  },
+                  "y_ratio": {
+                    "type": "number",
+                    "example": "0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/Image_frame"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500_ActionFailed"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_AccessDenied"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_NotFound"
+          }
+        }
+      }
+    },
+    "/image-mouth/patient/{patient_id}": {
+      "get": {
+        "tags": ["Image Mouth"],
+        "summary": "Retrieve a list of Image Mouth of a Patient",
+        "description": "Retrieve a list of Image Mouth of a Patient from database.",
         "parameters": [
           {
             "name": "patient_id",

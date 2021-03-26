@@ -47,6 +47,7 @@ const TreatmentSchema = mongoose.Schema(
       required: false,
     },
     mark_type: String,
+    status: String,
   },
   {
     timestamps: true,
@@ -145,11 +146,16 @@ module.exports.insert = async function (req) {
   treatment.note = req.note ? req.note : null;
   treatment.treatment_plan = req.treatment_plan ? req.treatment_plan : null;
   treatment.appointment = req.appointment ? req.appointment : null;
-  treatment.ada_code = Procedure.ada_code;
-  treatment.fee = Procedure.fee;
-  treatment.insurance_percent = Procedure.insurance_percent;
-  treatment.description = Procedure.description;
-  treatment.mark_type = Procedure.mark_type;
+  treatment.status = req.status ? req.status : "PLAN";
+  treatment.ada_code = req.ada_code ? req.ada_code : Procedure.ada_code;
+  treatment.fee = req.fee ? req.fee : Procedure.fee;
+  treatment.insurance_percent = req.insurance_percent
+    ? req.insurance_percent
+    : Procedure.insurance_percent;
+  treatment.description = req.description
+    ? req.description
+    : Procedure.description;
+  treatment.mark_type = req.mark_type ? req.mark_type : Procedure.mark_type;
   return await treatment.save();
 };
 module.exports.updateTreatment = async function (treatment, req) {
@@ -160,7 +166,8 @@ module.exports.updateTreatment = async function (treatment, req) {
   treatment.treatment_date = req.treatment_date
     ? Date.parse(req.treatment_date)
     : treatment.treatment_date;
-  treatment.patient = req.patient !== undefined ? req.patient : treatment.patient;
+  treatment.patient =
+    req.patient !== undefined ? req.patient : treatment.patient;
   treatment.assistant =
     req.assistant !== undefined ? req.assistant : treatment.assistant;
   treatment.provider =
@@ -185,12 +192,19 @@ module.exports.updateTreatment = async function (treatment, req) {
       : treatment.treatment_plan;
   treatment.appointment =
     req.appointment !== undefined ? req.appointment : treatment.appointment;
+  treatment.status = req.status ? req.status : treatment.status;
   if (Procedure) {
-    treatment.ada_code = Procedure.ada_code;
-    treatment.fee = Procedure.fee;
-    treatment.insurance_percent = Procedure.insurance_percent;
-    treatment.description = Procedure.description;
-    treatment.mark_type = Procedure.mark_type;
+    treatment.ada_code =
+      req.ada_code != undefined ? req.ada_code : Procedure.ada_code;
+    treatment.fee = req.fee != undefined ? req.fee : Procedure.fee;
+    treatment.insurance_percent =
+      req.insurance_percent != undefined
+        ? req.insurance_percent
+        : Procedure.insurance_percent;
+    treatment.description =
+      req.description != undefined ? req.description : Procedure.description;
+    treatment.mark_type =
+      req.mark_type != undefined ? req.mark_type : Procedure.mark_type;
   }
   return await treatment.save();
 };

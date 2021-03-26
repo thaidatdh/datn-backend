@@ -21,6 +21,7 @@ const UserSchema = mongoose.Schema(
     user_type: String,
     theme: Number,
     language: String,
+    address: String,
   },
   {
     timestamps: true,
@@ -67,6 +68,7 @@ module.exports.insert = async function (userInfo) {
   user.last_name = userInfo.last_name ? userInfo.last_name : "";
   user.fax = userInfo.fax ? userInfo.fax : null;
   user.mobile_phone = userInfo.mobile_phone ? userInfo.mobile_phone : null;
+  user.address = userInfo.address ? userInfo.address : null;
   user.home_phone = userInfo.home_phone ? userInfo.home_phone : null;
   user.facebook = userInfo.facebook ? userInfo.facebook : null;
   user.email = userInfo.email ? userInfo.email : null;
@@ -89,6 +91,8 @@ module.exports.updateUser = async function (user_id, userInfo) {
   user.last_name =
     userInfo.last_name !== undefined ? userInfo.last_name : user.last_name;
   user.fax = userInfo.fax !== undefined ? userInfo.fax : user.fax;
+  user.address =
+    userInfo.address !== undefined ? userInfo.address : user.address;
   user.mobile_phone =
     userInfo.mobile_phone !== undefined
       ? userInfo.mobile_phone

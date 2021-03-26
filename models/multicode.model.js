@@ -29,7 +29,12 @@ module.exports.get = async function (query, populateOptions) {
     promise.limit(Number.parseInt(populateOptions.limit));
   }
   if (populateOptions.get_procedures) {
-    promise.populate("procedures");
+    promise.populate({
+      path: "procedures",
+      populate: {
+        path: "procedure",
+      },
+    });
   }
   const resultQuery = await promise.exec();
   return resultQuery;

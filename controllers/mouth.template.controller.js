@@ -31,12 +31,6 @@ exports.index = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    if (req.body.patient == null) {
-      return res.status(400).json({
-        success: false,
-        message: await translator.Translate("Insert mouth failed. Require patient", req.query.lang),
-      });
-    }
     const rs = MouthTemplateModel.insertWithFrames(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
@@ -119,12 +113,6 @@ exports.delete = async function (req, res) {
 };
 exports.add_frame = async function (req, res) {
   try {
-    if (req.body.patient == null) {
-      return res.status(400).json({
-        success: false,
-        message: await translator.Translate("Insert frame failed. Require patient", req.query.lang),
-      });
-    }
     const rs = FrameTemplateModel.insert(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {

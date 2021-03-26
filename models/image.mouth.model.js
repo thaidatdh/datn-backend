@@ -43,7 +43,12 @@ module.exports.get = async function (query, populateOptions) {
     promise.limit(Number.parseInt(populateOptions.limit));
   }
   if (populateOptions.get_frames) {
-    promise.populate("frames");
+    promise.populate({
+      path: "frames",
+      populate: {
+        path: "image",
+      },
+    });
   }
   const resultQuery = await promise.exec();
   return resultQuery;

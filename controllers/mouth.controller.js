@@ -148,12 +148,6 @@ exports.delete = async function (req, res) {
 };
 exports.add_frame = async function (req, res) {
   try {
-    if (req.body.patient == null) {
-      return res.status(400).json({
-        success: false,
-        message: await translator.Translate("Insert frame failed. Require patient", req.query.lang),
-      });
-    }
     const request = Object.assign(req.body, {
       image_mouth_id: req.params.mouth_id,
     });
