@@ -8,6 +8,6 @@ router
 router
   .route("/:practice_id")
   .get(authMiddleware.verifyUser, practiceController.detail)
-  .post(practiceController.update)
-  .delete(practiceController.delete);
+  .post(authMiddleware.verifyUser, practiceController.update)
+  .delete(authMiddleware.verifyUser, practiceController.delete);
 module.exports = router;

@@ -27,6 +27,7 @@ exports.add_chair = async function (req, res) {
     chair.name = req.body.name ? req.body.name : null;
     chair.order = req.body.order ? req.body.order : null;
     chair.color = req.body.color ? req.body.color : RANDOM_COLOR();
+    chair.is_deleted = req.body.is_deleted ? req.body.is_deleted : false;
     if (chair.name) {
       const rs = await chair.save();
       return res.json({ success: true, payload: rs });
@@ -74,7 +75,10 @@ exports.update_chair = async function (req, res) {
     if (chair) {
       chair.name = req.body.name !== undefined ? req.body.name : chair.name;
       chair.order = req.body.name !== undefined ? req.body.order : chair.order;
-      chair.color = req.body.color !== undefined ? req.body.color : chair.color;
+      chair.is_deleted =
+        req.body.is_deleted !== undefined
+          ? req.body.is_deleted
+          : chair.is_deleted;
       const result = await chair.save();
       res.json({
         success: true,

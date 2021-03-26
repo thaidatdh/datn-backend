@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = {
   secret: "secret-backend",
 };
+const translator = require("../utils/translator");
 exports.verifyUser = async (request, response, next) => {
   let token = request.header("Authorization");
   if (!token)
