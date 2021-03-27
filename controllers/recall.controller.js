@@ -91,7 +91,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const recall = await RecallModel.findById(req.params.recall_id);
+    let recall = await RecallModel.findById(req.params.recall_id);
     if (recall) {
       const result = await RecallModel.updateRecall(recall, req.body);
       res.json({

@@ -49,7 +49,6 @@ module.exports.Translate = async (text, lang) => {
     const result = await translatte(text, { from: "en", to: getValidLanguage(lang) });
     return result.text;
   } catch (err) {
-    console.log(err);
     return text;
   }
 };

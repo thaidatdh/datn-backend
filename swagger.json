@@ -163,6 +163,14 @@
             "type": "string",
             "example": null
           },
+          "start_time": {
+            "type": "string",
+            "example": "0700"
+          },
+          "end_time": {
+            "type": "string",
+            "example": "1700"
+          },
           "createdAt": {
             "type": "string",
             "example": "string"
@@ -726,17 +734,17 @@
             "type": "string",
             "example": "string"
           },
-          "day": {
+          "description": {
             "type": "string",
             "example": "string"
           },
           "start_date": {
             "type": "string",
-            "example": "2021-01-01"
+            "example": "01/01 (dd/MM)"
           },
           "end_date": {
             "type": "string",
-            "example": "2021-01-01"
+            "example": "01/01 (dd/MM)"
           }
         }
       },
@@ -1010,27 +1018,6 @@
           }
         }
       },
-      "Practice_working_time": {
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string",
-            "example": "string"
-          },
-          "day": {
-            "type": "string",
-            "example": "string"
-          },
-          "start_time": {
-            "type": "string",
-            "example": "string"
-          },
-          "end_time": {
-            "type": "string",
-            "example": "string"
-          }
-        }
-      },
       "Prescription": {
         "type": "object",
         "properties": {
@@ -1090,6 +1077,10 @@
           "description": {
             "type": "string",
             "example": "string"
+          },
+          "expiry_date": {
+            "type": "string",
+            "example": "2021-01-01"
           }
         }
       },

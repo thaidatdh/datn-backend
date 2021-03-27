@@ -78,7 +78,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const image = await imageModel.findById(req.params.image_id);
+    let image = await imageModel.findById(req.params.image_id);
     if (image) {
       const result = await imageModel.updateImage(image, req.body);
       res.json({

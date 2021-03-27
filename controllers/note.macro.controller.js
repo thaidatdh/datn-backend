@@ -58,7 +58,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const macro = await NoteMacroModel.findById(req.params.note_id);
+    let macro = await NoteMacroModel.findById(req.params.note_id);
     if (macro) {
       macro.content = req.body.content !== undefined ? req.body.content : null;
       macro.note_type = req.body.note_type

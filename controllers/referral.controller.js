@@ -89,7 +89,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const referral = await referralModel.findById(req.params.referral_id);
+    let referral = await referralModel.findById(req.params.referral_id);
     if (referral) {
       const result = await referralModel.updateReferral(referral, req.body);
       res.json({

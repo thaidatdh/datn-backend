@@ -21,7 +21,7 @@ exports.index = async function (req, res) {
 exports.add = async function (req, res) {
   try {
     const holiday = new holidayModel();
-    holiday.day = req.body.day ? req.body.day : null;
+    holiday.description = req.body.description ? req.body.description : null;
     holiday.start_date = req.body.start_date ? req.body.start_date : null;
     holiday.end_date = req.body.end_date ? req.body.end_date : null;
     const rs = await holiday.save();

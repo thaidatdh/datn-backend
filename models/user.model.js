@@ -82,7 +82,7 @@ module.exports.insert = async function (userInfo) {
   return await user.save();
 };
 module.exports.updateUser = async function (user_id, userInfo) {
-  const user = await UserModel.findById(user_id);
+  let user = await UserModel.findById(user_id);
   if (user == null) {
     return null;
   }

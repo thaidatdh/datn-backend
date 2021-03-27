@@ -68,7 +68,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const mouth = await MouthTemplateModel.findById(req.params.mouth_id);
+    let mouth = await MouthTemplateModel.findById(req.params.mouth_id);
     if (mouth) {
       const result = await MouthTemplateModel.updateMouth(mouth, req.body);
       res.json({
@@ -147,7 +147,7 @@ exports.detail_frame = async function (req, res) {
 };
 exports.update_frame = async function (req, res) {
   try {
-    const frame = await FrameTemplateModel.findById(req.params.frame_id);
+    let frame = await FrameTemplateModel.findById(req.params.frame_id);
     if (frame) {
       const result = await FrameTemplateModel.updateFrame(frame, req.body);
       res.json({

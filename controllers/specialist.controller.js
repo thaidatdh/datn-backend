@@ -56,7 +56,7 @@ exports.specialist = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const specialist = await specialistModel.findById(req.params.specialist_id);
+    let specialist = await specialistModel.findById(req.params.specialist_id);
     if (specialist) {
       specialist.name = req.body.name ? req.body.name : specialist.name;
       const result = await specialist.save();

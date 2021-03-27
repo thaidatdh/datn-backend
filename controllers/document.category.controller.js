@@ -58,7 +58,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const category = await documentCategoryModel.findById(
+    let category = await documentCategoryModel.findById(
       req.params.category_id
     );
     if (category) {

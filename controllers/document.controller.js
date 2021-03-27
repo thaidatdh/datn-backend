@@ -111,7 +111,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const document = await documentModel.findById(req.params.document_id);
+    let document = await documentModel.findById(req.params.document_id);
     if (document) {
       const result = await documentModel.updateDocument(document, req.body);
       res.json({

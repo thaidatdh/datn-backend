@@ -103,7 +103,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const plan = await TreatmentPlanModel.findById(req.params.plan_id);
+    let plan = await TreatmentPlanModel.findById(req.params.plan_id);
     if (plan) {
       const result = await TreatmentPlanModel.updatePlan(plan, req.body);
       res.json({

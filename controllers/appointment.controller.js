@@ -71,7 +71,7 @@ exports.chair_info = async function (req, res) {
 exports.update_chair = async function (req, res) {
   const chair_id = req.params.chair_id;
   try {
-    const chair = await chairModel.findById(chair_id);
+    let chair = await chairModel.findById(chair_id);
     if (chair) {
       chair.name = req.body.name !== undefined ? req.body.name : chair.name;
       chair.order = req.body.name !== undefined ? req.body.order : chair.order;

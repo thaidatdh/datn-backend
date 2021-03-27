@@ -5,7 +5,7 @@ const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const practices = await practiceModel.find();
+    const practices = await practiceModel.findOne();
     res.json({
       success: true,
       payload: practices,
@@ -13,7 +13,7 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get practice list failed", req.query.lang),
+      message: await translator.Translate("Get practice failed", req.query.lang),
       exeption: err,
     });
   }
@@ -59,7 +59,7 @@ exports.detail = async function (req, res) {
 exports.update = async function (req, res) {
   try {
     const practiceInfo = req.body;
-    const practice = await practiceModel.findById(req.params.practice_id);
+    let practice = await practiceModel.findById(req.params.practice_id);
     if (practice) {
       const result = await practiceModel.updatePractice(practice, practiceInfo);
       res.json({

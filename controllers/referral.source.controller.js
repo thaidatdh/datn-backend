@@ -57,7 +57,7 @@ exports.source = async function (req, res) {
 exports.update = async function (req, res) {
   try {
     const sourceInfo = req.body;
-    const source = await referralSourceModel.findById(req.params.source_id);
+    let source = await referralSourceModel.findById(req.params.source_id);
     if (source) {
       const result = await referralSourceModel.updateSource(source, sourceInfo);
       res.json({

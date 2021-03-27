@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const HolidaySchema = mongoose.Schema(
   {
-    day: String,
-    start_date: Date,
-    end_date: Date,
+    description: String,
+    start_date: String,
+    end_date: String,
   },
   {
     timestamps: true,

@@ -57,7 +57,7 @@ exports.procedure_by_id = async function (req, res) {
 exports.update_procedure = async function (req, res) {
   try {
     const procedureInfo = req.body;
-    const procedure = await procedureModel.findById(req.params.procedure_id);
+    let procedure = await procedureModel.findById(req.params.procedure_id);
     if (procedure) {
       const result = await procedureModel.updateProcedure(
         procedure,
@@ -174,7 +174,7 @@ exports.add_category = async function (req, res) {
 };
 exports.update_category = async function (req, res) {
   try {
-    const category = await categoryModel.findById(req.params.category_id);
+    let category = await categoryModel.findById(req.params.category_id);
     if (category) {
       category.name =
         req.body.name !== undefined ? req.body.name : category.name;

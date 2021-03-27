@@ -8,11 +8,6 @@ const ImageMouthSchema = mongoose.Schema(
     note: String,
     entry_date: Date,
     thumbnail: String,
-    created_by: {
-      type: mongoose.Types.ObjectId,
-      ref: "staff",
-      required: true,
-    },
     patient: {
       type: mongoose.Types.ObjectId,
       ref: "patient",
@@ -59,7 +54,6 @@ module.exports.insert = async function (req) {
   mouth.thumbnail = req.thumbnail ? req.thumbnail : null;
   mouth.note = req.note ? req.note : null;
   mouth.entry_date = req.entry_date ? req.entry_date : Date.now();
-  mouth.created_by = req.created_by ? req.created_by : null;
   mouth.patient = req.patient ? req.patient : null;
   return await mouth.save();
 };
@@ -69,7 +63,6 @@ module.exports.insertWithFrames = async function (req) {
   mouth.thumbnail = req.thumbnail ? req.thumbnail : null;
   mouth.note = req.note ? req.note : null;
   mouth.entry_date = req.entry_date ? req.entry_date : Date.now();
-  mouth.created_by = req.created_by ? req.created_by : null;
   mouth.patient = req.patient ? req.patient : null;
   const insertedMouth = await mouth.save();
   let inseredFrameList = [];
@@ -88,8 +81,6 @@ module.exports.updateMouth = async function (mouth, req) {
   mouth.thumbnail = req.thumbnail ? req.thumbnail : mouth.thumbnail;
   mouth.note = req.note !== undefined ? req.note : mouth.note;
   mouth.entry_date = req.entry_date ? req.entry_date : mouth.entry_date;
-  mouth.created_by =
-    req.created_by !== undefined ? req.created_by : mouth.created_by;
   mouth.patient = req.patient !== undefined ? req.patient : mouth.patient;
   return await mouth.save();
 };

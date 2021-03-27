@@ -91,7 +91,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const note = await ProgressNoteModel.findById(req.params.note_id);
+    let note = await ProgressNoteModel.findById(req.params.note_id);
     if (note) {
       const result = await ProgressNoteModel.updateProgressNote(note, req.body);
       res.json({

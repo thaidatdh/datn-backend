@@ -103,7 +103,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const mouth = await MouthModel.findById(req.params.mouth_id);
+    let mouth = await MouthModel.findById(req.params.mouth_id);
     if (mouth) {
       const result = await MouthModel.updateMouth(mouth, req.body);
       res.json({
@@ -185,7 +185,7 @@ exports.detail_frame = async function (req, res) {
 };
 exports.update_frame = async function (req, res) {
   try {
-    const frame = await FrameModel.findById(req.params.frame_id);
+    let frame = await FrameModel.findById(req.params.frame_id);
     if (frame) {
       const result = await FrameModel.updateFrame(frame, req.body);
       res.json({

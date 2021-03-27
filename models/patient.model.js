@@ -122,7 +122,7 @@ module.exports.insert = async function (patientInfo) {
   return result;
 };
 module.exports.updatePatient = async function (patient_id, patientInfo) {
-  const patient = await PatientModel.findById(patient_id);
+  let patient = await PatientModel.findById(patient_id);
   if (patient == null) {
     return null;
   }

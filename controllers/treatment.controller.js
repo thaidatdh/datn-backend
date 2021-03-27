@@ -133,7 +133,7 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const treatment = await TreatmentModel.findById(req.params.treatment_id);
+    let treatment = await TreatmentModel.findById(req.params.treatment_id);
     if (treatment) {
       const result = await TreatmentModel.updateTreatment(treatment, req.body);
       if (result) {

@@ -4,6 +4,9 @@ const config = {
 };
 const translator = require("../utils/translator");
 exports.verifyUser = async (request, response, next) => {
+  if (process.env.DATABASE_DEBUG_SKIP_AUTHORIZATION) {
+    return next();
+  }
   let token = request.header("Authorization");
   if (!token)
     token =

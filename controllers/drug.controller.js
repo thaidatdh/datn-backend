@@ -57,7 +57,7 @@ exports.drug = async function (req, res) {
 exports.update = async function (req, res) {
   try {
     const drugInfo = req.body;
-    const drug = await drugModel.findById(req.params.drug_id);
+    let drug = await drugModel.findById(req.params.drug_id);
     if (drug) {
       const result = await drugModel.updateDrug(drug, drugInfo);
       res.json({

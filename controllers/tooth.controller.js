@@ -69,7 +69,7 @@ exports.tooth = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const tooth = await ToothModel.findById(req.params.tooth_id);
+    let tooth = await ToothModel.findById(req.params.tooth_id);
     if (tooth) {
       const result = await ToothModel.updateTooth(tooth, req.body);
       res.json({
@@ -146,13 +146,14 @@ exports.update_patient_tooth_by_number = async function (req, res) {
         message: await translator.Translate("Tooth " + tooth_number + " not valid", req.query.lang),
       });
     }
-    const tooth = await ToothModel.find({
+    let tooth = await ToothModel.findOne({
       patient: req.params.patient_id,
       tooth_number: tooth_number,
     });
     const toothInfo = {
       tooth_type: req.body.tooth_type ? req.body.tooth_type : "ADULT",
       tooth_note: req.body.tooth_note,
+      condition: req.body.condition,
     };
     if (tooth) {
       tooth = await ToothModel.updateTooth(tooth, toothInfo);
@@ -164,6 +165,7 @@ exports.update_patient_tooth_by_number = async function (req, res) {
       payload: tooth,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       success: false,
       message:  await translator.Translate("Update failed", req.query.lang),

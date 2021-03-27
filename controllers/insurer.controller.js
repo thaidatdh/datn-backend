@@ -57,7 +57,7 @@ exports.insurer = async function (req, res) {
 exports.update = async function (req, res) {
   try {
     const insurerInfo = req.body;
-    const insurer = await InsurerModel.findById(req.params.insurer_id);
+    let insurer = await InsurerModel.findById(req.params.insurer_id);
     if (insurer) {
       const result = await InsurerModel.updateInsurer(insurer, insurerInfo);
       res.json({
