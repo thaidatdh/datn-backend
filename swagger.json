@@ -9789,6 +9789,15 @@
               "type": "string",
               "example": "2021-01-01"
             }
+          },
+          {
+            "name": "active_chair_only",
+            "description": "Is get appointment list of active chair only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -10388,6 +10397,15 @@
             "schema": {
               "type": "string",
               "example": "2021-01-01"
+            }
+          },
+          {
+            "name": "active_chair_only",
+            "description": "Is get appointment list of active chair only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],

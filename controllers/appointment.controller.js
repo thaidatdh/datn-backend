@@ -8,7 +8,10 @@ const { RANDOM_COLOR } = require("../constants/constants");
 //Chair
 exports.chair_index = async function (req, res) {
   try {
-    const chairs = await chairModel.find().sort("order").exec();
+    const chairs = await chairModel
+      .find({ is_deleted: false })
+      .sort("order")
+      .exec();
     res.json({
       success: true,
       payload: chairs,
@@ -16,7 +19,10 @@ exports.chair_index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get chair list failed", req.query.lang),
+      message: await translator.Translate(
+        "Get chair list failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -34,13 +40,19 @@ exports.add_chair = async function (req, res) {
     } else {
       return res.status(400).json({
         success: false,
-        message: await translator.Translate("Chair name can not be empty", req.query.lang),
+        message: await translator.Translate(
+          "Chair name can not be empty",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert chair failed", req.query.lang),
+      message: await translator.Translate(
+        "Insert chair failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -63,7 +75,10 @@ exports.chair_info = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get Chair " + chair_id + " failed", req.query.lang),
+      message: await translator.Translate(
+        "Get Chair " + chair_id + " failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -93,7 +108,10 @@ exports.update_chair = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get Chair " + chair_id + " failed", req.query.lang),
+      message: await translator.Translate(
+        "Get Chair " + chair_id + " failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -116,7 +134,10 @@ exports.delete_chair = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete Chair " + chair_id + " failed", req.query.lang),
+      message: await translator.Translate(
+        "Delete Chair " + chair_id + " failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -130,10 +151,24 @@ exports.appointments_index = async function (req, res) {
     let query = {};
     if (req.query.date) {
       const startDate = new Date(req.query.date);
-      const endDate = new Date((new Date(startDate)).setDate(startDate.getDate() + 1));
+      const endDate = new Date(
+        new Date(startDate).setDate(startDate.getDate() + 1)
+      );
       query = {
         appointment_date: { $gte: startDate, $lt: endDate },
       };
+    }
+    if (req.query.active_chair_only) {
+      const chairs = await chairModel
+        .find({ is_deleted: false })
+        .select("_id")
+        .sort("order")
+        .exec();
+      let chairsList = [];
+      for (const chair of chairs) {
+        chairsList.push(chair._id);
+      }
+      query = Object.assign(query, { chair: { $in: chairsList } });
     }
     const appointments = await appointmentModel.get(query, options);
     res.json({
@@ -143,7 +178,10 @@ exports.appointments_index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get appointment list failed", req.query.lang),
+      message: await translator.Translate(
+        "Get appointment list failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -165,7 +203,10 @@ exports.appointments_of_patient = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("et appointment list of patient " + patient_id + " failed", req.query.lang),//"G",
+      message: await translator.Translate(
+        "et appointment list of patient " + patient_id + " failed",
+        req.query.lang
+      ), //"G",
       exeption: err,
     });
   }
@@ -185,13 +226,19 @@ exports.appointment_info = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Appointment not found", req.query.lang),
+        message: await translator.Translate(
+          "Appointment not found",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get appointment " + appointment_id + " failed", req.query.lang),
+      message: await translator.Translate(
+        "Get appointment " + appointment_id + " failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -205,7 +252,10 @@ exports.add_appointment = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert appointment failed", req.query.lang),
+      message: await translator.Translate(
+        "Insert appointment failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -223,13 +273,19 @@ exports.update_appointment = async function (req, res) {
     } else {
       return res.status(404).json({
         success: false,
-        message: await translator.Translate("Appointment not found", req.query.lang),
+        message: await translator.Translate(
+          "Appointment not found",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Update appointment failed", req.query.lang),
+      message: await translator.Translate(
+        "Update appointment failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -246,13 +302,19 @@ exports.delete_appointment = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Appointment not found", req.query.lang),
+        message: await translator.Translate(
+          "Appointment not found",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete appointment " + appointment_id + " failed", req.query.lang),
+      message: await translator.Translate(
+        "Delete appointment " + appointment_id + " failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -270,6 +332,18 @@ exports.block_index = async function (req, res) {
         block_date: { $gte: startDate, $lt: endDate },
       };
     }
+    if (req.query.active_chair_only) {
+      const chairs = await chairModel
+        .find({ is_deleted: false })
+        .select("_id")
+        .sort("order")
+        .exec();
+      let chairsList = [];
+      for (const chair of chairs) {
+        chairsList.push(chair._id);
+      }
+      query = Object.assign(query, { chair: { $in: chairsList } });
+    }
     const blocks = await blockModel.find(query);
     res.json({
       success: true,
@@ -278,7 +352,10 @@ exports.block_index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get appointment block list failed", req.query.lang),
+      message: await translator.Translate(
+        "Get appointment block list failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -295,13 +372,19 @@ exports.block_info = async function (req, res) {
     } else {
       return res.status(404).json({
         success: false,
-        message: await translator.Translate("Appointment Block not found", req.query.lang),
+        message: await translator.Translate(
+          "Appointment Block not found",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get appointment block " + appointment_id + " failed", req.query.lang),
+      message: await translator.Translate(
+        "Get appointment block " + appointment_id + " failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -315,7 +398,10 @@ exports.add_block = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert appointment block failed", req.query.lang),
+      message: await translator.Translate(
+        "Insert appointment block failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -332,13 +418,19 @@ exports.update_block = async function (req, res) {
     } else {
       return res.status(404).json({
         success: false,
-        message: await translator.Translate("Appointment block not found", req.query.lang),
+        message: await translator.Translate(
+          "Appointment block not found",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Update appointment block failed", req.query.lang),
+      message: await translator.Translate(
+        "Update appointment block failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -355,13 +447,19 @@ exports.delete_block = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Appointment block not found", req.query.lang),
+        message: await translator.Translate(
+          "Appointment block not found",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete appointment block " + block_id + " failed", req.query.lang),
+      message: await translator.Translate(
+        "Delete appointment block " + block_id + " failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
