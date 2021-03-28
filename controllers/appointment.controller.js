@@ -8,7 +8,7 @@ const { RANDOM_COLOR } = require("../constants/constants");
 //Chair
 exports.chair_index = async function (req, res) {
   try {
-    const chairs = await chairModel.find();
+    const chairs = await chairModel.find().sort("order").exec();
     res.json({
       success: true,
       payload: chairs,
@@ -130,7 +130,7 @@ exports.appointments_index = async function (req, res) {
     let query = {};
     if (req.query.date) {
       const startDate = new Date(req.query.date);
-      const endDate = startDate.setDate(startDate.getDate() + 1);
+      const endDate = new Date((new Date(startDate)).setDate(startDate.getDate() + 1));
       query = {
         appointment_date: { $gte: startDate, $lt: endDate },
       };
@@ -263,7 +263,9 @@ exports.block_index = async function (req, res) {
     let query = {};
     if (req.query.date) {
       const startDate = new Date(req.query.date);
-      const endDate = startDate.setDate(startDate.getDate() + 1);
+      const endDate = new Date(
+        new Date(startDate).setDate(startDate.getDate() + 1)
+      );
       query = {
         block_date: { $gte: startDate, $lt: endDate },
       };

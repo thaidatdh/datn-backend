@@ -20,7 +20,7 @@ exports.index = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    const access = new accessModel();
+    let access = new accessModel();
     access.name = req.body.name ? req.body.name : null;
     access.value = req.body.value ? req.body.value : null;
     const rs = await access.save();
