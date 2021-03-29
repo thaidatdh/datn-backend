@@ -158,7 +158,10 @@ exports.appointments_index = async function (req, res) {
         appointment_date: { $gte: startDate, $lt: endDate },
       };
     }
-    if (req.query.active_chair_only) {
+    if (
+      req.query.active_chair_only &&
+      String(req.query.active_chair_only).toLowerCase() == "true"
+    ) {
       const chairs = await chairModel
         .find({ is_deleted: false })
         .select("_id")
@@ -332,7 +335,10 @@ exports.block_index = async function (req, res) {
         block_date: { $gte: startDate, $lt: endDate },
       };
     }
-    if (req.query.active_chair_only) {
+    if (
+      req.query.active_chair_only &&
+      String(req.query.active_chair_only).toLowerCase() == "true"
+    ) {
       const chairs = await chairModel
         .find({ is_deleted: false })
         .select("_id")
