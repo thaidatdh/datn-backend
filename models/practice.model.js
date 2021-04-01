@@ -43,8 +43,10 @@ const UpdatePractice = (module.exports.updatePractice = async function (
       : practice.default_provider;
   practice.start_time = practiceInfo.start_time
     ? practiceInfo.start_time
-    : "0700";
-  practice.end_time = practiceInfo.end_time ? practiceInfo.end_time : "1700";
+    : practice.start_time;
+  practice.end_time = practiceInfo.end_time
+    ? practiceInfo.end_time
+    : practice.end_time;
   return await practice.save();
 });
 module.exports.insert = async function (practiceInfo) {
@@ -62,10 +64,8 @@ module.exports.insert = async function (practiceInfo) {
       : null;
     practice.start_time = practiceInfo.start_time
       ? practiceInfo.start_time
-      : practice.start_time;
-    practice.end_time = practiceInfo.end_time
-      ? practiceInfo.end_time
-      : practice.end_time;
+      : "0700";
+    practice.end_time = practiceInfo.end_time ? practiceInfo.end_time : "1700";
     return await practice.save();
   }
 };
