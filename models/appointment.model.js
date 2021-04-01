@@ -56,7 +56,13 @@ module.exports.get = async function (query, populateOptions) {
     },
   });
   promise.populate({
-    path: "staff",
+    path: "provider",
+    populate: {
+      path: "user",
+    },
+  });
+  promise.populate({
+    path: "assistant",
     populate: {
       path: "user",
     },
@@ -80,7 +86,13 @@ module.exports.getById = async function (id, populateOptions) {
     },
   });
   promise.populate({
-    path: "staff",
+    path: "provider",
+    populate: {
+      path: "user",
+    },
+  });
+  promise.populate({
+    path: "assistant",
     populate: {
       path: "user",
     },
