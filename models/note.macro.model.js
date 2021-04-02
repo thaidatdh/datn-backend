@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 
 const NoteMacroSchema = mongoose.Schema(
   {
@@ -11,4 +12,7 @@ const NoteMacroSchema = mongoose.Schema(
   }
 );
 
-const NoteMacroModel = module.exports = mongoose.model("note_macro", NoteMacroSchema);
+const NoteMacroModel = (module.exports = mongoose.model(
+  "note_macro",
+  NoteMacroSchema
+));

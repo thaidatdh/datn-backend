@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Treatment = require("./treatment.model");
 const TreatmentPlanSchema = mongoose.Schema(
   {
@@ -17,7 +18,10 @@ TreatmentPlanSchema.virtual("treatments", {
   foreignField: "treatment_plan",
   justOne: false,
 });
-const TreatmentPlanModel = module.exports = mongoose.model("treatment_plan", TreatmentPlanSchema);
+const TreatmentPlanModel = (module.exports = mongoose.model(
+  "treatment_plan",
+  TreatmentPlanSchema
+));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = TreatmentPlanModel.find(query);
@@ -54,6 +58,8 @@ module.exports.insert = async function (planInfo) {
 module.exports.updatePlan = async function (plan, planInfo) {
   plan.patient = planInfo.patient ? planInfo.patient : plan.patient;
   plan.name = planInfo.name ? planInfo.name : plan.name;
-  plan.description = planInfo.description ? planInfo.description : plan.description;
+  plan.description = planInfo.description
+    ? planInfo.description
+    : plan.description;
   return await plan.save();
 };

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Patient = require("./patient.model");
 const Staff = require("./staff.model");
 const ReferralSource = require("./referral.source.model");
@@ -29,7 +30,10 @@ const ReferralSchema = mongoose.Schema(
   }
 );
 
-const ReferralModel = (module.exports = mongoose.model("referral", ReferralSchema));
+const ReferralModel = (module.exports = mongoose.model(
+  "referral",
+  ReferralSchema
+));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = ReferralModel.find(query);

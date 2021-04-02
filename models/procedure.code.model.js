@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 require("./procedure.category.model");
 
 const ProcedureCodeSchema = mongoose.Schema(

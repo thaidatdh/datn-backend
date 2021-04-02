@@ -8,12 +8,9 @@ exports.index = async function (req, res) {
   try {
     const options = {
       get_access_group: req.query.get_access_group,
-      get_specialist: req.query.get_specialist,
+      get_specialty: req.query.get_specialty,
     };
-    const staffList = await StaffModel.get(
-      {},
-      options
-    );
+    const staffList = await StaffModel.get({}, options);
     res.json({
       success: true,
       payload: staffList,
@@ -21,7 +18,11 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get staff list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "staff list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -30,7 +31,7 @@ exports.index_provider = async function (req, res) {
   try {
     const options = {
       get_access_group: req.query.get_access_group,
-      get_specialist: req.query.get_specialist,
+      get_specialty: req.query.get_specialty,
     };
     const providerList = await StaffModel.get(
       { staff_type: constants.STAFF.STAFF_TYPE_PROVIDER },
@@ -43,7 +44,11 @@ exports.index_provider = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get provider list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "provider list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -52,7 +57,7 @@ exports.index_staff = async function (req, res) {
   try {
     const options = {
       get_access_group: req.query.get_access_group,
-      get_specialist: req.query.get_specialist,
+      get_specialty: req.query.get_specialty,
     };
     const staffList = await StaffModel.get(
       { staff_type: constants.STAFF.STAFF_TYPE_STAFF },
@@ -65,7 +70,11 @@ exports.index_staff = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get staff list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "staff list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -79,7 +88,11 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert staff failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "staff",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -88,7 +101,7 @@ exports.staff = async function (req, res) {
   try {
     const options = {
       get_access_group: req.query.get_access_group,
-      get_specialist: req.query.get_specialist,
+      get_specialty: req.query.get_specialty,
     };
     const staff = await StaffModel.get({ _id: req.params.staff_id }, options);
     if (staff && staff.length > 0) {
@@ -99,13 +112,13 @@ exports.staff = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Staff not found", req.query.lang),
+        message: await translator.NotFoundMessage("Staff", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Find Staff failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.GET, "Staff", req.query.lang),
       exeption: err,
     });
   }
@@ -123,13 +136,13 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Staff not found", req.query.lang),
+        message: await translator.NotFoundMessage("Staff", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Find Staff failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.GET, "Staff", req.query.lang),
       exeption: err,
     });
   }
@@ -142,18 +155,22 @@ exports.delete = async function (req, res) {
       await userModel.delete({ _id: staff.user });
       res.json({
         success: true,
-        message: await translator.Translate("Delete Successfully", req.query.lang),
+        message: await translator.DeleteMessage(req.query.lang),
       });
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Staff not found", req.query.lang),
+        message: await translator.NotFoundMessage("Staff", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.DELETE,
+        "Staff",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

@@ -1,4 +1,5 @@
 let router = require("express").Router();
+const authMiddleware = require("../middlewares/auth.middleware");
 let referralSourceController = require("../controllers/referral.source.controller");
 router
   .route("/")
@@ -7,6 +8,6 @@ router
 router
   .route("/:source_id")
   .get(referralSourceController.source)
-  .post(referralSourceController.update)
+  .patch(referralSourceController.update)
   .delete(referralSourceController.delete);
 module.exports = router;

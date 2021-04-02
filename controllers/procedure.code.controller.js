@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const procedureModel = require("../models/procedure.code.model");
 const categoryModel = require("../models/procedure.category.model");
 const translator = require("../utils/translator");
@@ -14,7 +15,11 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get procedure code list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "procedure code list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -27,7 +32,11 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert procedure code failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "procedure code",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -43,13 +52,17 @@ exports.procedure_by_id = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Procedure not found", req.query.lang),
+        message: await translator.NotFoundMessage("Procedure", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Find Procedure failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Procedure",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -70,13 +83,17 @@ exports.update_procedure = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Procedure not found", req.query.lang),
+        message: await translator.NotFoundMessage("Procedure", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Find Procedure failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Procedure",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -86,12 +103,16 @@ exports.delete_procedure = async function (req, res) {
     await procedureModel.deleteOne({ _id: req.params.procedure_id });
     res.json({
       success: true,
-      message: await translator.Translate("Delete Successfully", req.query.lang),
+      message: await translator.DeleteMessage(req.query.lang),
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.DELETE,
+        "Procedure",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -118,7 +139,11 @@ exports.index_category = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get procedure category list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "procedure category list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -142,17 +167,20 @@ exports.category_by_id = async function (req, res) {
         success: true,
         payload: result,
       });
-    }
-    else {
+    } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Category not found", req.query.lang),
+        message: await translator.NotFoundMessage("Category", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get procedure category failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "procedure category",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -167,7 +195,11 @@ exports.add_category = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert procedure category failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "procedure category",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -187,13 +219,17 @@ exports.update_category = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Category not found", req.query.lang),
+        message: await translator.NotFoundMessage("Category", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message:  await translator.Translate("Update failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.UPDATE,
+        constants.ACTION.UPDATE,
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -207,12 +243,16 @@ exports.delete_category = async function (req, res) {
     );
     res.json({
       success: true,
-      message: await translator.Translate("Delete Successfully", req.query.lang),
+      message: await translator.DeleteMessage(req.query.lang),
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.DELETE,
+        "Procedure Category",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

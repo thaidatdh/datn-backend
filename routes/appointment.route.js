@@ -1,4 +1,5 @@
 let router = require("express").Router();
+const authMiddleware = require("../middlewares/auth.middleware");
 let appointmentController = require("../controllers/appointment.controller");
 router
   .route("/block")
@@ -7,7 +8,7 @@ router
 router
   .route("/block/:appointment_block_id")
   .get(appointmentController.block_info)
-  .post(appointmentController.update_block)
+  .patch(appointmentController.update_block)
   .delete(appointmentController.delete_block);
 router
   .route("/chair")
@@ -16,7 +17,7 @@ router
 router
   .route("/chair/:chair_id")
   .get(appointmentController.chair_info)
-  .post(appointmentController.update_chair)
+  .patch(appointmentController.update_chair)
   .delete(appointmentController.delete_chair);
 router
   .route("/patient/:patient_id")
@@ -28,6 +29,6 @@ router
 router
   .route("/:appointment_id")
   .get(appointmentController.appointment_info)
-  .post(appointmentController.update_appointment)
+  .patch(appointmentController.update_appointment)
   .delete(appointmentController.delete_appointment);
 module.exports = router;

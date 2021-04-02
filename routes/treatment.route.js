@@ -1,10 +1,11 @@
 let router = require("express").Router();
+const authMiddleware = require("../middlewares/auth.middleware");
 let TreatmentController = require("../controllers/treatment.controller");
 router.route("/").get(TreatmentController.index).post(TreatmentController.add);
 router
   .route("/:treatment_id")
   .get(TreatmentController.detail)
-  .post(TreatmentController.update)
+  .patch(TreatmentController.update)
   .delete(TreatmentController.delete);
 router.route("/patient/:patient_id").get(TreatmentController.patient_treatment);
 /*router

@@ -1,13 +1,10 @@
 let router = require("express").Router();
-const practiceController = require("../controllers/practice.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
-router
-  .route("/")
-  .get(practiceController.index)
-  .post(authMiddleware.verifyUser, practiceController.add);
+const practiceController = require("../controllers/practice.controller");
+router.route("/").get(practiceController.index).post(practiceController.add);
 router
   .route("/:practice_id")
-  .get(authMiddleware.verifyUser, practiceController.detail)
-  .post(authMiddleware.verifyUser, practiceController.update)
-  .delete(authMiddleware.verifyUser, practiceController.delete);
+  .get(practiceController.detail)
+  .patch(practiceController.update)
+  .delete(practiceController.delete);
 module.exports = router;

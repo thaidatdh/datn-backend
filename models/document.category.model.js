@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 
 const DocumentCategorySchema = mongoose.Schema(
   {
-     name: String,
+    name: String,
   },
   {
     timestamps: true,

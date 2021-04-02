@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Patient = require("./patient.model");
 const Staff = require("./staff.model");
 const Chair = require("./chair.model");
@@ -107,7 +108,7 @@ module.exports.getById = async function (id, populateOptions) {
   return resultQuery;
 };
 
-module.exports.insert = async function(apptInfo) {
+module.exports.insert = async function (apptInfo) {
   let appointment = new AppointmentModel();
   appointment.patient = apptInfo.patient ? apptInfo.patient : null;
   appointment.provider = apptInfo.provider ? apptInfo.provider : null;
@@ -124,15 +125,14 @@ module.exports.insert = async function(apptInfo) {
   appointment.status = apptInfo.status ? apptInfo.status : "NEW";
   const rs = await appointment.save();
   return rs;
-}
+};
 module.exports.updateAppt = async function (apptInfo, appointment_id) {
   let appointment = await AppointmentModel.findById(appointment_id);
   if (appointment == null) {
     return null;
   }
-  appointment.patient = apptInfo.patient !== undefined
-    ? apptInfo.patient
-    : appointment.patient;
+  appointment.patient =
+    apptInfo.patient !== undefined ? apptInfo.patient : appointment.patient;
   appointment.provider =
     apptInfo.provider !== undefined ? apptInfo.provider : appointment.provider;
   appointment.assistant =
@@ -144,9 +144,10 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
   appointment.appointment_date = apptInfo.appointment_date
     ? Date.parse(apptInfo.appointment_date)
     : appointment.appointment_date;
-  appointment.appointment_time = apptInfo.appointment_time !== undefined
-    ? apptInfo.appointment_time
-    : appointment.appointment_time;
+  appointment.appointment_time =
+    apptInfo.appointment_time !== undefined
+      ? apptInfo.appointment_time
+      : appointment.appointment_time;
   appointment.duration =
     apptInfo.duration !== undefined ? apptInfo.duration : appointment.duration;
   appointment.note =

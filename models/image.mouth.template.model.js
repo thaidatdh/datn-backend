@@ -1,22 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const FrameTemplateModel = require("./image.frame.template.model");
-const ImageMouthTemplateSchema = mongoose.Schema({
-   name: String,
-   thumbnail: String,
-}, {
-   timestamps: true,
-   collection: 'image_mouth_template'
-});
+const ImageMouthTemplateSchema = mongoose.Schema(
+  {
+    name: String,
+    thumbnail: String,
+  },
+  {
+    timestamps: true,
+    collection: "image_mouth_template",
+  }
+);
 ImageMouthTemplateSchema.virtual("frames", {
   ref: "image_frame_template",
   localField: "_id",
   foreignField: "image_mouth_template_id",
   justOne: false,
 });
-const MouthTemplateModel = module.exports = mongoose.model(
+const MouthTemplateModel = (module.exports = mongoose.model(
   "image_mouth_template",
   ImageMouthTemplateSchema
-);
+));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = MouthTemplateModel.find(query);

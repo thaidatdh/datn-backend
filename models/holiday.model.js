@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 
 const HolidaySchema = mongoose.Schema(
   {
@@ -11,7 +12,4 @@ const HolidaySchema = mongoose.Schema(
     collection: "holiday",
   }
 );
-module.exports = mongoose.model(
-  "holiday",
-  HolidaySchema
-);
+module.exports = mongoose.model("holiday", HolidaySchema);

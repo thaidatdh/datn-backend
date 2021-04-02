@@ -337,7 +337,7 @@
             "description": "National Provider Identifier",
             "example": "string"
           },
-          "specialist": {
+          "specialty": {
             "type": "string",
             "description": "ObjectID",
             "example": null
@@ -1335,7 +1335,7 @@
           }
         }
       },
-      "Specialists": {
+      "Specialty": {
         "type": "object",
         "properties": {
           "_id": {
@@ -1501,8 +1501,8 @@
       "description": "Everything about Images"
     },
     {
-      "name": "Specialists",
-      "description": "Everything about Provider's specialist"
+      "name": "Specialty",
+      "description": "Everything about Provider's specialty"
     },
     {
       "name": "Referral Source",
@@ -1521,8 +1521,8 @@
       "description": "Everything about Patient Tooth"
     },
     {
-      "name": "Specialists",
-      "description": "Everything about Provider's specialist"
+      "name": "Specialty",
+      "description": "Everything about Provider's specialty"
     },
     {
       "name": "Insurer",
@@ -1712,7 +1712,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Practice"],
         "summary": "Update practice",
         "description": "Update practice",
@@ -1971,7 +1971,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Insurer"],
         "summary": "Update Insurer",
         "description": "Update Insurer",
@@ -2221,7 +2221,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Note Macro"],
         "summary": "Update Note Macro",
         "description": "Update Note Macro",
@@ -2465,7 +2465,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Images"],
         "summary": "Update Image",
         "description": "Update Image",
@@ -2725,7 +2725,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Drugs"],
         "summary": "Update Image",
         "description": "Update Image",
@@ -3146,7 +3146,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Document"],
         "summary": "Update Document",
         "description": "Update Document",
@@ -3395,7 +3395,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Document Category"],
         "summary": "Update Document category",
         "description": "Update Document category",
@@ -3644,7 +3644,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Procedure"],
         "summary": "Update Procedure",
         "description": "Update Procedure",
@@ -3925,7 +3925,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Procedure Category"],
         "summary": "Update Procedure category",
         "description": "Update Procedure category",
@@ -4337,7 +4337,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Patients"],
         "summary": "Update patient",
         "description": "Update patient",
@@ -4762,13 +4762,13 @@
             "description": "True would get access_group as json object"
           },
           {
-            "name": "get_specialist",
+            "name": "get_specialty",
             "in": "query",
             "required": false,
             "schema": {
               "type": "boolean"
             },
-            "description": "True would get specialist as json object"
+            "description": "True would get specialty as json object"
           }
         ],
         "responses": {
@@ -4838,7 +4838,7 @@
                     "description": "National Provider Identifier",
                     "example": "string"
                   },
-                  "specialist": {
+                  "specialty": {
                     "type": "string",
                     "description": "ObjectID",
                     "example": null
@@ -4963,13 +4963,13 @@
             "description": "True would get access_group as json object"
           },
           {
-            "name": "get_specialist",
+            "name": "get_specialty",
             "in": "query",
             "required": false,
             "schema": {
               "type": "boolean"
             },
-            "description": "True would get specialist as json object"
+            "description": "True would get specialty as json object"
           }
         ],
         "responses": {
@@ -5021,13 +5021,13 @@
             "description": "True would get access_group as json object"
           },
           {
-            "name": "get_specialist",
+            "name": "get_specialty",
             "in": "query",
             "required": false,
             "schema": {
               "type": "boolean"
             },
-            "description": "True would get specialist as json object"
+            "description": "True would get specialty as json object"
           }
         ],
         "responses": {
@@ -5087,13 +5087,13 @@
             "description": "True would get access_group as json object"
           },
           {
-            "name": "get_specialist",
+            "name": "get_specialty",
             "in": "query",
             "required": false,
             "schema": {
               "type": "boolean"
             },
-            "description": "True would get specialist as json object"
+            "description": "True would get specialty as json object"
           }
         ],
         "responses": {
@@ -5129,7 +5129,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Staffs"],
         "summary": "Update staff",
         "description": "Update staff",
@@ -5174,7 +5174,7 @@
                     "description": "National Provider Identifier",
                     "example": "string"
                   },
-                  "specialist": {
+                  "specialty": {
                     "type": "string",
                     "description": "ObjectID",
                     "example": null
@@ -5475,7 +5475,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Referral Source"],
         "summary": "Update Referral Source",
         "description": "Update Referral Source",
@@ -5751,7 +5751,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Patient Referral"],
         "summary": "Update Referral",
         "description": "Update Referral",
@@ -6198,7 +6198,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Image Mouth"],
         "summary": "Update Image Mouth",
         "description": "Update Image Mouth",
@@ -6723,7 +6723,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Image Mouth"],
         "summary": "Update Image Mouth",
         "description": "Update Image Mouth",
@@ -6887,7 +6887,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Image Mouth"],
         "summary": "Update Image Frame",
         "description": "Update Image Frame",
@@ -7338,7 +7338,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Patient Insurance"],
         "summary": "Update Insurance",
         "description": "Update Insurance",
@@ -7720,7 +7720,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Treatment Plans"],
         "summary": "Update Treatment Plan",
         "description": "Update Treatment Plan",
@@ -8144,7 +8144,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Treatments"],
         "summary": "Update Treatment",
         "description": "Update Treatment",
@@ -8571,7 +8571,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Progress Note"],
         "summary": "Update Progress Note",
         "description": "Update Progress Note",
@@ -8910,7 +8910,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Patient Tooth"],
         "summary": "Update tooth",
         "description": "Update tooth",
@@ -9123,7 +9123,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Patient Tooth"],
         "summary": "Update a tooth of a Patient",
         "description": "Update a tooth of a Patient",
@@ -9363,7 +9363,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Patient Recall"],
         "summary": "Update Recall",
         "description": "Update Recall",
@@ -9535,11 +9535,11 @@
         }
       }
     },
-    "/specialist": {
+    "/specialty": {
       "get": {
-        "tags": ["Specialists"],
-        "summary": "Retrieve a list of specialists",
-        "description": "Retrieve a list of specialists from database.",
+        "tags": ["Specialty"],
+        "summary": "Retrieve a list of specialty",
+        "description": "Retrieve a list of specialty from database.",
         "parameters": [],
         "responses": {
           "200": {
@@ -9554,7 +9554,7 @@
                     "payload": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Specialists"
+                        "$ref": "#/components/schemas/Specialty"
                       }
                     }
                   }
@@ -9574,9 +9574,9 @@
         }
       },
       "post": {
-        "tags": ["Specialists"],
-        "summary": "Insert new specialist",
-        "description": "Insert new specialist",
+        "tags": ["Specialty"],
+        "summary": "Insert new specialty",
+        "description": "Insert new specialty",
         "parameters": [],
         "requestBody": {
           "content": {
@@ -9603,7 +9603,7 @@
                       "default": true
                     },
                     "payload": {
-                      "$ref": "#/components/schemas/Specialists"
+                      "$ref": "#/components/schemas/Specialty"
                     }
                   }
                 }
@@ -9622,14 +9622,14 @@
         }
       }
     },
-    "/specialist/{specialist_id}": {
+    "/specialty/{specialty_id}": {
       "get": {
-        "tags": ["Specialists"],
-        "summary": "Get specialist detail",
-        "description": "Get specialist detail",
+        "tags": ["Specialty"],
+        "summary": "Get specialty detail",
+        "description": "Get specialty detail",
         "parameters": [
           {
-            "name": "specialist_id",
+            "name": "specialty_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -9649,7 +9649,7 @@
                       "default": true
                     },
                     "payload": {
-                      "$ref": "#/components/schemas/Specialists"
+                      "$ref": "#/components/schemas/Specialty"
                     }
                   }
                 }
@@ -9670,15 +9670,15 @@
           }
         }
       },
-      "post": {
-        "tags": ["Specialists"],
-        "summary": "Update specialist",
-        "description": "Update specialist",
+      "patch": {
+        "tags": ["Specialty"],
+        "summary": "Update specialty",
+        "description": "Update specialty",
         "parameters": [
           {
-            "name": "specialist_id",
+            "name": "specialty_id",
             "in": "path",
-            "description": "Specialist ID",
+            "description": "Specialty ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -9710,7 +9710,7 @@
                       "default": true
                     },
                     "payload": {
-                      "$ref": "#/components/schemas/Specialists"
+                      "$ref": "#/components/schemas/Specialty"
                     }
                   }
                 }
@@ -9732,14 +9732,14 @@
         }
       },
       "delete": {
-        "tags": ["Specialists"],
-        "summary": "Delete specialist",
-        "description": "Delete specialist",
+        "tags": ["Specialty"],
+        "summary": "Delete specialty",
+        "description": "Delete specialty",
         "parameters": [
           {
-            "name": "specialist_id",
+            "name": "specialty_id",
             "in": "path",
-            "description": "Specialist ID",
+            "description": "Specialty ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -9966,7 +9966,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Appointments"],
         "summary": "Update Appointment",
         "description": "Update Appointment",
@@ -10272,7 +10272,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Appointment Chairs"],
         "summary": "Update Chair",
         "description": "Update Chair",
@@ -10568,7 +10568,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "tags": ["Appointment Blocks"],
         "summary": "Update Appointment block",
         "description": "Update Appointment block",

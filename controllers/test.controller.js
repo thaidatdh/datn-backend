@@ -1,6 +1,7 @@
 let jwt = require("jsonwebtoken");
 //Import User Model
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const patientModel = require("../models/patient.model");
 User = require("../models/user.model");
 const Staff = require("../models/staff.model");

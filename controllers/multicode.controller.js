@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const MultiCodeModel = require("../models/multicode.model");
 const translator = require("../utils/translator");
 //For index
@@ -23,8 +24,9 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate(
-        "Get Multi-Code list failed",
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Multi-Code list",
         req.query.lang
       ),
       exeption: err,
@@ -48,8 +50,9 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate(
-        "Insert Multi-Code failed",
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "Multi-Code",
         req.query.lang
       ),
       exeption: err,
@@ -73,16 +76,13 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate(
-          "Multi-Code not found",
-          req.query.lang
-        ),
+        message: await translator.NotFoundMessage("Multi-Code", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get detail failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
       exeption: err,
     });
   }

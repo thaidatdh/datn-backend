@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const MouthTemplateModel = require("../models/image.mouth.template.model");
 const FrameTemplateModel = require("../models/image.frame.template.model");
 const translator = require("../utils/translator");
@@ -24,7 +25,11 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get mouth list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "mouth list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -36,7 +41,11 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert mouth failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "mouth",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -46,7 +55,10 @@ exports.detail = async function (req, res) {
     const options = {
       get_frames: req.query.get_frames,
     };
-    const mouth = await MouthTemplateModel.get({ _id: req.params.mouth_id }, options);
+    const mouth = await MouthTemplateModel.get(
+      { _id: req.params.mouth_id },
+      options
+    );
     if (mouth && mouth.length > 0) {
       res.json({
         success: true,
@@ -55,13 +67,16 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Image Mouth not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Image Mouth",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get detail failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
       exeption: err,
     });
   }
@@ -78,13 +93,20 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Image Mouth not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Image Mouth",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message:  await translator.Translate("Update failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.UPDATE,
+        "Image Mouth",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -100,13 +122,20 @@ exports.delete = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Image Mouth not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Image Mouth",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.DELETE,
+        "Image Mouth",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -118,7 +147,11 @@ exports.add_frame = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert frame failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "frame",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -134,13 +167,16 @@ exports.detail_frame = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Image Frame not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Image Frame",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get detail failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
       exeption: err,
     });
   }
@@ -157,13 +193,20 @@ exports.update_frame = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Image Frame not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Image Frame",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message:  await translator.Translate("Update failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.UPDATE,
+        "Image Frame",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -179,13 +222,20 @@ exports.delete_frame = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Image Frame not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Image Frame",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.DELETE,
+        "Image Frame",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

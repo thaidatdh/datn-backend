@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Category = require("./document.category.model");
 const Patient = require("./patient.model");
 const DocumentSchema = mongoose.Schema(
@@ -71,8 +72,8 @@ module.exports.get = async function (query, populateOptions) {
     promise.populate({
       path: "patient",
       populate: {
-        path: "user"
-      }
+        path: "user",
+      },
     });
   }
   if (populateOptions.get_category) {

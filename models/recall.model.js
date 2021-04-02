@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Patient = require("./patient.model");
 const Treatment = require("./treatment.model");
 const Appointment = require("./appointment.model");
@@ -36,7 +37,7 @@ const RecallSchema = mongoose.Schema(
   }
 );
 
-const RecallModel = module.exports = mongoose.model('recall', RecallSchema);
+const RecallModel = (module.exports = mongoose.model("recall", RecallSchema));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = RecallModel.find(query);
@@ -76,14 +77,10 @@ module.exports.insert = async function (recallInfo) {
     : Date.now();
   recall.patient = recallInfo.patient ? recallInfo.patient : null;
   recall.treatment = recallInfo.treatment ? recallInfo.treatment : null;
-  recall.appointment = recallInfo.appointment
-    ? recallInfo.appointment
-    : null;
+  recall.appointment = recallInfo.appointment ? recallInfo.appointment : null;
   recall.procedure = recallInfo.procedure ? recallInfo.procedure : null;
   recall.note = recallInfo.note ? recallInfo.note : null;
-  recall.interval = recallInfo.interval
-    ? recallInfo.interval
-    : "0y1m0w0d";
+  recall.interval = recallInfo.interval ? recallInfo.interval : "0y1m0w0d";
   recall.is_active = recallInfo.is_active ? recallInfo.is_active : false;
   return await recall.save();
 };
@@ -107,8 +104,9 @@ module.exports.updateRecall = async function (recall, recallInfo) {
       : recall.procedure;
   recall.note = recallInfo.note !== undefined ? recallInfo.note : recall.note;
   recall.interval = recallInfo.interval ? recallInfo.interval : recall.interval;
-  recall.is_active = recallInfo.is_active !== undefined
-    ? recallInfo.is_active
-    : recall.is_active;
-  return await referral.save();
+  recall.is_active =
+    recallInfo.is_active !== undefined
+      ? recallInfo.is_active
+      : recall.is_active;
+  return await recall.save();
 };

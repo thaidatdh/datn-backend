@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const practiceModel = require("../models/practice.model");
 const translator = require("../utils/translator");
 //For index
@@ -13,7 +14,11 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get practice failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "practice",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -26,7 +31,11 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert practice failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "practice",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -44,13 +53,17 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Practice not found", req.query.lang),
+        message: await translator.NotFoundMessage("Practice", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Find practice failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "practice",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -69,28 +82,36 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Practice not found", req.query.lang),
+        message: await translator.NotFoundMessage("Practice", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message:  await translator.Translate("Update failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.UPDATE,
+        "Practice",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
 };
 exports.delete = async function (req, res) {
   try {
-    await practiceModel.deleteOne({_id: req.params.practice_id});
+    await practiceModel.deleteOne({ _id: req.params.practice_id });
     res.json({
       success: true,
-      message: await translator.Translate("Delete Successfully", req.query.lang),
+      message: await translator.DeleteMessage(req.query.lang),
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.DELETE,
+        "Practice",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

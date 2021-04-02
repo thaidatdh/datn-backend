@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const drugModel = require("../models/drug.model");
 const translator = require("../utils/translator");
 //For index
@@ -13,7 +14,11 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get drugs list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "drugs list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -26,7 +31,11 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert drugs failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "drugs",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -43,13 +52,13 @@ exports.drug = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Drug not found", req.query.lang),
+        message: await translator.NotFoundMessage("Drug", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get detail failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
       exeption: err,
     });
   }
@@ -67,27 +76,27 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Drug not found", req.query.lang),
+        message: await translator.NotFoundMessage("Drug", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message:  await translator.Translate("Update failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.UPDATE, "Drug", req.query.lang),
       exeption: err,
     });
   }
 };
 exports.delete = async function (req, res) {
   try {
-    await drugModel.deleteOne({_id: req.params.drug_id});
+    await drugModel.deleteOne({ _id: req.params.drug_id });
     res.json({
       success: true,
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.DELETE, "Drug", req.query.lang),
       exeption: err,
     });
   }

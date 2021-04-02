@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const TreatmentPlanModel = require("../models/treatment.plan.model");
 const translator = require("../utils/translator");
 //For index
@@ -24,7 +25,11 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get Treatment Plan list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Treatment Plan list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -38,7 +43,10 @@ exports.patient_treatment_plan = async function (req, res) {
       limit: req.query.limit,
     };
 
-    const plans = await TreatmentPlanModel.get({ patient: patient_id }, options);
+    const plans = await TreatmentPlanModel.get(
+      { patient: patient_id },
+      options
+    );
     const result = [...plans];
     if (options.get_treatment) {
       for (let i = 0; i < plans.length; i++) {
@@ -52,7 +60,11 @@ exports.patient_treatment_plan = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get Treatment Plan list of patient " + patient_id + "failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Treatment Plan list of patient " + patient_id + "failed",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -62,7 +74,11 @@ exports.add = async function (req, res) {
     if (req.body.patient == null) {
       return res.status(400).json({
         success: false,
-        message: await translator.Translate("Insert Treatment Plan failed. Require patient", req.query.lang),
+        message: await translator.FailedMessage(
+          constants.ACTION.INSERT,
+          "Treatment Plan failed. Require patient",
+          req.query.lang
+        ),
       });
     }
     const rs = TreatmentPlanModel.insert(req.body);
@@ -70,7 +86,11 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert Treatment Plan failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "Treatment Plan",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -81,7 +101,10 @@ exports.detail = async function (req, res) {
       get_patient: req.query.get_patient,
       get_treatment: req.query.get_treatment,
     };
-    const plans = await TreatmentPlanModel.get({ _id: req.params.plan_id }, options);
+    const plans = await TreatmentPlanModel.get(
+      { _id: req.params.plan_id },
+      options
+    );
     if (plans && plans.length > 0) {
       res.json({
         success: true,
@@ -90,13 +113,16 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Treatment Plan not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Treatment Plan",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get detail failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
       exeption: err,
     });
   }
@@ -113,13 +139,20 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Treatment Plan not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Treatment Plan",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message:  await translator.Translate("Update failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.UPDATE,
+        "Treatment Plan",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -135,13 +168,20 @@ exports.delete = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Treatment Plan not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Treatment Plan",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.DELETE,
+        "Treatment Plan",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

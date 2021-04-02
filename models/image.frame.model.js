@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Images = require("./images.model");
 const ImageFrameSchema = mongoose.Schema(
   {

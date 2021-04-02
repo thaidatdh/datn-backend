@@ -1,10 +1,37 @@
 module.exports = {
+  ACTION: {
+    GET: "Get",
+    UPDATE: "Update",
+    DELETE: "Delete",
+    INSERT: "Insert",
+  },
+  MESSAGES: {
+    NOT_FOUND: "not found",
+    FAILED: "failed",
+  },
+  ACCESS_GROUP: {
+    READ_ONLY_BACKEND_METHODS: ["GET"],
+    FULL_ACTION_BACKEND_METHODS: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    ACTION: {
+      NONE: [],
+      READONLY: ["GET"],
+      FULL: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    },
+    ACTION_SETTING: {
+      DEFAULT: "NONE",
+      NONE: "NONE",
+      READONLY: "READONLY",
+      FULL: "FULL",
+    },
+  },
   USER: {
     DEFAULT_PASSWORD: "hello123",
-    USER_TYPE_STAFF: 'STAFF',
-    USER_TYPE_PROVIDER: 'PROVIDER',
-    USER_TYPE_PATIENT: 'PATIENT',
-    USER_TYPE_OTHER: 'OTHER',
+    USER_TYPE_STAFF: "ADMIN",
+    USER_TYPE_STAFF: "STAFF",
+    USER_TYPE_PROVIDER: "PROVIDER",
+    USER_TYPE_PATIENT: "PATIENT",
+    USER_TYPE_OTHER: "OTHER",
+    DEFAULT_LANGUAGE: "en",
   },
   PATIENT: {
     PATIENT_TYPE: ["NON_PATIENT", "PATIENT"],
@@ -20,7 +47,7 @@ module.exports = {
     DEFAULT_MARIRAL_STATUS: "NOT_SPECIFY",
   },
   STAFF: {
-    STAFF_TYPES: ["PROVIDER", "STAFF"],
+    STAFF_TYPES: ["PROVIDER", "STAFF", "ADMIN"],
     DEFAULT_STAFF_TYPE: "STAFF",
     STAFF_TYPE_PROVIDER: "PROVIDER",
     STAFF_TYPE_STAFF: "STAFF",
@@ -28,6 +55,6 @@ module.exports = {
   },
 };
 module.exports.RANDOM_COLOR = () => {
-  const randomColor = Math.floor(Math.random()*16777215).toString(16);
+  const randomColor = Math.floor(Math.random() * 16777215).toString(16);
   return "#" + randomColor.toString().toUpperCase();
-}
+};

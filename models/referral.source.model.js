@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 
 const ReferralSourceSchema = mongoose.Schema(
   {
@@ -34,12 +35,16 @@ module.exports.insert = async function (sourceInfo) {
 };
 module.exports.updateSource = async function (source, sourceInfo) {
   source.name = sourceInfo.name !== undefined ? sourceInfo.name : source.name;
-  source.address = sourceInfo.address !== undefined ? sourceInfo.address : source.address;
-  source.phone = sourceInfo.phone != undefined ? sourceInfo.phone : source.phone;
+  source.address =
+    sourceInfo.address !== undefined ? sourceInfo.address : source.address;
+  source.phone =
+    sourceInfo.phone != undefined ? sourceInfo.phone : source.phone;
   source.fax = sourceInfo.fax !== undefined ? sourceInfo.fax : source.fax;
-  source.email = sourceInfo.email !== undefined ? sourceInfo.email : source.email;
-  source.additional_info = sourceInfo.additional_info !== undefined
-    ? sourceInfo.additional_info
-    : source.additional_info;
+  source.email =
+    sourceInfo.email !== undefined ? sourceInfo.email : source.email;
+  source.additional_info =
+    sourceInfo.additional_info !== undefined
+      ? sourceInfo.additional_info
+      : source.additional_info;
   return await source.save();
 };

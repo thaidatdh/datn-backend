@@ -40,7 +40,7 @@ exports.signin_staff = async function (req, res) {
             // if user is found and password is right create a token
             const returnUser = Object.assign(user, { password: undefined });
             const expiredTimeToken = process.env.TOKEN_EXPIRE
-              ? process.env.TOKEN_EXPIRE
+              ? Number.parseInt(process.env.TOKEN_EXPIRE)
               : 3600;
             let expiredDateToken = new Date();
             expiredDateToken.setTime(
@@ -50,12 +50,14 @@ exports.signin_staff = async function (req, res) {
               expiresIn: expiredTimeToken, //1h
             });
             const expiredTimeRefreshToken = process.env.TOKEN_EXPIRE_REFRESH
-              ? process.env.TOKEN_EXPIRE_REFRESH
+              ? Number.parseInt(process.env.TOKEN_EXPIRE_REFRESH)
               : 86400;
             let expiredDateRefreshToken = new Date();
             expiredDateRefreshToken.setTime(
               expiredDateRefreshToken.getTime() + expiredTimeRefreshToken * 1000
             );
+            console.log(expiredDateRefreshToken);
+            console.log(expiredDateToken);
             const refreshToken = jwt.sign(
               user.toJSON(),
               process.env.TOKEN_SECRET_REFRESH,
@@ -84,7 +86,7 @@ exports.signin_staff = async function (req, res) {
             });
           }
         } catch (error) {
-          console.log(error)
+          console.log(error);
           return res.status(500).send({
             success: false,
             message: await translator.Translate(

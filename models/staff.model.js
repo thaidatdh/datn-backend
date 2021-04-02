@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
-require("./specialist.model");
+require("./specialty.model");
 require("./access.group.model");
 const User = require("./user.model");
 const StaffSchema = mongoose.Schema(
@@ -20,9 +20,9 @@ const StaffSchema = mongoose.Schema(
       default: "STAFF", //STAFF, PROVIDER
     },
     drug_lic: String,
-    specialist: {
+    specialty: {
       type: mongoose.Types.ObjectId,
-      ref: "specialist",
+      ref: "specialty",
     },
     access_group: {
       type: mongoose.Types.ObjectId,
@@ -30,6 +30,7 @@ const StaffSchema = mongoose.Schema(
     },
     start_date: { type: Date, default: Date.now() },
     npi: String,
+    biography: String,
     notify_staff_msg: Boolean,
     notify_patient_msg: Boolean,
     notify_meeting: Boolean,
@@ -60,8 +61,8 @@ module.exports.insert = async function (staffInfo) {
     ? staffInfo.staff_type
     : constants.STAFF.DEFAULT_STAFF_TYPE;
   staff.drug_lic = staffInfo.drug_lic ? staffInfo.drug_lic : null;
-  staff.specialist = staffInfo.specialist
-    ? mongoose.Types.ObjectId(staffInfo.specialist)
+  staff.specialty = staffInfo.specialty
+    ? mongoose.Types.ObjectId(staffInfo.specialty)
     : null;
   staff.access_group = staffInfo.access_group
     ? mongoose.Types.ObjectId(staffInfo.access_group)
@@ -70,6 +71,7 @@ module.exports.insert = async function (staffInfo) {
     ? Date.parse(staffInfo.start_date)
     : Date.now();
   staff.npi = staffInfo.npi ? staffInfo.npi : null;
+  staff.biography = staffInfo.biography ? staffInfo.biography : null;
   staff.notify_staff_msg =
     staffInfo.notify_staff_msg != undefined
       ? staffInfo.notify_staff_msg
@@ -107,9 +109,9 @@ module.exports.updateStaff = async function (staff, staffInfo) {
       : staff.staff_type;
   staff.drug_lic =
     staffInfo.drug_lic !== undefined ? staffInfo.drug_lic : staff.drug_lic;
-  staff.specialist = staffInfo.specialist
-    ? mongoose.Types.ObjectId(staffInfo.specialist)
-    : staff.specialist;
+  staff.specialty = staffInfo.specialty
+    ? mongoose.Types.ObjectId(staffInfo.specialty)
+    : staff.specialty;
   staff.access_group = staffInfo.access_group
     ? mongoose.Types.ObjectId(staffInfo.access_group)
     : staff.access_group;
@@ -117,6 +119,8 @@ module.exports.updateStaff = async function (staff, staffInfo) {
     ? Date.parse(staffInfo.start_date)
     : staff.start_date;
   staff.npi = staffInfo.npi !== undefined ? staffInfo.npi : staffInfo.npi;
+  staff.biography =
+    staffInfo.biography !== undefined ? staffInfo.biography : staff.biography;
   staff.notify_staff_msg =
     staffInfo.notify_staff_msg != undefined
       ? staffInfo.notify_staff_msg
@@ -162,9 +166,9 @@ module.exports.get = async function (query, populateOptions) {
   if (populateOptions.get_access_group) {
     promise.populate("access_group");
   }
-  // Specialist
-  if (populateOptions.get_specialist) {
-    promise.populate("specialist");
+  // Specialty
+  if (populateOptions.get_specialty) {
+    promise.populate("specialty");
   }
   const resultQuery = await promise.exec();
   return resultQuery;

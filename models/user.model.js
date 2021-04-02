@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-var bcrypt = require("bcrypt-nodejs");
 const constants = require("../constants/constants");
+var bcrypt = require("bcrypt-nodejs");
 const UserSchema = mongoose.Schema(
   {
     first_name: String,
@@ -54,12 +54,12 @@ UserSchema.pre("save", function (next) {
 });
 
 UserSchema.methods.comparePassword = async function (pwd) {
-   return await new Promise((resolve, reject) => {
-     bcrypt.compare(pwd, this.password, function (err, hash) {
-       if (err) reject(err);
-       resolve(hash);
-     });
-   });
+  return await new Promise((resolve, reject) => {
+    bcrypt.compare(pwd, this.password, function (err, hash) {
+      if (err) reject(err);
+      resolve(hash);
+    });
+  });
 };
 const UserModel = (module.exports = mongoose.model("user", UserSchema));
 module.exports.insert = async function (userInfo) {

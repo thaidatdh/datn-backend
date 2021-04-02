@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const PeriodontalDetail = require("./periodontal.detail.model");
 const Patient = require("./patient.model");
 const Staff = require("./staff.model");

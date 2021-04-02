@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Periodontal = require("./periodontal.model");
 const PeriodontalDetailSchema = mongoose.Schema(
   {

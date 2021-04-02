@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 
 const InsurerSchema = mongoose.Schema(
   {
@@ -41,9 +42,8 @@ module.exports.updateInsurer = async function (insurer, insurerInfo) {
   insurer.fax = insurerInfo.fax !== undefined ? insurerInfo.fax : insurer.fax;
   insurer.email =
     insurerInfo.email !== undefined ? insurerInfo.email : insurer.email;
-  insurer.max_coverage =
-    insurerInfo.max_coverage
-      ? insurerInfo.max_coverage
-      : insurer.max_coverage;
+  insurer.max_coverage = insurerInfo.max_coverage
+    ? insurerInfo.max_coverage
+    : insurer.max_coverage;
   return await insurer.save();
 };

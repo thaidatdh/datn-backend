@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const documentCategoryModel = require("../models/document.category.model");
 const translator = require("../utils/translator");
 //For index
@@ -13,7 +14,11 @@ exports.index = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Get document category list failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "document category list",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -27,7 +32,11 @@ exports.add = async function (req, res) {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: await translator.Translate("Insert document category failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.INSERT,
+        "document category",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -45,22 +54,23 @@ exports.detail = async function (req, res) {
     } else {
       res.status(500).json({
         success: false,
-        message: await translator.Translate("Document category not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Document category",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.json({
       success: false,
-      message: await translator.Translate("Get detail failed", req.query.lang),
+      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
       exeption: err,
     });
   }
 };
 exports.update = async function (req, res) {
   try {
-    let category = await documentCategoryModel.findById(
-      req.params.category_id
-    );
+    let category = await documentCategoryModel.findById(req.params.category_id);
     if (category) {
       category.name = req.body.name ? req.body.name : category.name;
       const result = await category.save();
@@ -71,13 +81,20 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Document category not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Document category",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Update failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.UPDATE,
+        "Document category",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -95,13 +112,20 @@ exports.delete = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.Translate("Document category not found", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Document category",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.Translate("Delete failed", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.DELETE,
+        "Document Category",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Patient = require("./patient.model");
 const Insurer = require("./insurer.model");
 const PatientInsuranceSchema = mongoose.Schema(

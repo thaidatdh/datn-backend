@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../constants/constants");
 const Prescription = require("./prescription.model");
 const PrescriptionDetailSchema = mongoose.Schema(
   {

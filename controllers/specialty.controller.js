@@ -1,58 +1,58 @@
 //Import User Model
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
-const InsurerModel = require("../models/insurer.model");
+const specialtyModel = require("../models/specialty.model");
 const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const insurerList = await InsurerModel.find({});
+    const specialty = await specialtyModel.find();
     res.json({
       success: true,
-      payload: insurerList,
+      payload: specialty,
     });
   } catch (err) {
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.GET,
-        "insurer list",
+        "specialty list",
         req.query.lang
       ),
       exeption: err,
     });
   }
 };
-//insert
 exports.add = async function (req, res) {
   try {
-    const insurerInfo = Object.assign({}, req.body);
-    const rs = await InsurerModel.insert(insurerInfo);
+    let specialty = new specialtyModel();
+    specialty.name = req.body.name;
+    const rs = await specialty.save();
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.INSERT,
-        "insurer",
+        "specialty",
         req.query.lang
       ),
       exeption: err,
     });
   }
 };
-exports.insurer = async function (req, res) {
+exports.specialty = async function (req, res) {
   try {
-    const insurer = await InsurerModel.findById(req.params.insurer_id);
-    if (insurer) {
+    const specialty = await specialtyModel.findById(req.params.specialty_id);
+    if (specialty) {
       res.json({
         success: true,
-        payload: insurer,
+        payload: specialty,
       });
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.NotFoundMessage("Insurer", req.query.lang),
+        message: await translator.NotFoundMessage("Specialty", req.query.lang),
       });
     }
   } catch (err) {
@@ -65,10 +65,10 @@ exports.insurer = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    const insurerInfo = req.body;
-    let insurer = await InsurerModel.findById(req.params.insurer_id);
-    if (insurer) {
-      const result = await InsurerModel.updateInsurer(insurer, insurerInfo);
+    let specialty = await specialtyModel.findById(req.params.specialty_id);
+    if (specialty) {
+      specialty.name = req.body.name ? req.body.name : specialty.name;
+      const result = await specialty.save();
       res.json({
         success: true,
         payload: result,
@@ -76,7 +76,7 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.NotFoundMessage("Insurer", req.query.lang),
+        message: await translator.NotFoundMessage("Specialty", req.query.lang),
       });
     }
   } catch (err) {
@@ -84,7 +84,7 @@ exports.update = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.UPDATE,
-        "Insurer",
+        "Specialty",
         req.query.lang
       ),
       exeption: err,
@@ -93,7 +93,7 @@ exports.update = async function (req, res) {
 };
 exports.delete = async function (req, res) {
   try {
-    await InsurerModel.deleteOne({ _id: req.params.insurer_id });
+    await specialtyModel.deleteOne({ _id: req.params.specialty_id });
     res.json({
       success: true,
     });
@@ -102,7 +102,7 @@ exports.delete = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.DELETE,
-        "Insurer",
+        "Specialty",
         req.query.lang
       ),
       exeption: err,
