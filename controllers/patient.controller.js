@@ -7,16 +7,27 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_hohh: req.query.get_hohh,
-      get_provider: req.query.get_provider,
+      get_hohh: req.query.get_hohh == "true",
+      get_provider: req.query.get_provider == "true",
       limit: req.query.limit,
       page: req.query.page,
     };
     const patientList = await PatientModel.get({}, options);
-    res.json({
+    let result = {
       success: true,
       payload: patientList,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await PatientModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -51,8 +62,8 @@ exports.patient = async function (req, res) {
   try {
     const patient_id = req.params.patient_id;
     const options = {
-      get_hohh: req.query.get_hohh,
-      get_provider: req.query.get_provider,
+      get_hohh: req.query.get_hohh == "true",
+      get_provider: req.query.get_provider == "true",
     };
     const rs = await PatientModel.get({ _id: patient_id }, options);
     if (rs != null && rs.length > 0) {

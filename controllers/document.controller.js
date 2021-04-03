@@ -7,14 +7,27 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_category: req.query.get_category,
+      get_patient: req.query.get_patient == "true",
+      get_category: req.query.get_category == "true",
+      limit: req.query.limit,
+      page: req.query.page,
     };
     const documents = await documentModel.get({}, options);
-    res.json({
+    let result = {
       success: true,
       payload: documents,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await documentModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -30,14 +43,27 @@ exports.index = async function (req, res) {
 exports.practice_document = async function (req, res) {
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_category: req.query.get_category,
+      get_patient: req.query.get_patient == "true",
+      get_category: req.query.get_category == "true",
+      limit: req.query.limit,
+      page: req.query.page,
     };
     const documents = await documentModel.get({ patient: null }, options);
-    res.json({
+    let result = {
       success: true,
       payload: documents,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await documentModel.countDocuments({ patient: null });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -54,15 +80,30 @@ exports.patient_document = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_category: req.query.get_category,
+      get_patient: req.query.get_patient == "true",
+      get_category: req.query.get_category == "true",
+      limit: req.query.limit,
+      page: req.query.page,
     };
 
     const documents = await documentModel.get({ patient: patient_id }, options);
-    res.json({
+    let result = {
       success: true,
       payload: documents,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await documentModel.countDocuments({
+        patient: patient_id,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -104,8 +145,8 @@ exports.add = async function (req, res) {
 exports.detail = async function (req, res) {
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_category: req.query.get_category,
+      get_patient: req.query.get_patient == "true",
+      get_category: req.query.get_category == "true",
     };
     const document = await documentModel.get(
       { _id: req.params.document_id },
@@ -125,7 +166,11 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

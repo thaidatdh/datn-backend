@@ -7,7 +7,7 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_procedures: req.query.get_patient,
+      get_procedures: req.query.get_procedures == "true",
       limit: req.query.limit,
     };
     const multicodes = await MultiCodeModel.get({}, options);
@@ -62,7 +62,7 @@ exports.add = async function (req, res) {
 exports.detail = async function (req, res) {
   try {
     const options = {
-      get_procedures: req.query.get_procedures,
+      get_procedures: req.query.get_procedures == "true",
     };
     const multicodes = await MultiCodeModel.get(
       { _id: req.params.multicode_id },

@@ -7,11 +7,26 @@ const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const procedure_codes = await procedureModel.find();
-    res.json({
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const procedure_codes = await procedureModel.get({}, options);
+    let result = {
       success: true,
       payload: procedure_codes,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await procedureModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -35,6 +50,45 @@ exports.add = async function (req, res) {
       message: await translator.FailedMessage(
         constants.ACTION.INSERT,
         "procedure code",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+exports.procedure_by_category_id = async function (req, res) {
+  try {
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const procedure_codes = await procedureModel.get(
+      { category: req.params.category_id },
+      options
+    );
+    let result = {
+      success: true,
+      payload: procedure_codes,
+    };
+    if (options.page && options.limit) {
+      const totalCount = await procedureModel.countDocuments({
+        category: req.params.category_id,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Procedure",
         req.query.lang
       ),
       exeption: err,
@@ -122,14 +176,14 @@ exports.delete_procedure = async function (req, res) {
 exports.index_category = async function (req, res) {
   try {
     const options = {
-      get_codes: req.query.get_codes,
+      get_codes: req.query.get_codes == "true",
       limit: req.query.limit,
     };
     const categories = await categoryModel.get({}, options);
     const result = [...categories];
     if (options.get_codes) {
       for (let i = 0; i < categories.length; i++) {
-        result[i].procedure_code = [...categories[i].procedure_code];
+        result[i].procedure_code = categories[i].procedure_code;
       }
     }
     res.json({
@@ -151,7 +205,7 @@ exports.index_category = async function (req, res) {
 exports.category_by_id = async function (req, res) {
   try {
     const options = {
-      get_codes: req.query.get_codes,
+      get_codes: req.query.get_codes == "true",
     };
     const category_id = req.params.category_id;
     const category = await categoryModel.get({ _id: category_id }, options);
@@ -161,7 +215,7 @@ exports.category_by_id = async function (req, res) {
           ? Object.assign({}, category[0]._doc)
           : null;
       if (options.get_codes && result) {
-        result.procedure_code = [...category.procedure_code];
+        result.procedure_code = category.procedure_code;
       }
       res.json({
         success: true,
@@ -227,7 +281,7 @@ exports.update_category = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.UPDATE,
-        constants.ACTION.UPDATE,
+        "Procedure Category",
         req.query.lang
       ),
       exeption: err,

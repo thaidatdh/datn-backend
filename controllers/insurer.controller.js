@@ -6,11 +6,26 @@ const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const insurerList = await InsurerModel.find({});
-    res.json({
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const insurerList = await InsurerModel.get({}, options);
+    let result = {
       success: true,
       payload: insurerList,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await drugModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -58,7 +73,11 @@ exports.insurer = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

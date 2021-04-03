@@ -48,3 +48,19 @@ module.exports.updateSource = async function (source, sourceInfo) {
       : source.additional_info;
   return await source.save();
 };
+module.exports.get = async function (query, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = ReferralSourceModel.find(query);
+  // Limit
+  if (populateOptions.limit && populateOptions.page) {
+    promise.skip(
+      Number.parseInt(populateOptions.limit) *
+        Number.parseInt(populateOptions.page)
+    );
+  }
+  if (populateOptions.limit) {
+    promise.limit(Number.parseInt(populateOptions.limit));
+  }
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};

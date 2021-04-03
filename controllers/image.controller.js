@@ -8,12 +8,24 @@ exports.index = async function (req, res) {
   try {
     const options = {
       limit: req.query.limit,
+      page: req.query.page,
     };
     const images = await imageModel.get({}, options);
-    res.json({
+    let result = {
       success: true,
       payload: images,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await imageModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -31,13 +43,27 @@ exports.image_of_patient = async function (req, res) {
   try {
     const options = {
       limit: req.query.limit,
+      page: req.query.page,
     };
 
     const images = await imageModel.get({ patient: patient_id }, options);
-    res.json({
+    let result = {
       success: true,
       payload: images,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await imageModel.countDocuments({
+        patient: patient_id,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -84,7 +110,11 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail ", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail ",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

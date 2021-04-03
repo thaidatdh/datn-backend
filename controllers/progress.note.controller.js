@@ -7,8 +7,8 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_provider: req.query.get_provider,
+      get_patient: req.query.get_patient == "true",
+      get_provider: req.query.get_provider == "true",
       limit: req.query.limit,
     };
     const notes = await ProgressNoteModel.get({}, options);
@@ -32,8 +32,8 @@ exports.patient_note = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_provider: req.query.get_provider,
+      get_patient: req.query.get_patient == "true",
+      get_provider: req.query.get_provider == "true",
       limit: req.query.limit,
     };
 
@@ -83,8 +83,8 @@ exports.add = async function (req, res) {
 exports.detail = async function (req, res) {
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_provider: req.query.get_provider,
+      get_patient: req.query.get_patient == "true",
+      get_provider: req.query.get_provider == "true",
     };
     const notes = await ProgressNoteModel.get(
       { _id: req.params.note_id },

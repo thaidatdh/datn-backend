@@ -2,15 +2,31 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const holidayModel = require("../models/holiday.model");
+const { options } = require("../routes");
 const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const holidays = await holidayModel.find();
-    res.json({
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const holidays = await holidayModel.get({}, options);
+    let result = {
       success: true,
       payload: holidays,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await holidayModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,

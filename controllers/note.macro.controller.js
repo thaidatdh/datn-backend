@@ -6,17 +6,146 @@ const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const noteMacroList = await NoteMacroModel.find();
-    res.json({
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const noteMacroList = await NoteMacroModel.get({}, options);
+    let result = {
       success: true,
       payload: noteMacroList,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await NoteMacroModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.GET,
         "note macro list",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+exports.medical_alert_index = async function (req, res) {
+  try {
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const noteMacroList = await NoteMacroModel.get({ note_type : constants.NOTE_MACRO.TYPE_MEDICAL_ALERT}, options);
+    let result = {
+      success: true,
+      payload: noteMacroList,
+    };
+    if (options.page && options.limit) {
+      const totalCount = await NoteMacroModel.countDocuments({
+        note_type: constants.NOTE_MACRO.TYPE_MEDICAL_ALERT,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Medical Alert macro list",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+exports.treatment_note_index = async function (req, res) {
+  try {
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const noteMacroList = await NoteMacroModel.get(
+      { note_type: constants.NOTE_MACRO.TYPE_TREATMENT },
+      options
+    );
+    let result = {
+      success: true,
+      payload: noteMacroList,
+    };
+    if (options.page && options.limit) {
+      const totalCount = await NoteMacroModel.countDocuments({
+        note_type: constants.NOTE_MACRO.TYPE_TREATMENT,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Treatment Note macro list",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+exports.back_note_index = async function (req, res) {
+  try {
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const noteMacroList = await NoteMacroModel.get(
+      { note_type: constants.NOTE_MACRO.TYPE_BACKNOTE },
+      options
+    );
+    let result = {
+      success: true,
+      payload: noteMacroList,
+    };
+    if (options.page && options.limit) {
+      const totalCount = await NoteMacroModel.countDocuments({
+        note_type: constants.NOTE_MACRO.TYPE_BACKNOTE,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Progress Note macro list",
         req.query.lang
       ),
       exeption: err,

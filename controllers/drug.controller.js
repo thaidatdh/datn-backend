@@ -6,11 +6,26 @@ const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const drugs = await drugModel.find();
-    res.json({
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const drugs = await drugModel.get({}, options);
+    let result = {
       success: true,
       payload: drugs,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await drugModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,

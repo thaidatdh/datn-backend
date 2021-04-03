@@ -8,22 +8,38 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_details: req.query.get_details,
-      get_provider: req.query.get_provider,
+      get_details: req.query.get_details == "true",
+      get_provider: req.query.get_provider == "true",
       limit: req.query.limit,
+      page: req.query.page,
     };
     const prescriptions = await PrescriptionModel.get({}, options);
-    const result = [];
-    for (const prescription of prescriptions) {
-      let prescriptionObject = Object.assign({}, prescription._doc);
-      prescriptionObject.detail = [...prescription.detail];
-      result.push(prescriptionObject);
+    let resultList = prescriptions;
+    if (options.get_details) {
+      resultList = [];
+      for (const prescription of prescriptions) {
+        let prescriptionObject = Object.assign({}, prescription._doc);
+        prescriptionObject.details = prescription.details;
+        resultList.push(prescriptionObject);
+      }
     }
-    res.json({
+    let result = {
       success: true,
-      payload: result,
-    });
+      payload: resultList,
+    };
+    if (options.page && options.limit) {
+      const totalCount = await PrescriptionModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
@@ -39,25 +55,40 @@ exports.patient_prescription = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
-      get_details: req.query.get_details,
-      get_provider: req.query.get_provider,
+      get_details: req.query.get_details == "true",
+      get_provider: req.query.get_provider == "true",
       limit: req.query.limit,
+      page: req.query.page,
     };
 
     const prescriptions = await PrescriptionModel.get(
       { patient: patient_id },
       options
     );
-    const result = [];
-    for (const prescription of prescriptions) {
-      let prescriptionObject = Object.assign({}, prescription._doc);
-      prescriptionObject.details = [...prescription.details];
-      result.push(prescriptionObject);
+    let resultList = prescriptions;
+    if (options.get_details) {
+      resultList = [];
+      for (const prescription of prescriptions) {
+        let prescriptionObject = Object.assign({}, prescription._doc);
+        prescriptionObject.details = prescription.details;
+        resultList.push(prescriptionObject);
+      }
     }
-    res.json({
+    let result = {
       success: true,
-      payload: result,
-    });
+      payload: resultList,
+    };
+    if (options.page && options.limit) {
+      const totalCount = await PrescriptionModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -98,8 +129,8 @@ exports.add = async function (req, res) {
 exports.detail = async function (req, res) {
   try {
     const options = {
-      get_details: req.query.get_details,
-      get_provider: req.query.get_provider,
+      get_details: req.query.get_details == "true",
+      get_provider: req.query.get_provider == "true",
     };
     const prescription = await PrescriptionModel.get(
       { _id: req.params.prescription_id },
@@ -107,7 +138,7 @@ exports.detail = async function (req, res) {
     );
     if (prescription && prescription.length > 0) {
       const result = Object.assign({}, prescription[0]);
-      result.details = [...prescription[0].details];
+      result.details = prescription[0].details;
       res.json({
         success: true,
         payload: result,

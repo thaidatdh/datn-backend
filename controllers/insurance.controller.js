@@ -7,8 +7,8 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_insurer: req.query.get_insurer,
+      get_patient: req.query.get_patient == "true",
+      get_insurer: req.query.get_insurer == "true",
       limit: req.query.limit,
     };
     const insurances = await InsuranceModel.get({}, options);
@@ -32,8 +32,8 @@ exports.patient_insurance = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_insurer: req.query.get_insurer,
+      get_patient: req.query.get_patient == "true",
+      get_insurer: req.query.get_insurer == "true",
       limit: req.query.limit,
     };
 
@@ -85,11 +85,19 @@ exports.add = async function (req, res) {
 };
 exports.detail = async function (req, res) {
   try {
-    const insurance = await InsuranceModel.findById(req.params.insurance_id);
-    if (insurance) {
+    const options = {
+      get_patient: req.query.get_patient == "true",
+      get_insurer: req.query.get_insurer == "true",
+      limit: 1,
+    };
+    const insurance = await InsuranceModel.get(
+      { _id: req.params.insurance_id },
+      options
+    );
+    if (insurance && insurance.length > 0) {
       res.json({
         success: true,
-        payload: insurance,
+        payload: insurance[0],
       });
     } else {
       res.status(404).json({

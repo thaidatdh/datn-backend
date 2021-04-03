@@ -8,7 +8,7 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_frames: req.query.get_frames,
+      get_frames: req.query.get_frames == "true",
       limit: req.query.limit,
     };
     const mouths = await MouthTemplateModel.get({}, options);
@@ -53,7 +53,7 @@ exports.add = async function (req, res) {
 exports.detail = async function (req, res) {
   try {
     const options = {
-      get_frames: req.query.get_frames,
+      get_frames: req.query.get_frames == "true",
     };
     const mouth = await MouthTemplateModel.get(
       { _id: req.params.mouth_id },

@@ -7,14 +7,27 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_access_group: req.query.get_access_group,
-      get_specialty: req.query.get_specialty,
+      get_access_group: req.query.get_access_group == "true",
+      get_specialty: req.query.get_specialty == "true",
+      limit: req.query.limit,
+      page: req.query.page,
     };
     const staffList = await StaffModel.get({}, options);
-    res.json({
+    let result = {
       success: true,
       payload: staffList,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await StaffModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -30,17 +43,32 @@ exports.index = async function (req, res) {
 exports.index_provider = async function (req, res) {
   try {
     const options = {
-      get_access_group: req.query.get_access_group,
-      get_specialty: req.query.get_specialty,
+      get_access_group: req.query.get_access_group == "true",
+      get_specialty: req.query.get_specialty == "true",
+      limit: req.query.limit,
+      page: req.query.page,
     };
     const providerList = await StaffModel.get(
       { staff_type: constants.STAFF.STAFF_TYPE_PROVIDER },
       options
     );
-    res.json({
+    let result = {
       success: true,
       payload: providerList,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await StaffModel.countDocuments({
+        staff_type: constants.STAFF.STAFF_TYPE_PROVIDER,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -56,17 +84,32 @@ exports.index_provider = async function (req, res) {
 exports.index_staff = async function (req, res) {
   try {
     const options = {
-      get_access_group: req.query.get_access_group,
-      get_specialty: req.query.get_specialty,
+      get_access_group: req.query.get_access_group == "true",
+      get_specialty: req.query.get_specialty == "true",
+      limit: req.query.limit,
+      page: req.query.page,
     };
     const staffList = await StaffModel.get(
       { staff_type: constants.STAFF.STAFF_TYPE_STAFF },
       options
     );
-    res.json({
+    let result = {
       success: true,
       payload: staffList,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await StaffModel.countDocuments({
+        staff_type: constants.STAFF.STAFF_TYPE_STAFF,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -100,8 +143,8 @@ exports.add = async function (req, res) {
 exports.staff = async function (req, res) {
   try {
     const options = {
-      get_access_group: req.query.get_access_group,
-      get_specialty: req.query.get_specialty,
+      get_access_group: req.query.get_access_group == "true",
+      get_specialty: req.query.get_specialty == "true",
     };
     const staff = await StaffModel.get({ _id: req.params.staff_id }, options);
     if (staff && staff.length > 0) {

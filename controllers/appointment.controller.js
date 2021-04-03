@@ -153,6 +153,7 @@ exports.appointments_index = async function (req, res) {
   try {
     const options = {
       limit: req.query.limit,
+      page: req.query.page,
     };
     let query = {};
     if (req.query.date) {
@@ -180,11 +181,27 @@ exports.appointments_index = async function (req, res) {
       query = Object.assign(query, { chair: { $in: chairsList } });
     }
     const appointments = await appointmentModel.get(query, options);
-    res.json({
+
+    let result = {
       success: true,
       payload: appointments,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount =
+        query == {}
+          ? await appointmentModel.estimatedDocumentCount()
+          : await appointmentModel.countDocuments(query);
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
@@ -200,16 +217,30 @@ exports.appointments_of_patient = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
+      page: req.query.page,
       limit: req.query.limit,
     };
     const appointments = await appointmentModel.get(
       { patient: patient_id },
       options
     );
-    res.json({
+    let result = {
       success: true,
       payload: appointments,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await appointmentModel.countDocuments({
+        patient: patient_id,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,

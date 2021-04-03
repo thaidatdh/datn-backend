@@ -42,3 +42,19 @@ module.exports.updateDrug = async function (drug, drugInfo) {
   drug.note = drugInfo.note !== undefined ? drugInfo.note : drug.note;
   return await drug.save();
 };
+module.exports.get = async function (query, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = DrugModel.find(query);
+  // Limit
+  if (populateOptions.limit && populateOptions.page) {
+    promise.skip(
+      Number.parseInt(populateOptions.limit) *
+        Number.parseInt(populateOptions.page)
+    );
+  }
+  if (populateOptions.limit) {
+    promise.limit(Number.parseInt(populateOptions.limit));
+  }
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};

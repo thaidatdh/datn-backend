@@ -53,6 +53,11 @@ module.exports = {
     STAFF_TYPE_STAFF: "STAFF",
     DEFAULT_IS_ACTIVE: true,
   },
+  NOTE_MACRO: {
+    TYPE_MEDICAL_ALERT: "MEDICAL_ALERT",
+    TYPE_TREATMENT: "TREATMENT",
+    TYPE_BACKNOTE: "BACKNOTE",
+  }
 };
 module.exports.RANDOM_COLOR = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);

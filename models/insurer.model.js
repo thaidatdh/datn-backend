@@ -20,6 +20,22 @@ const InsurerModel = (module.exports = mongoose.model(
   "insurer",
   InsurerSchema
 ));
+module.exports.get = async function (query, populateOptions) {
+  populateOptions = populateOptions || {};
+  const promise = InsurerModel.find(query);
+  // Limit
+  if (populateOptions.limit && populateOptions.page) {
+    promise.skip(
+      Number.parseInt(populateOptions.limit) *
+        Number.parseInt(populateOptions.page)
+    );
+  }
+  if (populateOptions.limit) {
+    promise.limit(Number.parseInt(populateOptions.limit));
+  }
+  const resultQuery = await promise.exec();
+  return resultQuery;
+};
 module.exports.insert = async function (insurerInfo) {
   let insurer = new InsurerModel();
   insurer.name = insurerInfo.name ? insurerInfo.name : null;

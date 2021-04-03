@@ -10,6 +10,7 @@ router
   .get(procedureController.category_by_id)
   .patch(procedureController.update_category)
   .delete(procedureController.delete_category);
+router.route("/by_category/:category_id").get(procedureController.procedure_by_category_id);
 router.route("/").get(procedureController.index).post(procedureController.add);
 router
   .route("/:procedure_id")

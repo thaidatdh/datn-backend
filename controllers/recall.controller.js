@@ -7,17 +7,29 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_treatment: req.query.get_treatment,
-      get_appointment: req.query.get_appointment,
-      get_procedure: req.query.get_procedure,
+      get_patient: req.query.get_patient == "true",
+      get_treatment: req.query.get_treatment == "true",
+      get_appointment: req.query.get_appointment == "true",
+      get_procedure: req.query.get_procedure == "true",
       limit: req.query.limit,
+      page: req.query.page,
     };
     const recall = await RecallModel.get({}, options);
-    res.json({
+    let result = {
       success: true,
-      payload: recall,
-    });
+      payload: recalls,
+    };
+    if (options.page && options.limit) {
+      const totalCount = await RecallModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -34,18 +46,32 @@ exports.patient_recall = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
-      get_patient: req.query.get_patient,
-      get_treatment: req.query.get_treatment,
-      get_appointment: req.query.get_appointment,
-      get_procedure: req.query.get_procedure,
+      get_patient: req.query.get_patient == "true",
+      get_treatment: req.query.get_treatment == "true",
+      get_appointment: req.query.get_appointment == "true",
+      get_procedure: req.query.get_procedure == "true",
       limit: req.query.limit,
+      page: req.query.page,
     };
 
     const recalls = await RecallModel.get({ patient: patient_id }, options);
-    res.json({
+    let result = {
       success: true,
       payload: recalls,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await RecallModel.countDocuments({
+        patient: patient_id,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -86,11 +112,20 @@ exports.add = async function (req, res) {
 };
 exports.detail = async function (req, res) {
   try {
-    const recall = await RecallModel.findById(req.params.recall_id);
-    if (recall) {
+    const options = {
+      get_patient: req.query.get_patient == "true",
+      get_treatment: req.query.get_treatment == "true",
+      get_appointment: req.query.get_appointment == "true",
+      get_procedure: req.query.get_procedure == "true",
+    };
+    const recall = await RecallModel.get(
+      { _id: req.params.recall_id },
+      options
+    );
+    if (recall && recall.length > 0) {
       res.json({
         success: true,
-        payload: recall,
+        payload: recall[0],
       });
     } else {
       res.status(404).json({
@@ -101,7 +136,11 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
