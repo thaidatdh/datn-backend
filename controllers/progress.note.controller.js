@@ -10,12 +10,24 @@ exports.index = async function (req, res) {
       get_patient: req.query.get_patient == "true",
       get_provider: req.query.get_provider == "true",
       limit: req.query.limit,
+      page: req.query.page,
     };
     const notes = await ProgressNoteModel.get({}, options);
-    res.json({
+    let result = {
       success: true,
       payload: notes,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await ProgressNoteModel.estimatedDocumentCount();
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -35,13 +47,27 @@ exports.patient_note = async function (req, res) {
       get_patient: req.query.get_patient == "true",
       get_provider: req.query.get_provider == "true",
       limit: req.query.limit,
+      page: req.query.page,
     };
 
     const notes = await ProgressNoteModel.get({ patient: patient_id }, options);
-    res.json({
+    let result = {
       success: true,
       payload: notes,
-    });
+    };
+    if (options.page && options.limit) {
+      const totalCount = await ProgressNoteModel.countDocuments({
+        patient: patient_id,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
   } catch (err) {
     res.status(500).json({
       success: false,
