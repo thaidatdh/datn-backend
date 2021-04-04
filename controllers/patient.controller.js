@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const { SEARCH } = require("../constants/constants");
 const constants = require("../constants/constants");
 const PatientModel = require("../models/patient.model");
 const translator = require("../utils/translator");
@@ -132,6 +133,74 @@ exports.delete = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.DELETE,
+        "Patient",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+
+exports.autocomplete = async function (req, res) {
+  let searchType = SEARCH.DEFAULT_AUTO_COMPLETE_PATIENT_TYPE;
+  if (
+    req.query.type &&
+    SEARCH.AUTO_COMPLETE_PATIENT_TYPE.includes(req.query.type)
+  ) {
+    searchType = req.query.type;
+  }
+  const searchData = req.query.data;
+  const regexSearch = {
+    $regex: "^" + searchData,
+    $options: "i",
+  };
+  const matchSearch =
+    searchType == SEARCH.DEFAULT_AUTO_COMPLETE_PATIENT_TYPE
+      ? {
+          name: regexSearch,
+        }
+      : {
+          patient_id: regexSearch,
+        };
+  try {
+    const result = await PatientModel.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "UserData",
+        },
+      },
+      {
+        $unwind: "$UserData",
+      },
+      {
+        $addFields: {
+          name: {
+            $concat: ["$UserData.first_name", " ", "$UserData.last_name"],
+          },
+        },
+      },
+      {
+        $match: matchSearch,
+      },
+      {
+        $project: {
+          _id: 1,
+          patient_id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    ]);
+    res.json({ success: true, payload: result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
         "Patient",
         req.query.lang
       ),

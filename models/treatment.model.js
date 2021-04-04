@@ -35,6 +35,7 @@ const TreatmentSchema = mongoose.Schema(
     insurance_percent: Number,
     discount: Number,
     insurance_amount: Number,
+    patient_amount: Number,
     description: String,
     note: String,
     treatment_plan: {
@@ -147,9 +148,8 @@ module.exports.insert = async function (req) {
   treatment.tooth = req.tooth ? req.tooth : null;
   treatment.surface = req.surface ? req.surface : null;
   treatment.discount = req.discount ? req.discount : 0;
-  treatment.insurance_amount = req.insurance_amount
-    ? req.insurance_amount
-    : null;
+  treatment.insurance_amount = req.insurance_amount ? req.insurance_amount : 0;
+  treatment.patient_amount = req.patient_amount ? req.patient_amount : 0;
   treatment.note = req.note ? req.note : null;
   treatment.treatment_plan = req.treatment_plan ? req.treatment_plan : null;
   treatment.appointment = req.appointment ? req.appointment : null;
@@ -192,6 +192,10 @@ module.exports.updateTreatment = async function (treatment, req) {
     req.insurance_amount !== undefined
       ? req.insurance_amount
       : treatment.insurance_amount;
+  treatment.patient_amount =
+    req.patient_amount !== undefined
+      ? req.patient_amount
+      : treatment.patient_amount;
   treatment.note = req.note !== undefined ? req.note : treatment.note;
   treatment.treatment_plan =
     req.treatment_plan !== undefined

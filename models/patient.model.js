@@ -64,8 +64,8 @@ module.exports.insert = async function (patientInfo) {
   patient.user = user_id;
   patient.patient_id = patientInfo.patient_id ? patientInfo.patient_id : null;
   patient.active_date = patientInfo.active_date
-    ? Date.parse(patientInfo.active_date)
-    : Date.now();
+    ? new Date(patientInfo.active_date)
+    : new Date(Date.now());
   patient.is_active =
     patientInfo.is_active != undefined
       ? patientInfo.is_active
@@ -134,7 +134,7 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
       : patient.patient_id;
   patient.active_date =
     patientInfo.active_date != undefined
-      ? Date.parse(patientInfo.active_date)
+      ? new Date(patientInfo.active_date)
       : patientInfo.active_date;
   patient.is_active =
     patientInfo.is_active != undefined

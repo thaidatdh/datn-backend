@@ -26,6 +26,8 @@ const imageMouthRouter = require("./mouth.route");
 const imageMouthTemplateRouter = require("./mouth.template.route");
 const multiCodeRouter = require("./multicode.route");
 const prescriptionRouter = require("./prescription.route");
+const reportRouter = require("./report.route");
+router.use("/report", reportRouter);
 router.use("/patient", patientRouter);
 router.use("/staff", staffRouter);
 router.use("/specialty", specialtyRouter);

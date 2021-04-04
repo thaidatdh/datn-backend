@@ -57,7 +57,12 @@ module.exports = {
     TYPE_MEDICAL_ALERT: "MEDICAL_ALERT",
     TYPE_TREATMENT: "TREATMENT",
     TYPE_BACKNOTE: "BACKNOTE",
-  }
+  },
+  SEARCH: {
+    DEFAULT_AUTO_COMPLETE_PATIENT_TYPE: "name",
+    AUTO_COMPLETE_PATIENT_TYPE: ["name","id"],
+    REGEX_NAME: "\w+",
+  },
 };
 module.exports.RANDOM_COLOR = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);
