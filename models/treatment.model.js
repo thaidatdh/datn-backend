@@ -5,6 +5,7 @@ const Patient = require("./patient.model");
 const Staff = require("./staff.model");
 const ProcedureModel = require("./procedure.code.model");
 const Appointment = require("./appointment.model");
+const RecallModel = require("./recall.model");
 const TreatmentSchema = mongoose.Schema(
   {
     patient: {
@@ -163,7 +164,23 @@ module.exports.insert = async function (req) {
     ? req.description
     : Procedure.description;
   treatment.mark_type = req.mark_type ? req.mark_type : Procedure.mark_type;
-  return await treatment.save();
+  const treatmentResult = await treatment.save();
+  if (
+    Procedure.auto_recall === true &&
+    Procedure.recall_interval != null &&
+    Procedure.recall_interval !== constants.RECALL.DEFAULT_INTERVAL
+  ) {
+    const autoRecallInfo = {
+      patient: treatmentResult.patient,
+      treatment_date: treatmentResult.treatment_date,
+      interval: Procedure.recall_interval,
+      appointment: treatmentResult.appointment,
+      procedure: treatmentResult.procedure_code,
+      treatment: treatmentResult._id,
+    };
+    await RecallModel.insertAutoRecall(autoRecallInfo);
+  }
+  return treatmentResult;
 };
 module.exports.updateTreatment = async function (treatment, req) {
   const Procedure = await ProcedureModel.findById(req.procedure_code);

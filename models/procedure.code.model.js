@@ -93,7 +93,7 @@ module.exports.insert = async function (procedureCodeInfo) {
     : false;
   proc.recall_interval = procedureCodeInfo.recall_interval
     ? procedureCodeInfo.recall_interval
-    : null;
+    : constants.RECALL.DEFAULT_INTERVAL;
   return await proc.save();
 };
 module.exports.updateProcedure = async function (procedure, procedureCodeInfo) {

@@ -4,6 +4,7 @@ const Patient = require("./patient.model");
 const Treatment = require("./treatment.model");
 const Appointment = require("./appointment.model");
 const Procedure = require("./procedure.code.model");
+const { calculateDateRecallByInterval } = require("../utils/utils");
 const RecallSchema = mongoose.Schema(
   {
     patient: {
@@ -26,7 +27,6 @@ const RecallSchema = mongoose.Schema(
       ref: "procedure_code",
       required: false,
     },
-    interval: String,
     recall_date: Date,
     is_active: Boolean,
     note: String,
@@ -86,8 +86,22 @@ module.exports.insert = async function (recallInfo) {
   recall.appointment = recallInfo.appointment ? recallInfo.appointment : null;
   recall.procedure = recallInfo.procedure ? recallInfo.procedure : null;
   recall.note = recallInfo.note ? recallInfo.note : null;
-  recall.interval = recallInfo.interval ? recallInfo.interval : "0y1m0w0d";
   recall.is_active = recallInfo.is_active ? recallInfo.is_active : false;
+  return await recall.save();
+};
+module.exports.insertAutoRecall = async function (autoRecallInfo) {
+  let date = calculateDateRecallByInterval(
+    autoRecallInfo.reatment_date,
+    autoRecallInfo.interval
+  );
+  let recall = new RecallModel();
+  recall.recall_date = date;
+  recall.patient = autoRecallInfo.patient;
+  recall.treatment = autoRecallInfo.treatment;
+  recall.appointment = autoRecallInfo.appointment;
+  recall.procedure = autoRecallInfo.procedure;
+  recall.note = null;
+  recall.is_active = true;
   return await recall.save();
 };
 module.exports.updateRecall = async function (recall, recallInfo) {
@@ -109,7 +123,6 @@ module.exports.updateRecall = async function (recall, recallInfo) {
       ? recallInfo.procedure
       : recall.procedure;
   recall.note = recallInfo.note !== undefined ? recallInfo.note : recall.note;
-  recall.interval = recallInfo.interval ? recallInfo.interval : recall.interval;
   recall.is_active =
     recallInfo.is_active !== undefined
       ? recallInfo.is_active

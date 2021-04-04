@@ -63,6 +63,9 @@ module.exports = {
     AUTO_COMPLETE_PATIENT_TYPE: ["name","id"],
     REGEX_NAME: "\w+",
   },
+  RECALL: {
+    DEFAULT_INTERVAL: "0y0m0w0d",
+  }
 };
 module.exports.RANDOM_COLOR = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);
