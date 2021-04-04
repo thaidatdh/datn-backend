@@ -149,6 +149,7 @@ exports.autocomplete = async function (req, res) {
   ) {
     searchType = req.query.type;
   }
+  const limit = req.query.limit ? Number.parseInt(req.query.limit) : constants.PATIENT.DEFAILT_LIMIT_AUTO_COMPLETE;
   const searchData = req.query.data;
   const regexSearch = {
     $regex: "^" + searchData,
@@ -180,6 +181,12 @@ exports.autocomplete = async function (req, res) {
           name: {
             $concat: ["$UserData.first_name", " ", "$UserData.last_name"],
           },
+          first_name: {
+            $concat: ["$UserData.first_name", ""],
+          },
+          last_name: {
+            $concat: ["", "$UserData.last_name"],
+          },
         },
       },
       {
@@ -193,6 +200,7 @@ exports.autocomplete = async function (req, res) {
           last_name: 1,
         },
       },
+      { $limit: limit },
     ]);
     res.json({ success: true, payload: result });
   } catch (err) {
