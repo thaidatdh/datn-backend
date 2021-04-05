@@ -155,7 +155,7 @@ module.exports.insert = async function (req) {
   treatment.treatment_plan = req.treatment_plan ? req.treatment_plan : null;
   treatment.appointment = req.appointment ? req.appointment : null;
   treatment.status = req.status ? req.status : "PLAN";
-  treatment.ada_code = req.ada_code ? req.ada_code : Procedure.ada_code;
+  treatment.ada_code = req.ada_code ? req.ada_code : Procedure.procedure_code;
   treatment.fee = req.fee ? req.fee : Procedure.fee;
   treatment.insurance_percent = req.insurance_percent
     ? req.insurance_percent
@@ -223,7 +223,7 @@ module.exports.updateTreatment = async function (treatment, req) {
   treatment.status = req.status ? req.status : treatment.status;
   if (Procedure) {
     treatment.ada_code =
-      req.ada_code != undefined ? req.ada_code : Procedure.ada_code;
+      req.ada_code != undefined ? req.ada_code : Procedure.procedure_code;
     treatment.fee = req.fee != undefined ? req.fee : Procedure.fee;
     treatment.insurance_percent =
       req.insurance_percent != undefined

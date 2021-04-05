@@ -32,6 +32,10 @@ module.exports = {
     USER_TYPE_PATIENT: "PATIENT",
     USER_TYPE_OTHER: "OTHER",
     DEFAULT_LANGUAGE: "en",
+    LANGUAGE: {
+      VIETNAMESE: "vi",
+      ENGLISH: "en",
+    },
   },
   PATIENT: {
     PATIENT_TYPE: ["NON_PATIENT", "PATIENT"],
@@ -61,12 +65,12 @@ module.exports = {
   },
   SEARCH: {
     DEFAULT_AUTO_COMPLETE_PATIENT_TYPE: "name",
-    AUTO_COMPLETE_PATIENT_TYPE: ["name","id"],
-    REGEX_NAME: "\w+",
+    AUTO_COMPLETE_PATIENT_TYPE: ["name", "id"],
+    REGEX_NAME: "w+",
   },
   RECALL: {
     DEFAULT_INTERVAL: "0y0m0w0d",
-  }
+  },
 };
 module.exports.RANDOM_COLOR = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);

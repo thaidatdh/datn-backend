@@ -273,5 +273,8 @@ module.exports.get = async function (query, populateOptions) {
     });
   }
   const resultQuery = await promise.exec();
+  if (populateOptions.one) {
+    return resultQuery.length > 0 ? resultQuery[0] : null;
+  }
   return resultQuery;
 };
