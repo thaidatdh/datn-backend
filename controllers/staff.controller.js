@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const { SEARCH, STAFF } = require("../constants/constants");
 const constants = require("../constants/constants");
 const StaffModel = require("../models/staff.model");
 const translator = require("../utils/translator");
@@ -161,7 +162,11 @@ exports.staff = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "Staff", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Staff",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -185,7 +190,11 @@ exports.update = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "Staff", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Staff",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -211,6 +220,88 @@ exports.delete = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.DELETE,
+        "Staff",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+
+exports.autocomplete = async function (req, res) {
+  const searchType =
+    req.query.type && SEARCH.AUTO_COMPLETE_PATIENT_TYPE.includes(req.query.type)
+      ? req.query.type
+      : SEARCH.AUTO_COMPLETE_TYPE_NAME;
+  const staffType = STAFF.STAFF_TYPES.includes(req.query.staffType)
+    ? req.query.staffType
+    : STAFF.STAFF_TYPE_PROVIDER;
+  const limit = req.query.limit
+    ? Number.parseInt(req.query.limit)
+    : SEARCH.DEFAILT_LIMIT_AUTO_COMPLETE;
+  const searchData = req.query.data;
+  const regexSearch = {
+    $regex: "^" + searchData,
+    $options: "i",
+  };
+  const matchSearch =
+    searchType == SEARCH.AUTO_COMPLETE_TYPE_NAME
+      ? {
+          name: regexSearch,
+          is_active: true,
+          staff_type: staffType,
+        }
+      : {
+          display_id: regexSearch,
+          is_active: true,
+          staff_type: staffType,
+        };
+  try {
+    const result = await StaffModel.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "UserData",
+        },
+      },
+      {
+        $unwind: "$UserData",
+      },
+      {
+        $addFields: {
+          name: {
+            $concat: ["$UserData.first_name", " ", "$UserData.last_name"],
+          },
+          first_name: {
+            $concat: ["$UserData.first_name", ""],
+          },
+          last_name: {
+            $concat: ["", "$UserData.last_name"],
+          },
+        },
+      },
+      {
+        $match: matchSearch,
+      },
+      {
+        $project: {
+          _id: 1,
+          display_id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+      { $limit: limit },
+    ]);
+    res.json({ success: true, payload: result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
         "Staff",
         req.query.lang
       ),

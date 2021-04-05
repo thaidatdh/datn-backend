@@ -67,6 +67,8 @@ module.exports = {
     DEFAULT_AUTO_COMPLETE_PATIENT_TYPE: "name",
     AUTO_COMPLETE_PATIENT_TYPE: ["name", "id"],
     REGEX_NAME: "w+",
+    AUTO_COMPLETE_TYPE_NAME: "name",
+    DEFAILT_LIMIT_AUTO_COMPLETE: 10,
   },
   RECALL: {
     DEFAULT_INTERVAL: "0y0m0w0d",
