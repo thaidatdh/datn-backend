@@ -3,6 +3,7 @@ const constants = require("../constants/constants");
 require("./staff.model");
 const User = require("./user.model");
 const ToothModel = require("./tooth.model");
+const { toNumber, calculateAge } = require("../utils/utils");
 const PatientSchema = mongoose.Schema(
   {
     user: {
@@ -10,6 +11,7 @@ const PatientSchema = mongoose.Schema(
       ref: "user",
     },
     patient_id: String,
+    patient_id_numeric: Number,
     active_date: Date,
     is_active: Boolean,
     head_of_household: {
@@ -48,14 +50,46 @@ const PatientModel = (module.exports = mongoose.model(
   "patient",
   PatientSchema
 ));
-function calculateAge(birthday) {
-  if (birthday == null || birthday == undefined) {
-    return 20;
+const generatePatientId = (module.exports.generatePatientId = async () => {
+  let new_id = 1;
+  try {
+    const MaxIDFound = await PatientModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          max_id: { $max: "$patient_id_numeric" },
+        },
+      },
+      {
+        $project: {
+          max_id: 1,
+        },
+      },
+    ]);
+    const IdObj = MaxIDFound[0];
+
+    if (IdObj && IdObj.max_id) {
+      new_id = parseInt(IdObj.max_id) + 1;
+    }
+    const ListPatientIdObj = await PatientModel.aggregate([
+      {
+        $project: {
+          patient_id: 1,
+        },
+      },
+    ]);
+    let ListPatientId = [];
+    for (const obj of ListPatientIdObj) {
+      ListPatientId.push(obj.patient_id);
+    }
+    while (ListPatientId.includes(new_id.toString())) {
+      new_id = new_id + 1;
+    }
+  } catch (err) {
+    console.log(err);
   }
-  var ageDifMs = Date.now() - birthday;
-  var ageDate = new Date(ageDifMs); // miliseconds from epoch
-  return Math.abs(ageDate.getUTCFullYear() - 1970);
-}
+  return new_id.toString();
+});
 module.exports.insert = async function (patientInfo) {
   patientInfo.user_type = constants.USER.USER_TYPE_PATIENT;
   const insertedUser = await User.insert(patientInfo);
@@ -63,6 +97,7 @@ module.exports.insert = async function (patientInfo) {
   let patient = new PatientModel();
   patient.user = user_id;
   patient.patient_id = patientInfo.patient_id ? patientInfo.patient_id : null;
+  patient.patient_id_numeric = toNumber(patient.patient_id);
   patient.active_date = patientInfo.active_date
     ? new Date(patientInfo.active_date)
     : new Date(Date.now());
@@ -111,6 +146,10 @@ module.exports.insert = async function (patientInfo) {
   patient.patient_balance = 0.0;
   patient.insurance_balance = 0.0;
   patient.credit_amount = 0.0;
+  if (patient.new_patient == false && patient.patient_id == null) {
+    patient.patient_id = generatePatientId();
+    patient.patient_id_numeric = toNumber(patient.patient_id);
+  }
   const insertedPatient = await patient.save();
   const tooth_type =
     insertedPatient.dob == null || calculateAge(insertedPatient.dob) > 13
@@ -132,6 +171,7 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
     patientInfo.patient_id !== undefined
       ? patientInfo.patient_id
       : patient.patient_id;
+  patient.patient_id_numeric = toNumber(patient.patient_id);
   patient.active_date =
     patientInfo.active_date != undefined
       ? new Date(patientInfo.active_date)
@@ -200,6 +240,13 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
     patientInfo.credit_amount != undefined
       ? patientInfo.credit_amount
       : patient.credit_amount;
+  if (patient.new_patient === true) {
+    if (patient.patient_id == null) {
+      patient.patient_id = await generatePatientId();
+      patient.patient_id_numeric = toNumber(patient.patient_id);
+    }
+    patient.new_patient = false;
+  }
   const updatedPatient = await patient.save();
   const result = await Object.assign({}, updatedPatient._doc);
   result.user = await Object.assign({}, updatedUser._doc);

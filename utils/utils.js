@@ -33,3 +33,15 @@ exports.formatReadableDate = (date, lang) => {
     dateValue.getFullYear()
   );
 };
+exports.toNumber = (number) => {
+  const numeric_string = number ? new String(number).replace(/\D/g, "") : null;
+  return numeric_string ? parseInt(numeric_string) : 0;
+};
+exports.calculateAge = (birthday) => {
+  if (birthday == null || birthday == undefined) {
+    return 20;
+  }
+  var ageDifMs = Date.now() - birthday;
+  var ageDate = new Date(ageDifMs); // miliseconds from epoch
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}

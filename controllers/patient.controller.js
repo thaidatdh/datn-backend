@@ -149,7 +149,9 @@ exports.autocomplete = async function (req, res) {
   ) {
     searchType = req.query.type;
   }
-  const limit = req.query.limit ? Number.parseInt(req.query.limit) : constants.PATIENT.DEFAILT_LIMIT_AUTO_COMPLETE;
+  const limit = req.query.limit
+    ? Number.parseInt(req.query.limit)
+    : constants.PATIENT.DEFAILT_LIMIT_AUTO_COMPLETE;
   const searchData = req.query.data;
   const regexSearch = {
     $regex: "^" + searchData,
@@ -158,7 +160,7 @@ exports.autocomplete = async function (req, res) {
   const matchSearch =
     searchType == SEARCH.DEFAULT_AUTO_COMPLETE_PATIENT_TYPE
       ? {
-          name: regexSearch,
+          $or: [{ name: regexSearch }, { last_name: regexSearch }],
         }
       : {
           patient_id: regexSearch,

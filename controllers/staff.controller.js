@@ -247,7 +247,7 @@ exports.autocomplete = async function (req, res) {
   const matchSearch =
     searchType == SEARCH.AUTO_COMPLETE_TYPE_NAME
       ? {
-          name: regexSearch,
+          $or: [{ name: regexSearch }, { last_name: regexSearch }],
           is_active: true,
           staff_type: staffType,
         }
