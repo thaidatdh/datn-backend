@@ -11,12 +11,15 @@ const nonSecurePaths = [
   "/api/authorization/signin",
   "/api/authorization/refresh-token",
   "/api/authorization/patient/signin",
+  "/api/",
 ];
 
 exports.verifyUser = async (request, response, next) => {
+  const regex = new RegExp('/api/([\\w-\\d])+.\\w+');
   if (
     process.env.DATABASE_DEBUG_SKIP_AUTHORIZATION == "true" ||
-    nonSecurePaths.includes(request.path)
+    nonSecurePaths.includes(request.path) ||
+    regex.test(request.path)
   ) {
     return next();
   }

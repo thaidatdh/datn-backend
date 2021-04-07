@@ -34,6 +34,7 @@ const StaffSchema = mongoose.Schema(
     notify_staff_msg: Boolean,
     notify_patient_msg: Boolean,
     notify_meeting: Boolean,
+    staff_photo: String,
   },
   {
     timestamps: true,
@@ -72,6 +73,7 @@ module.exports.insert = async function (staffInfo) {
     : Date.now();
   staff.npi = staffInfo.npi ? staffInfo.npi : null;
   staff.biography = staffInfo.biography ? staffInfo.biography : null;
+  staff.staff_photo = staffInfo.staff_photo ? staffInfo.staff_photo : null;
   staff.notify_staff_msg =
     staffInfo.notify_staff_msg != undefined
       ? staffInfo.notify_staff_msg
@@ -121,6 +123,10 @@ module.exports.updateStaff = async function (staff, staffInfo) {
   staff.npi = staffInfo.npi !== undefined ? staffInfo.npi : staffInfo.npi;
   staff.biography =
     staffInfo.biography !== undefined ? staffInfo.biography : staff.biography;
+  staff.staff_photo =
+    staffInfo.staff_photo !== undefined
+      ? staffInfo.staff_photo
+      : staff.staff_photo;
   staff.notify_staff_msg =
     staffInfo.notify_staff_msg != undefined
       ? staffInfo.notify_staff_msg
