@@ -94,7 +94,7 @@ module.exports.updateStaff = async function (staff, staffInfo) {
     staffInfo.staff_type !== undefined
       ? staffInfo.staff_type
       : staff.staff_type;
-  const updatedUser = await User.updateUser(staff.user, staffInfo);
+  const updatedUser = await User.updateUser(staff.user._id, staffInfo);
   staff.display_id =
     staffInfo.display_id !== undefined
       ? staffInfo.display_id
@@ -130,7 +130,7 @@ module.exports.updateStaff = async function (staff, staffInfo) {
   staff.notify_staff_msg =
     staffInfo.notify_staff_msg != undefined
       ? staffInfo.notify_staff_msg
-      : taff.notify_staff_msg;
+      : staff.notify_staff_msg;
   staff.notify_patient_msg =
     staffInfo.notify_patient_msg != undefined
       ? staffInfo.notify_patient_msg
@@ -143,7 +143,7 @@ module.exports.updateStaff = async function (staff, staffInfo) {
   const result = await Object.assign({}, updatedStaff._doc);
   result.user = await Object.assign({}, updatedUser._doc);
   return result;
-};
+};;
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = StaffModel.find(query);

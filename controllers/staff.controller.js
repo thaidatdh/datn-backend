@@ -188,10 +188,11 @@ exports.update = async function (req, res) {
       });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
-        constants.ACTION.GET,
+        constants.ACTION.UPDATE,
         "Staff",
         req.query.lang
       ),

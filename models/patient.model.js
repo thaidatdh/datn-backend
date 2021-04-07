@@ -165,7 +165,7 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
   if (patient == null) {
     return null;
   }
-  const updatedUser = await User.updateUser(patient.user, patientInfo);
+  const updatedUser = await User.updateUser(patient.user._id, patientInfo);
   patientInfo.user_type = constants.USER.USER_TYPE_PATIENT;
   patient.patient_id =
     patientInfo.patient_id !== undefined
