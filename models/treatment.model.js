@@ -159,7 +159,7 @@ module.exports.insert = async function (req) {
   treatment.fee = req.fee ? req.fee : Procedure.fee;
   treatment.insurance_percent = req.insurance_percent
     ? req.insurance_percent
-    : Procedure.insurance_percent;
+    : Procedure.insured_percent;
   treatment.description = req.description
     ? req.description
     : Procedure.description;
@@ -179,6 +179,13 @@ module.exports.insert = async function (req) {
       treatment: treatmentResult._id,
     };
     await RecallModel.insertAutoRecall(autoRecallInfo);
+  }
+  if (constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(treatment.status)) {
+    await Patient.updateBalance(
+      req.patient,
+      treatment.fee,
+      constants.TRANSACTION.TREATMENT_BALANCE_TYPE
+    );
   }
   return treatmentResult;
 };
@@ -220,6 +227,9 @@ module.exports.updateTreatment = async function (treatment, req) {
       : treatment.treatment_plan;
   treatment.appointment =
     req.appointment !== undefined ? req.appointment : treatment.appointment;
+  const isUpdateBalance =
+    constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(req.status) &&
+    !constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(treatment.status);
   treatment.status = req.status ? req.status : treatment.status;
   if (Procedure) {
     treatment.ada_code =
@@ -228,11 +238,18 @@ module.exports.updateTreatment = async function (treatment, req) {
     treatment.insurance_percent =
       req.insurance_percent != undefined
         ? req.insurance_percent
-        : Procedure.insurance_percent;
+        : Procedure.insured_percent;
     treatment.description =
       req.description != undefined ? req.description : Procedure.description;
     treatment.mark_type =
       req.mark_type != undefined ? req.mark_type : Procedure.mark_type;
+  }
+  if (isUpdateBalance) {
+    await Patient.updateBalance(
+      req.patient,
+      treatment.fee,
+      constants.TRANSACTION.TREATMENT_BALANCE_TYPE
+    );
   }
   return await treatment.save();
 };

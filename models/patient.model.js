@@ -325,3 +325,20 @@ module.exports.get = async function (query, populateOptions) {
   }
   return resultQuery;
 };
+
+module.exports.updateBalance = async (patient_id, amount, type) => {
+  const Patient = await PatientModel.findById(patient_id);
+  if (!Patient) {
+    return false;
+  }
+  const amountNumber = parseFloat(amount);
+  const originalAmount = parseFloat(Patient.patient_balance);
+  if (type === constants.TRANSACTION.TREATMENT_BALANCE_TYPE) {
+    Patient.patient_balance = originalAmount + amountNumber;
+  }
+  else if (type == constants.TRANSACTION.TRANSACTION_BALANCE_TYPE) {
+    Patient.patient_balance = originalAmount - amountNumber;
+  }
+  await Patient.save();
+  return true;
+}
