@@ -77,7 +77,7 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const rs = MouthModel.insertWithFrames(req.body);
+    const rs = await MouthModel.insertWithFrames(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
@@ -181,7 +181,7 @@ exports.add_frame = async function (req, res) {
     const request = Object.assign(req.body, {
       image_mouth_id: req.params.mouth_id,
     });
-    const rs = FrameModel.insert(request);
+    const rs = await FrameModel.insert(request);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({

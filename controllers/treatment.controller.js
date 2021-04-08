@@ -1,5 +1,6 @@
 //Import User Model
 const mongoose = require("mongoose");
+const { TREATMENT } = require("../constants/constants");
 const constants = require("../constants/constants");
 const TreatmentModel = require("../models/treatment.model");
 const translator = require("../utils/translator");
@@ -123,7 +124,7 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const rs = TreatmentModel.insert(req.body);
+    const rs = await TreatmentModel.insert(req.body);
     if (rs) {
       return res.json({ success: true, payload: rs });
     } else {
@@ -137,6 +138,7 @@ exports.add = async function (req, res) {
       });
     }
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
@@ -173,7 +175,11 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -220,10 +226,20 @@ exports.delete = async function (req, res) {
   try {
     const treatment = TreatmentModel.findById(req.params.treatment_id);
     if (treatment) {
-      await TreatmentModel.deleteOne({ _id: req.params.treatment_id });
-      res.json({
-        success: true,
-      });
+      if (TREATMENT.UPDATE_BALANCE_STATUS.includes(treatment.status)) {
+        return res.status(400).json({
+          success: false,
+          message: await translator.Translate(
+            "Can not delete Completed/Existing Treatment",
+            req.query.lang
+          ),
+        });
+      } else {
+        await TreatmentModel.deleteOne({ _id: req.params.treatment_id });
+        res.json({
+          success: true,
+        });
+      }
     } else {
       res.status(404).json({
         success: false,

@@ -36,7 +36,7 @@ exports.index = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    const rs = MouthTemplateModel.insertWithFrames(req.body);
+    const rs = await MouthTemplateModel.insertWithFrames(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
@@ -142,7 +142,7 @@ exports.delete = async function (req, res) {
 };
 exports.add_frame = async function (req, res) {
   try {
-    const rs = FrameTemplateModel.insert(req.body);
+    const rs = await FrameTemplateModel.insert(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({

@@ -35,7 +35,7 @@ exports.index = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    const rs = MultiCodeModel.insert(req.body);
+    const rs = await MultiCodeModel.insert(req.body);
     if (rs) {
       return res.json({ success: true, payload: rs });
     } else {

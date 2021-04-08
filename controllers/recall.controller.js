@@ -96,7 +96,7 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const rs = RecallModel.insert(req.body);
+    const rs = await RecallModel.insert(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({

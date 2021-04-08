@@ -1,3 +1,4 @@
+//deprecated
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const Patient = require("./patient.model");

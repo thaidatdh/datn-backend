@@ -83,7 +83,7 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const rs = referralModel.insert(req.body);
+    const rs = await referralModel.insert(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({

@@ -1,4 +1,4 @@
-//Import User Model
+//deprecated
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const InsuranceModel = require("../models/patient.insurance.model");
@@ -69,7 +69,7 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const rs = InsuranceModel.insert(req.body);
+    const rs = await InsuranceModel.insert(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
@@ -108,7 +108,11 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail ", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail ",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

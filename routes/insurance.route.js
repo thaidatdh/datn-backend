@@ -1,3 +1,4 @@
+//deprecated
 let router = require("express").Router();
 const authMiddleware = require("../middlewares/auth.middleware");
 let insuranceController = require("../controllers/insurance.controller");

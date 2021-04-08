@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const Patient = require("./patient.model");
-const Treatment = require("./treatment.model");
 const Appointment = require("./appointment.model");
 const Procedure = require("./procedure.code.model");
 const { calculateDateRecallByInterval } = require("../utils/utils");
@@ -91,7 +90,7 @@ module.exports.insert = async function (recallInfo) {
 };
 module.exports.insertAutoRecall = async function (autoRecallInfo) {
   let date = calculateDateRecallByInterval(
-    autoRecallInfo.reatment_date,
+    autoRecallInfo.treatment_date,
     autoRecallInfo.interval
   );
   let recall = new RecallModel();

@@ -1,4 +1,4 @@
-//Import User Model
+//deprecated
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const InsurerModel = require("../models/insurer.model");

@@ -1,24 +1,25 @@
 //Import User Model
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
-const ProgressNoteModel = require("../models/progress.note.model");
+const TransactionModel = require("../models/transaction.model");
 const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
     const options = {
       get_patient: req.query.get_patient == "true",
-      get_provider: req.query.get_provider == "true",
+      get_staff: req.query.get_staff == "true",
+      get_treatment: req.query.get_treatment == "true",
       limit: req.query.limit,
       page: req.query.page,
     };
-    const notes = await ProgressNoteModel.get({}, options);
+    const transactions = await TransactionModel.get({}, options);
     let result = {
       success: true,
-      payload: notes,
+      payload: transactions,
     };
     if (options.page && options.limit) {
-      const totalCount = await ProgressNoteModel.estimatedDocumentCount();
+      const totalCount = await TransactionModel.estimatedDocumentCount();
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
@@ -33,30 +34,34 @@ exports.index = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.GET,
-        "note list",
+        "Transaction list",
         req.query.lang
       ),
       exeption: err,
     });
   }
 };
-exports.patient_note = async function (req, res) {
+exports.patient_transaction = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
       get_patient: req.query.get_patient == "true",
-      get_provider: req.query.get_provider == "true",
+      get_staff: req.query.get_staff == "true",
+      get_treatment: req.query.get_treatment == "true",
       limit: req.query.limit,
       page: req.query.page,
     };
 
-    const notes = await ProgressNoteModel.get({ patient: patient_id }, options);
+    const transactions = await TransactionModel.get(
+      { patient: patient_id },
+      options
+    );
     let result = {
       success: true,
-      payload: notes,
+      payload: transactions,
     };
     if (options.page && options.limit) {
-      const totalCount = await ProgressNoteModel.countDocuments({
+      const totalCount = await TransactionModel.countDocuments({
         patient: patient_id,
       });
       const limit = Number.parseInt(options.limit);
@@ -69,11 +74,12 @@ exports.patient_note = async function (req, res) {
     }
     res.json(result);
   } catch (err) {
+    
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.GET,
-        "note list of patient " + patient_id + "failed",
+        "Transaction list of patient " + patient_id + "failed",
         req.query.lang
       ),
       exeption: err,
@@ -87,19 +93,31 @@ exports.add = async function (req, res) {
         success: false,
         message: await translator.FailedMessage(
           constants.ACTION.INSERT,
-          "note failed. Require patient",
+          "Transaction failed. Require patient",
           req.query.lang
         ),
       });
     }
-    const rs = await ProgressNoteModel.insert(req.body);
-    return res.json({ success: true, payload: rs });
+    const rs = await TransactionModel.insert(req.body);
+    if (rs != null) {
+      return res.json({ success: true, payload: rs });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: await translator.FailedMessage(
+          constants.ACTION.INSERT,
+          "Transaction failed",
+          req.query.lang
+        ),
+      });
+    }
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.INSERT,
-        "note",
+        "Transaction",
         req.query.lang
       ),
       exeption: err,
@@ -110,50 +128,60 @@ exports.detail = async function (req, res) {
   try {
     const options = {
       get_patient: req.query.get_patient == "true",
-      get_provider: req.query.get_provider == "true",
+      get_staff: req.query.get_staff == "true",
+      get_treatment: req.query.get_treatment == "true",
     };
-    const notes = await ProgressNoteModel.get(
-      { _id: req.params.note_id },
+    const transactions = await TransactionModel.get(
+      { _id: req.params.transaction_id },
       options
     );
-    if (notes && notes.length > 0) {
+    if (transactions && transactions.length > 0) {
       res.json({
         success: true,
-        payload: notes[0],
+        payload: transactions[0],
       });
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.NotFoundMessage(
-          "Progress Note",
-          req.query.lang
-        ),
+        message: await translator.NotFoundMessage("Transaction", req.query.lang),
       });
     }
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
 };
 exports.update = async function (req, res) {
   try {
-    let note = await ProgressNoteModel.findById(req.params.note_id);
-    if (note) {
-      const result = await ProgressNoteModel.updateProgressNote(note, req.body);
-      res.json({
-        success: true,
-        payload: result,
-      });
+    let transaction = await TransactionModel.findById(req.params.transaction_id);
+    if (transaction) {
+      const result = await TransactionModel.updateTransaction(transaction, req.body);
+      if (result) {
+        res.json({
+          success: true,
+          payload: result,
+        });
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: await translator.FailedMessage(
+            constants.ACTION.INSERT,
+            "Transaction",
+            req.query.lang
+          ),
+        });
+      }
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.NotFoundMessage(
-          "Progress Note",
-          req.query.lang
-        ),
+        message: await translator.NotFoundMessage("Transaction", req.query.lang),
       });
     }
   } catch (err) {
@@ -161,36 +189,7 @@ exports.update = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.UPDATE,
-        "Progress Note",
-        req.query.lang
-      ),
-      exeption: err,
-    });
-  }
-};
-exports.delete = async function (req, res) {
-  try {
-    const note = ProgressNoteModel.findById(req.params.note_id);
-    if (note) {
-      await ProgressNoteModel.deleteOne({ _id: req.params.note_id });
-      res.json({
-        success: true,
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: await translator.NotFoundMessage(
-          "Progress Note",
-          req.query.lang
-        ),
-      });
-    }
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: await translator.FailedMessage(
-        constants.ACTION.DELETE,
-        "Progress Note",
+        "Transaction",
         req.query.lang
       ),
       exeption: err,

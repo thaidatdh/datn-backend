@@ -36,9 +36,9 @@ const PatientSchema = mongoose.Schema(
       default: "NOT_SPECIFY", //MALE, FEMALE, NOT_SPECIFY
     },
     patient_photo: String,
-    patient_balance: Number,
-    insurance_balance: Number,
-    credit_amount: Number,
+    patient_balance: mongoose.Types.Decimal128,
+    //insurance_balance: Number,
+    credit_amount: mongoose.Types.Decimal128,
   },
   {
     timestamps: true,
@@ -144,7 +144,7 @@ module.exports.insert = async function (patientInfo) {
     ? patientInfo.patient_photo
     : constants.PATIENT.DEFAULT_PATIENT_PHOTO_LINK;
   patient.patient_balance = 0.0;
-  patient.insurance_balance = 0.0;
+  //patient.insurance_balance = 0.0;
   patient.credit_amount = 0.0;
   if (patient.new_patient == false && patient.patient_id == null) {
     patient.patient_id = generatePatientId();
@@ -232,10 +232,10 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
     patientInfo.patient_balance != undefined
       ? patientInfo.patient_balance
       : patient.patient_balance;
-  patient.insurance_balance =
-    patientInfo.insurance_balance != undefined
-      ? patientInfo.insurance_balance
-      : patient.insurance_balance;
+  //patient.insurance_balance =
+  //  patientInfo.insurance_balance != undefined
+  //    ? patientInfo.insurance_balance
+  //    : patient.insurance_balance;
   patient.credit_amount =
     patientInfo.credit_amount != undefined
       ? patientInfo.credit_amount
@@ -332,13 +332,28 @@ module.exports.updateBalance = async (patient_id, amount, type) => {
     return false;
   }
   const amountNumber = parseFloat(amount);
-  const originalAmount = parseFloat(Patient.patient_balance);
-  if (type === constants.TRANSACTION.TREATMENT_BALANCE_TYPE) {
+  const originalAmount = parseFloat(Patient.patient_balance.toString());
+  if (type === constants.TRANSACTION.INCREASE) {
     Patient.patient_balance = originalAmount + amountNumber;
   }
-  else if (type == constants.TRANSACTION.TRANSACTION_BALANCE_TYPE) {
+  else if (type == constants.TRANSACTION.DECREASE) {
     Patient.patient_balance = originalAmount - amountNumber;
   }
   await Patient.save();
   return true;
 }
+module.exports.updateCredit = async (patient_id, amount, type) => {
+  const Patient = await PatientModel.findById(patient_id);
+  if (!Patient) {
+    return false;
+  }
+  const amountNumber = parseFloat(amount);
+  const originalAmount = parseFloat(Patient.credit_amount.toString());
+  if (type === constants.TRANSACTION.INCREASE) {
+    Patient.credit_amount = originalAmount + amountNumber;
+  } else if (type == constants.TRANSACTION.DECREASE) {
+    Patient.credit_amount = originalAmount - amountNumber;
+  }
+  await Patient.save();
+  return true;
+};

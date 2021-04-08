@@ -456,10 +456,6 @@
             "type": "number",
             "example": 0.0
           },
-          "insurance_balance": {
-            "type": "number",
-            "example": 0.0
-          },
           "credit_amount": {
             "type": "number",
             "example": 0.0
@@ -1412,18 +1408,6 @@
             "type": "number",
             "example": "0.0"
           },
-          "insurance_percent": {
-            "type": "number",
-            "example": "0.0"
-          },
-          "discount": {
-            "type": "number",
-            "example": "0.0"
-          },
-          "insurance_amount": {
-            "type": "number",
-            "example": "0.0"
-          },
           "description": {
             "type": "string",
             "example": "string"
@@ -1526,7 +1510,11 @@
     },
     {
       "name": "Insurer",
-      "description": "Everything about Insurer"
+      "description": "[Deprecated]Everything about Insurer"
+    },
+    {
+      "name": "Ptient Insurance",
+      "description": "[Deprecated]Everything about Ptient Insurance"
     },
     {
       "name": "Appointments",
@@ -8008,10 +7996,6 @@
                     "type": "string",
                     "example": "string"
                   },
-                  "discount": {
-                    "type": "number",
-                    "example": "0.0"
-                  },
                   "note": {
                     "type": "string",
                     "example": "string"
@@ -8187,10 +8171,6 @@
                   "surface": {
                     "type": "string",
                     "example": "string"
-                  },
-                  "discount": {
-                    "type": "number",
-                    "example": "0.0"
                   },
                   "note": {
                     "type": "string",
@@ -9265,7 +9245,7 @@
                   },
                   "interval": {
                     "type": "string",
-                    "example": "0y1m0w0d"
+                    "example": "0y|1m|0w|0d"
                   },
                   "recall_date": {
                     "type": "string",
@@ -9401,7 +9381,7 @@
                   },
                   "interval": {
                     "type": "string",
-                    "example": "0y1m0w0d"
+                    "example": "0y|1m|0w|0d"
                   },
                   "recall_date": {
                     "type": "string",

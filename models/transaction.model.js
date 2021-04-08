@@ -18,15 +18,16 @@ const TransactionSchema = mongoose.Schema(
     treatment: {
       type: mongoose.Types.ObjectId,
       ref: "treatment",
-      required: true,
+      required: false,
     },
-    amount: Number,
+    amount: mongoose.Types.Decimal128,
     transaction_date: Date,
     transaction_type: String,
     is_delete: {
       type: Boolean,
       default: false,
     },
+    note: String,
   },
   {
     timestamps: true,
@@ -83,6 +84,9 @@ module.exports.get = async function (query, populateOptions) {
       },
     });
   }
+  if (populateOptions.get_treatment) {
+    promise.populate("treatment");
+  }
   const resultQuery = await promise.exec();
   return resultQuery;
 };
@@ -91,43 +95,140 @@ module.exports.get = async function (query, populateOptions) {
  * credit is amount practice need to pay patient back
  * amount of balance increase by complete treatment fee
  * PAYMENT, DISCOUNT(ADJUSTMENT): patient pay, decrease balance
+ * ADJUSTMENT: increase balance
  * CREDIT(ADJUSTMENT): no affect to balance, increase credit
  * TRANSFER CREDIT: increase balance, tranfer the amount to credit (ex: balance = -100, credit = 10 -> transfer 20 -> balance = -80, credit = 30)
  * REFUND(full/partial): practice pay patient back, decrease credit
  * */
 module.exports.insert = async function (req) {
   const Treatment = await TreatmentModel.findById(req.treatment);
-  if (!Treatment) {
-    return null;
-  }
   let transaction = new TransactionModel();
   transaction.transaction_date = req.transaction_date
     ? new Date(Date.parse(req.transaction_date))
     : new Date(Date.now());
   transaction.patient = req.patient ? req.patient : null;
   transaction.provider = req.provider ? req.provider : null;
-  transaction.treatment = Treatment._id;
+  transaction.treatment = Treatment ? Treatment._id : null;
   transaction.note = req.note ? req.note : null;
   transaction.amount = req.amount ? req.amount : 0;
   transaction.transaction_type = req.transaction_type
     ? req.transaction_type
     : constants.TRANSACTION.TRANSACTION_TYPE_PAYMENT;
+  transaction.is_delete = req.is_delete ? req.is_delete : false;
   const transactionResult = await transaction.save();
-  if (constants.TRANSACTION.UPDATE_TRANSACTION_TYPES.includes(transaction.transaction_type)) {
-    await PatientModel.updateBalance(transaction.patient, req.amount, constants.TRANSACTION.TRANSACTION_BALANCE_TYPE);
+  if (transaction.is_delete == true) return transactionResult;
+  if (
+    constants.TRANSACTION.UPDATE_TRANSACTION_TYPES.includes(
+      transaction.transaction_type
+    )
+  ) {
+    await PatientModel.updateBalance(
+      transaction.patient,
+      req.amount,
+      constants.TRANSACTION.DECREASE
+    );
+  } else if (
+    transaction.transaction_type ==
+    constants.TRANSACTION.TRANSACTION_TYPE_CREDIT
+  ) {
+    await PatientModel.updateCredit(
+      transaction.patient,
+      req.amount,
+      constants.TRANSACTION.INCREASE
+    );
+  } else if (
+    transaction.transaction_type ==
+    constants.TRANSACTION.TRANSACTION_TYPE_TRANSFER_CREDIT
+  ) {
+    await PatientModel.updateBalance(
+      transaction.patient,
+      req.amount,
+      constants.TRANSACTION.INCREASE
+    );
+    await PatientModel.updateCredit(
+      transaction.patient,
+      req.amount,
+      constants.TRANSACTION.INCREASE
+    );
+  } else if (
+    transaction.transaction_type ==
+    constants.TRANSACTION.TRANSACTION_TYPE_REFUND
+  ) {
+    await PatientModel.updateCredit(
+      transaction.patient,
+      req.amount,
+      constants.TRANSACTION.DECREASE
+    );
+  } else if (
+    transaction.transaction_type ==
+    constants.TRANSACTION.TRANSACTION_TYPE_ADJUSTMENT
+  ) {
+    await PatientModel.updateBalance(
+      transaction.patient,
+      req.amount,
+      constants.TRANSACTION.INCREASE
+    );
   }
   return transactionResult;
 };
 module.exports.updateTransaction = async function (transaction, req) {
-  let transaction = new TransactionModel();
   transaction.note = req.note !== undefined ? req.note : transaction.note;
   const isDelete = transaction.is_delete == false && req.is_delete == true;
   transaction.is_delete =
     req.is_delete !== undefined ? req.is_delete : transaction.is_delete;
   const transactionResult = await transaction.save();
-  if (isDelete == true && constants.TRANSACTION.UPDATE_TRANSACTION_TYPES.includes(transaction.transaction_type)) {
-    const newAmount = 0 - parseFloat(transaction.amount);
-    await PatientModel.updateBalance(transaction.patient, newAmount, constants.TRANSACTION.TRANSACTION_BALANCE_TYPE);
+  if (isDelete == false) return transactionResult;
+  if (
+    constants.TRANSACTION.UPDATE_TRANSACTION_TYPES.includes(
+      transaction.transaction_type
+    )
+  ) {
+    await PatientModel.updateBalance(
+      transaction.patient._id,
+      transaction.amount,
+      constants.TRANSACTION.INCREASE
+    );
+  } else if (
+    transaction.transaction_type ==
+    constants.TRANSACTION.TRANSACTION_TYPE_CREDIT
+  ) {
+    await PatientModel.updateCredit(
+      transaction.patient._id,
+      req.amount,
+      constants.TRANSACTION.DECREASE
+    );
+  } else if (
+    transaction.transaction_type ==
+    constants.TRANSACTION.TRANSACTION_TYPE_TRANSFER_CREDIT
+  ) {
+    await PatientModel.updateBalance(
+      transaction.patient._id,
+      req.amount,
+      constants.TRANSACTION.DECREASE
+    );
+    await PatientModel.updateCredit(
+      transaction.patient._id,
+      req.amount,
+      constants.TRANSACTION.DECREASE
+    );
+  } else if (
+    transaction.transaction_type ==
+    constants.TRANSACTION.TRANSACTION_TYPE_REFUND
+  ) {
+    await PatientModel.updateCredit(
+      transaction.patient._id,
+      req.amount,
+      constants.TRANSACTION.INCREASE
+    );
+  } else if (
+    transaction.transaction_type ==
+    constants.TRANSACTION.TRANSACTION_TYPE_ADJUSTMENT
+  ) {
+    await PatientModel.updateBalance(
+      transaction.patient._id,
+      req.amount,
+      constants.TRANSACTION.DECREASE
+    );
   }
   return transactionResult;
 };

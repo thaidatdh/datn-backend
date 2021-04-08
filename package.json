@@ -21,6 +21,7 @@
     "jsreport-core": "^2.10.1",
     "jsreport-handlebars": "^2.1.0",
     "mongoose": "^5.11.13",
+    "nodemailer": "^6.5.0",
     "puppeteer": "^8.0.0",
     "swagger-ui-express": "^4.1.6",
     "translatte": "^3.0.0"

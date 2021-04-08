@@ -32,11 +32,11 @@ const TreatmentSchema = mongoose.Schema(
     ada_code: String,
     tooth: String,
     surface: String,
-    fee: Number,
-    insurance_percent: Number,
-    discount: Number,
-    insurance_amount: Number,
-    patient_amount: Number,
+    fee: mongoose.Types.Decimal128,
+    //insurance_percent: Number,
+    //discount: Number,
+    //insurance_amount: Number,
+    //patient_amount: Number,
     description: String,
     note: String,
     treatment_plan: {
@@ -148,18 +148,18 @@ module.exports.insert = async function (req) {
   treatment.procedure_code = req.procedure_code ? req.procedure_code : null;
   treatment.tooth = req.tooth ? req.tooth : null;
   treatment.surface = req.surface ? req.surface : null;
-  treatment.discount = req.discount ? req.discount : 0;
-  treatment.insurance_amount = req.insurance_amount ? req.insurance_amount : 0;
-  treatment.patient_amount = req.patient_amount ? req.patient_amount : 0;
+  //treatment.discount = req.discount ? req.discount : 0;
+  //treatment.insurance_amount = req.insurance_amount ? req.insurance_amount : 0;
+  //treatment.patient_amount = req.patient_amount ? req.patient_amount : 0;
   treatment.note = req.note ? req.note : null;
   treatment.treatment_plan = req.treatment_plan ? req.treatment_plan : null;
   treatment.appointment = req.appointment ? req.appointment : null;
   treatment.status = req.status ? req.status : "PLAN";
   treatment.ada_code = req.ada_code ? req.ada_code : Procedure.procedure_code;
-  treatment.fee = req.fee ? req.fee : Procedure.fee;
-  treatment.insurance_percent = req.insurance_percent
-    ? req.insurance_percent
-    : Procedure.insured_percent;
+  treatment.fee = req.fee ? req.fee : Procedure.procedure_fee;
+  //treatment.insurance_percent = req.insurance_percent
+  //  ? req.insurance_percent
+  //  : Procedure.insured_percent;
   treatment.description = req.description
     ? req.description
     : Procedure.description;
@@ -178,13 +178,17 @@ module.exports.insert = async function (req) {
       procedure: treatmentResult.procedure_code,
       treatment: treatmentResult._id,
     };
-    await RecallModel.insertAutoRecall(autoRecallInfo);
+    try {
+      await RecallModel.insertAutoRecall(autoRecallInfo);
+    }catch(errorRecall) {
+      console.log(errorRecall);
+    }
   }
   if (constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(treatment.status)) {
     await Patient.updateBalance(
-      req.patient,
+      treatment.patient,
       treatment.fee,
-      constants.TRANSACTION.TREATMENT_BALANCE_TYPE
+      constants.TRANSACTION.INCREASE
     );
   }
   return treatmentResult;
@@ -210,16 +214,16 @@ module.exports.updateTreatment = async function (treatment, req) {
   treatment.tooth = req.tooth !== undefined ? req.tooth : treatment.tooth;
   treatment.surface =
     req.surface !== undefined ? req.surface : treatment.surface;
-  treatment.discount =
-    req.discount !== undefined ? req.discount : treatment.discount;
-  treatment.insurance_amount =
-    req.insurance_amount !== undefined
-      ? req.insurance_amount
-      : treatment.insurance_amount;
-  treatment.patient_amount =
-    req.patient_amount !== undefined
-      ? req.patient_amount
-      : treatment.patient_amount;
+  //treatment.discount =
+  //  req.discount !== undefined ? req.discount : treatment.discount;
+  //treatment.insurance_amount =
+  //  req.insurance_amount !== undefined
+  //    ? req.insurance_amount
+  //    : treatment.insurance_amount;
+  //treatment.patient_amount =
+  //  req.patient_amount !== undefined
+  //    ? req.patient_amount
+  //    : treatment.patient_amount;
   treatment.note = req.note !== undefined ? req.note : treatment.note;
   treatment.treatment_plan =
     req.treatment_plan !== undefined
@@ -234,11 +238,11 @@ module.exports.updateTreatment = async function (treatment, req) {
   if (Procedure) {
     treatment.ada_code =
       req.ada_code != undefined ? req.ada_code : Procedure.procedure_code;
-    treatment.fee = req.fee != undefined ? req.fee : Procedure.fee;
-    treatment.insurance_percent =
-      req.insurance_percent != undefined
-        ? req.insurance_percent
-        : Procedure.insured_percent;
+    treatment.fee = req.fee != undefined ? req.fee : Procedure.procedure_fee;
+    //treatment.insurance_percent =
+    //  req.insurance_percent != undefined
+    //    ? req.insurance_percent
+    //    : Procedure.insured_percent;
     treatment.description =
       req.description != undefined ? req.description : Procedure.description;
     treatment.mark_type =
@@ -246,9 +250,9 @@ module.exports.updateTreatment = async function (treatment, req) {
   }
   if (isUpdateBalance) {
     await Patient.updateBalance(
-      req.patient,
+      treatment.patient._id,
       treatment.fee,
-      constants.TRANSACTION.TREATMENT_BALANCE_TYPE
+      constants.TRANSACTION.INCREASE
     );
   }
   return await treatment.save();

@@ -112,7 +112,7 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const rs = PrescriptionModel.insertWithDetails(req.body);
+    const rs = await PrescriptionModel.insertWithDetails(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
@@ -225,7 +225,7 @@ exports.add_detail = async function (req, res) {
     const request = Object.assign(req.body, {
       image_prescription_id: req.params.prescription_id,
     });
-    const rs = DetailModel.insert(request);
+    const rs = await DetailModel.insert(request);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({

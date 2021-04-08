@@ -61,7 +61,7 @@ exports.index = async function (req, res) {
         $group: {
           _id: undefined,
           total_fee: { $sum: "$fee" },
-          total_insurance_amount: { $sum: "$insurance_amount" },
+          //total_insurance_amount: { $sum: "$insurance_amount" },
           total_patient_amount: { $sum: "$patient_amount" },
           total_discount_amount: { $sum: "$discount" },
         },
@@ -96,7 +96,7 @@ exports.index = async function (req, res) {
           $group: {
             _id: undefined,
             total_fee: { $sum: "$fee" },
-            total_insurance_amount: { $sum: "$insurance_amount" },
+            //total_insurance_amount: { $sum: "$insurance_amount" },
             total_patient_amount: { $sum: "$patient_amount" },
             total_discount_amount: { $sum: "$discount" },
           },
