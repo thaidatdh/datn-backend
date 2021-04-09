@@ -9,11 +9,7 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
 //verify authentication middleware
 app.use(authMiddleware.verifyUser);
 // Configuring the database
@@ -33,7 +29,11 @@ mongoose
     console.log("Could not connect to the database. Exiting now...", err);
     process.exit();
   });
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
 
+// parse requests of content-type - application/json
+app.use(bodyParser.json({ limit: "100mb" }));
 // define a simple route
 app.get("/", (req, res) => {
   res.json({

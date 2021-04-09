@@ -128,7 +128,7 @@ module.exports.insert = async function (apptInfo) {
     : null;
   appointment.duration = apptInfo.duration ? apptInfo.duration : 15;
   appointment.note = apptInfo.note ? apptInfo.note : null;
-  appointment.status = apptInfo.status ? apptInfo.status : "NEW";
+  appointment.status = apptInfo.status ? apptInfo.status : "New";
   const rs = await appointment.save();
   return rs;
 };

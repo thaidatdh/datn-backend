@@ -9,7 +9,9 @@ const DocumentSchema = mongoose.Schema(
       ref: "patient",
       required: false,
     },
+    data: Buffer,
     filepath: String,
+    file_name: String,
     name: String,
     description: String,
     category: {
@@ -34,6 +36,8 @@ module.exports.insert = async function (documentinfo) {
     ? documentinfo.name
     : Date.now().toString("dd/mm/yyyy");
   document.patient = documentinfo.patient ? documentinfo.patient : null;
+  document.data = documentinfo.data ? documentinfo.data : null;
+  document.file_name = documentinfo.file_name ? documentinfo.file_name : null;
   document.filepath = documentinfo.filepath ? documentinfo.filepath : null;
   document.description = documentinfo.description
     ? documentinfo.description
@@ -43,6 +47,11 @@ module.exports.insert = async function (documentinfo) {
 };
 module.exports.updateDocument = async function (document, documentinfo) {
   document.name = documentinfo.name ? documentinfo.name : document.name;
+  document.data = documentinfo.data ? documentinfo.data : document.data;
+  document.file_name =
+    documentinfo.file_name !== undefined
+      ? documentinfo.file_name
+      : document.file_name;
   document.patient =
     documentinfo.patient !== undefined
       ? documentinfo.patient

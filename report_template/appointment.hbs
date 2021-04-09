@@ -1,0 +1,187 @@
+<!-- 
+Invoice dynamically rendered into html using handlebars and converted into pdf
+using chrome-pdf recipe. The styles are extracted into separate asset for 
+better readability and later reuse.
+
+Data to this sample are mocked at the design time and should be filled on the 
+incoming API request.
+!-->
+
+<html>
+
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <style>
+    {{css}}
+  </style>
+  <script>
+    window.JSREPORT_CHROME_PDF_OPTIONS = {
+      landscape: false,
+    }
+  </script>
+</head>
+
+<body>
+  <div style="margin: 20px">
+    <table cellpadding="0" cellspacing="0" style="width: 100%;line-height: inherit;text-align: left;">
+      <tr class="information ">
+        <td colspan="3 ">
+          <table style="width: 100%;line-height: inherit;text-align: left;">
+            <tr>
+              <td>
+                {{practice.name}}<br>
+                {{practice.address}}<br>
+                Phone: {{practice.phone}}
+              </td>
+              <td>
+
+              </td>
+              <td style="text-align: right;">
+
+                <br> Date: {{now}}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div style="text-align: center; margin-top: 20px; margin-bottom: 10px;">
+    <h2 style="margin-bottom: 1px">Appointment</h2>
+    <h3 style="margin-top: 1px;">{{startDate}} - {{endDate}}</h3>
+  </div>
+  {{#if patient}}
+  <div style="text-align: left; margin-left: 20px; margin-bottom: 10px;">
+    <h3 style="margin-bottom: 5px; color:deepskyblue">{{patient.name}}</h3>
+    <h4 style="margin-top: 5px; margin-bottom: 5px;">Patient ID: {{patient.id}}</h4>
+    <h4 style="margin-top: 5px;">DOB: {{patient.dob}}</h4>
+  </div>
+  {{/if}}
+  <div class="invoice-box">
+    <table cellpadding="0" cellspacing="0">
+      <tr class="item">
+        <td style="text-align: left;">
+          New:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.New}}
+        </td>
+        <td style="text-align: left;">
+          Check in seated:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.Check_in_seated}}
+        </td>
+        <td style="text-align: left;">
+          Check in waiting:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.Check_in_waiting}}
+        </td>
+      </tr>
+      <tr class="item">
+        <td style="text-align: left;">
+          Check out:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.Check_out}}
+        </td>
+        <td style="text-align: left;">
+          Confirm Hold:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.Confirm_Hold}}
+        </td>
+        <td style="text-align: left;">
+          Confirmed:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.Confirmed}}
+        </td>
+      </tr>
+      <tr class="item">
+        <td style="text-align: left;">
+          Rescheduled:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.Rescheduled}}
+        </td>
+        <td style="text-align: left;">
+          Cancelled:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.Cancelled}}
+        </td>
+        <td style="text-align: left;">
+          No Show:
+        </td>
+        <td style="text-align: center;">
+          {{statistic.No_Show}}
+        </td>
+      </tr>
+      <tr class="total ">
+        <td style="font-weight: bold;text-align: left;">
+          Total:
+        </td>
+        <td style="text-align: center;">
+          {{total}}
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="invoice-box">
+    <table cellpadding="0" cellspacing="0">
+      <tr class="heading ">
+        <td colspan="1" style="text-align: center;">
+          Date
+        </td>
+        <td style="text-align: center;">
+          Time
+        </td>
+        <td style="text-align: center;">
+          Duration
+        </td>
+        <td style="min-width: 100; text-align: left;max-width: 150;">
+          Facility
+        </td>
+        <td style="max-width: 200;">
+          Provider
+        </td>
+        <td style="max-width: 200;">
+          Patient
+        </td>
+        <td style="text-align: right;">
+          Status
+        </td>
+      </tr>
+      {{#each items}}
+      <tr class="item">
+        <td colspan="1">
+          {{appointment_date}}
+        </td>
+        <td style="text-align: center;">
+          {{time}}
+        </td>
+        <td style="text-align: center;">
+          {{duration}}
+        </td>
+        <td style="min-width: 100; text-align: left;max-width: 150;">
+          {{facility}}
+        </td>
+        <td style="max-width: 300;">
+          {{provider_name}}
+        </td>
+        <td>
+          {{patient_name}}
+        </td>
+        <td style="text-align: right;">
+          {{status}}
+        </td>
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+
+</body>
+
+</html>

@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const chairModel = require("../models/chair.model");
-const appointmentModel = require("../models/appointment.model");
+const AppointmentModel = require("../models/appointment.model");
 const TreatmentModel = require("../models/treatment.model");
 const procedureCodeModel = require("../models/procedure.code.model");
 const PatientModel = require("../models/patient.model");
@@ -14,6 +14,7 @@ const fs = require("fs");
 const { promisify } = require("util");
 const { formatMoney, formatReadableDate } = require("../utils/utils");
 const { PATIENT } = require("../constants/constants");
+const { co } = require("translatte/languages");
 const readFileAsync = promisify(fs.readFile);
 jsreport.init();
 exports.index = async function (req, res) {
@@ -35,7 +36,7 @@ exports.index = async function (req, res) {
       });
     }
     const DateRange = { $gte: startDate, $lt: endDate };
-    const appointment_count = await appointmentModel.countDocuments({
+    const appointment_count = await AppointmentModel.countDocuments({
       appointment_date: DateRange,
     });
     const treatment_count = await TreatmentModel.countDocuments({
@@ -80,7 +81,7 @@ exports.index = async function (req, res) {
       const tempDateEnd = new Date(
         new Date(tempDate).setDate(tempDate.getDate() + gap)
       );
-      const apptCount = await appointmentModel.countDocuments({
+      const apptCount = await AppointmentModel.countDocuments({
         appointment_date: { $gte: tempDate, $lt: tempDateEnd },
       });
 
@@ -242,7 +243,7 @@ exports.report_treatment_history = async function (req, res) {
       patient: mongoose.Types.ObjectId(req.params.patient_id),
     };
     const lang = req.query.lang;
-    const createDate = formatReadableDate(new Date(), lang);
+    const createDate = formatReadableDate(new Date());
     let startDateString = null;
     let endDateStr = null;
     if (req.query.startDate && req.query.endDate) {
@@ -262,8 +263,8 @@ exports.report_treatment_history = async function (req, res) {
           ),
         });
       }
-      startDateString = formatReadableDate(startDate, lang);
-      endDateStr = formatReadableDate(new Date(req.query.endDate), lang);
+      startDateString = formatReadableDate(startDate);
+      endDateStr = formatReadableDate(new Date(req.query.endDate));
       const DateRange = { $gte: startDate, $lt: endDate };
       Query = Object.assign(Query, { treatment_date: DateRange });
     }
@@ -284,7 +285,7 @@ exports.report_treatment_history = async function (req, res) {
       ada_code: 1,
       tooth: 1,
       surface: 1,
-      fee: { $ifNull: [ "$fee", 0 ] },
+      fee: { $ifNull: ["$fee", 0] },
       description: 1,
       treatment_date: {
         $dateToString: {
@@ -352,7 +353,7 @@ exports.report_treatment_history = async function (req, res) {
       endDate: endDateStr,
       patient: {
         name: User.first_name + " " + User.last_name,
-        dob: Patient.dob ? formatReadableDate(Patient.dob, lang) : null,
+        dob: Patient.dob ? formatReadableDate(Patient.dob) : null,
         id: Patient.patient_id,
       },
       total: TreatmentData.length,
@@ -365,6 +366,223 @@ exports.report_treatment_history = async function (req, res) {
       items: TreatmentData,
     };
 
+    const ReportFile = await jsreport.render({
+      template: {
+        content: content.toString(),
+        engine: "handlebars",
+        recipe: "chrome-pdf",
+      },
+      data: data,
+    });
+    res.contentType("application/pdf").send(ReportFile.content);
+  } catch (e) {
+    console.log(e);
+    res.end(e.message);
+  }
+};
+exports.report_appointment = async function (req, res) {
+  try {
+    let Query = {};
+    if (req.query.patient_id) {
+      Query = {
+        patient: mongoose.Types.ObjectId(req.query.patient_id),
+      };
+    }
+    const lang = req.query.lang;
+    const createDate = formatReadableDate(new Date());
+    let startDateString = null;
+    let endDateStr = null;
+    if (req.query.startDate && req.query.endDate) {
+      const startDate = new Date(req.query.startDate);
+      const endDate = new Date(
+        new Date(req.query.endDate).setDate(
+          new Date(req.query.endDate).getDate() + 1
+        )
+      );
+      if (startDate >= endDate) {
+        return res.status(400).json({
+          success: false,
+          message: await translator.FailedMessage(
+            constants.ACTION.GET,
+            "Statistic Report",
+            req.query.lang
+          ),
+        });
+      }
+      startDateString = formatReadableDate(startDate);
+      endDateStr = formatReadableDate(new Date(req.query.endDate));
+      const DateRange = { $gte: startDate, $lt: endDate };
+      Query = Object.assign(Query, { appointment_date: DateRange });
+    }
+    const Patient = await PatientModel.get(
+      { _id: req.query.patient_id },
+      { one: true }
+    );
+    let patientInfo = null;
+    if (Patient != null) {
+      const User = await Patient.user;
+      patientInfo = {
+        name: User.first_name + " " + User.last_name,
+        dob: Patient.dob ? formatReadableDate(Patient.dob) : null,
+        id: Patient.patient_id,
+      };
+    }
+    let appointment_selected_fields = {
+      provider_name: 1,
+      patient_name: 1,
+      status: 1,
+      facility: 1,
+      time: {
+        $concat: [
+          { $substr: ["$appointment_time", 0, 2] },
+          ":",
+          { $substr: ["$appointment_time", 2, 2] },
+        ],
+      },
+      duration: 1,
+      appointment_date: {
+        $dateToString: {
+          format: "%d/%m/%Y",
+          date: "$appointment_date",
+        },
+      },
+    };
+    const AppointmentData = await AppointmentModel.aggregate([
+      {
+        $match: Query,
+      },
+      {
+        $lookup: {
+          from: "staffs",
+          localField: "provider",
+          foreignField: "_id",
+          as: "Provivder",
+        },
+      },
+      {
+        $unwind: "$Provivder",
+      },
+      {
+        $addFields: {
+          provider_user: "$Provivder.user",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "provider_user",
+          foreignField: "_id",
+          as: "User",
+        },
+      },
+      {
+        $unwind: "$User",
+      },
+      {
+        $addFields: {
+          provider_name: {
+            $concat: ["$User.first_name", " ", "$User.last_name"],
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patient",
+          foreignField: "_id",
+          as: "Patient",
+        },
+      },
+      {
+        $unwind: "$Patient",
+      },
+      {
+        $addFields: {
+          patient_user: "$Patient.user",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "patient_user",
+          foreignField: "_id",
+          as: "PatientUser",
+        },
+      },
+      {
+        $unwind: "$PatientUser",
+      },
+      {
+        $addFields: {
+          patient_name: {
+            $concat: ["$PatientUser.first_name", " ", "$PatientUser.last_name"],
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "chairs",
+          localField: "chair",
+          foreignField: "_id",
+          as: "Chair",
+        },
+      },
+      {
+        $unwind: "$Chair",
+      },
+      {
+        $addFields: {
+          facility: "$Chair.name",
+        },
+      },
+      {
+        $sort: {
+          appointment_date: 1,
+          time: 1,
+          facility: 1,
+        },
+      },
+      {
+        $project: appointment_selected_fields,
+      },
+    ]);
+    const Practice = await PracticeModel.findOne();
+    const content = await readFileAsync("./report_template/appointment.hbs");
+    const css = await readFileAsync("./report_template/provider-report.css");
+    let TotalData = {
+      New: 0,
+      Check_in_seated: 0,
+      Check_in_waiting: 0,
+      Check_out: 0,
+      Confirm_Hold: 0,
+      Confirmed: 0,
+      Rescheduled: 0,
+      Cancelled: 0,
+      No_Show: 0,
+    };
+    for (const appointment of AppointmentData) {
+      const field = appointment.status.toString().replace(" ","_");
+      if (TotalData[field] == undefined) {
+        TotalData[field] = 1;
+      } else {
+        TotalData[field] = parseInt(TotalData[field]) + 1;
+      }
+    }
+    const data = {
+      css: css,
+      statistic: TotalData,
+      startDate: startDateString,
+      endDate: endDateStr,
+      patient: patientInfo == null ? undefined : patientInfo,
+      total: AppointmentData.length,
+      now: createDate,
+      practice: {
+        name: Practice.name,
+        address: Practice.address,
+        phone: Practice.phone,
+      },
+      items: AppointmentData,
+    };
     const ReportFile = await jsreport.render({
       template: {
         content: content.toString(),

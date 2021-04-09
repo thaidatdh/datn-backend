@@ -23,12 +23,12 @@ exports.getFormatRegion = (lang) => {
   }
   return format;
 };
-exports.formatReadableDate = (date, lang) => {
+exports.formatReadableDate = (date) => {
   const dateValue = new Date(date);
   return (
-    dateValue.getDate() +
+    dateValue.getDate().toString().padStart(2, "0") +
     "/" +
-    (dateValue.getMonth() + 1) +
+    (dateValue.getMonth() + 1).toString().padStart(2, "0") +
     "/" +
     dateValue.getFullYear()
   );
@@ -44,4 +44,4 @@ exports.calculateAge = (birthday) => {
   var ageDifMs = Date.now() - birthday;
   var ageDate = new Date(ageDifMs); // miliseconds from epoch
   return Math.abs(ageDate.getUTCFullYear() - 1970);
-}
+};
