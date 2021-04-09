@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const UserModel = require("../models/user.model");
 const StaffModel = require("../models/staff.model");
+const PatientModel = require("../models/patient.model");
 const translator = require("../utils/translator");
 let tokenList = {};
 exports.signin_staff = async function (req, res) {
@@ -38,7 +39,10 @@ exports.signin_staff = async function (req, res) {
           const isMatch = await user.comparePassword(req.body.password);
           if (isMatch) {
             // if user is found and password is right create a token
-            const returnUser = Object.assign(user, { password: undefined });
+            const returnStaff = await StaffModel.get(
+              { user: user._id },
+              { one: true, limit: 1 }
+            );
             const expiredTimeToken = process.env.TOKEN_EXPIRE
               ? Number.parseInt(process.env.TOKEN_EXPIRE)
               : 3600;
@@ -46,9 +50,13 @@ exports.signin_staff = async function (req, res) {
             expiredDateToken.setTime(
               expiredDateToken.getTime() + expiredTimeToken * 1000
             );
-            const token = jwt.sign(user.toJSON(), process.env.TOKEN_SECRET, {
-              expiresIn: expiredTimeToken, //1h
-            });
+            const token = jwt.sign(
+              returnStaff.toJSON(),
+              process.env.TOKEN_SECRET,
+              {
+                expiresIn: expiredTimeToken, //1h
+              }
+            );
             const expiredTimeRefreshToken = process.env.TOKEN_EXPIRE_REFRESH
               ? Number.parseInt(process.env.TOKEN_EXPIRE_REFRESH)
               : 86400;
@@ -59,17 +67,17 @@ exports.signin_staff = async function (req, res) {
             console.log(expiredDateRefreshToken);
             console.log(expiredDateToken);
             const refreshToken = jwt.sign(
-              user.toJSON(),
+              returnStaff.toJSON(),
               process.env.TOKEN_SECRET_REFRESH,
               {
                 expiresIn: expiredTimeRefreshToken, //1d
               }
             );
-            tokenList[refreshToken] = user;
+            tokenList[refreshToken] = returnStaff;
             // return the information including token as JSON
             return res.json({
               success: true,
-              user: returnUser,
+              user: returnStaff,
               token: token,
               refreshToken: refreshToken,
               expirationTime: expiredDateToken,
@@ -137,12 +145,15 @@ exports.signin_patient = async function (req, res) {
         try {
           const isMatch = await user.comparePassword(req.body.password);
           if (isMatch) {
-            const returnUser = Object.assign(user, { password: undefined });
-            const token = jwt.sign(user.toJSON());
+            const returnPatient = await PatientModel.get(
+              { user: user._id },
+              { one: true, limit: 1 }
+            );
+            const token = jwt.sign(returnPatient.toJSON());
             // return the information including token as JSON
             return res.json({
               success: true,
-              user: returnUser,
+              user: returnPatient,
               token: token,
             });
           } else {
