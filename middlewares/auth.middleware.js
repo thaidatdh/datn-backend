@@ -15,7 +15,7 @@ const nonSecurePaths = [
 ];
 
 exports.verifyUser = async (request, response, next) => {
-  const regex = new RegExp("/api/([\\w-\\d])+.\\w+");
+  const regex = new RegExp('/api/([\\w-\\d])+.\\w+');
   if (
     process.env.DATABASE_DEBUG_SKIP_AUTHORIZATION == "true" ||
     nonSecurePaths.includes(request.path) ||
@@ -42,12 +42,11 @@ exports.verifyUser = async (request, response, next) => {
   try {
     const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
     request.decoded = decoded;
-    const user = decoded ? decoded.user : null;
     const isAuthorized =
-      user && user.user_type == constants.USER.USER_TYPE_ADMIN
+      decoded.user_type == constants.USER.USER_TYPE_ADMIN
         ? true
         : await AccessModel.isBackendAuthorized(
-            user.user_type,
+            decoded.user_type,
             request.originalUrl.replace("/api", ""),
             request.method
           );
