@@ -52,11 +52,22 @@ exports.patient_treatment = async function (req, res) {
       limit: req.query.limit,
       page: req.query.page,
     };
+    let query = { patient: patient_id };
+    if (req.query.query_status) {
+      query = Object.assign(query, { status: req.query.query_status });
+    }
+    if (req.query.query_date) {
+      const startDate = new Date(req.query.query_date);
+      const endDate = new Date(
+        new Date(req.query.query_date).setDate(startDate.getDate() + 1)
+      );
+      const DateRange = { $gte: startDate, $lt: endDate };
+      query = Object.assign(query, {
+        treatment_date: DateRange,
+      });
+    }
 
-    const treatments = await TreatmentModel.get(
-      { patient: patient_id },
-      options
-    );
+    const treatments = await TreatmentModel.get(query, options);
     let result = {
       success: true,
       payload: treatments,

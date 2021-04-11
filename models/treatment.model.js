@@ -64,7 +64,7 @@ const TreatmentModel = (module.exports = mongoose.model(
 ));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = TreatmentModel.find(query);
+  const promise = TreatmentModel.find(query).sort("treatment_date");
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(

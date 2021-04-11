@@ -30,7 +30,14 @@ module.exports.get = async function (query, populateOptions) {
     promise.limit(Number.parseInt(populateOptions.limit));
   }
   if (populateOptions.get_codes) {
-    promise.populate("procedure_code");
+    promise.populate({
+      path: "procedure_code",
+      select: {
+        _id: 1,
+        procedure_code: 1,
+        description: 1,
+      },
+    });
   }
   const resultQuery = await promise.exec();
   return resultQuery;

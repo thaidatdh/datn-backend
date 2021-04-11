@@ -39,7 +39,7 @@ const RecallSchema = mongoose.Schema(
 const RecallModel = (module.exports = mongoose.model("recall", RecallSchema));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = RecallModel.find(query);
+  const promise = RecallModel.find(query).sort("recall_date");
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(

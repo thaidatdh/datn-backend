@@ -10,10 +10,10 @@ const ProcedureCodeSchema = mongoose.Schema(
     procedure_type: String, //TREATMENT, CONDITION
     procedure_fee: mongoose.Types.Decimal128,
     procedure_time: mongoose.Types.Decimal128,
-    insured_percent: {
+    /*insured_percent: {
       type: Number,
       default: 0,
-    },
+    },*/
     category: {
       type: mongoose.Types.ObjectId,
       ref: "procedure_category",
@@ -67,9 +67,9 @@ module.exports.insert = async function (procedureCodeInfo) {
   proc.procedure_fee = procedureCodeInfo.procedure_fee
     ? procedureCodeInfo.procedure_fee
     : 0;
-  proc.insured_percent = procedureCodeInfo.insured_percent
+  /*proc.insured_percent = procedureCodeInfo.insured_percent
     ? procedureCodeInfo.insured_percent
-    : 0;
+    : 0;*/
   proc.procedure_type = procedureCodeInfo.procedure_type
     ? procedureCodeInfo.procedure_type
     : null;
@@ -124,10 +124,10 @@ module.exports.updateProcedure = async function (procedure, procedureCodeInfo) {
     procedureCodeInfo.procedure_fee !== undefined
       ? procedureCodeInfo.procedure_fee
       : procedure.procedure_fee;
-  procedure.insured_percent =
+  /*procedure.insured_percent =
     procedureCodeInfo.insured_percent !== undefined
       ? procedureCodeInfo.insured_percent
-      : procedure.insured_percent;
+      : procedure.insured_percent;*/
   procedure.procedure_type =
     procedureCodeInfo.procedure_type !== undefined
       ? procedureCodeInfo.procedure_type

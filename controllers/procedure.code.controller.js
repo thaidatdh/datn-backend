@@ -209,13 +209,10 @@ exports.category_by_id = async function (req, res) {
     };
     const category_id = req.params.category_id;
     const category = await categoryModel.get({ _id: category_id }, options);
-    if (category) {
-      const result =
-        category && category.length > 0
-          ? Object.assign({}, category[0]._doc)
-          : null;
+    if (category && category.length > 0) {
+      const result = Object.assign({}, category[0]._doc);
       if (options.get_codes && result) {
-        result.procedure_code = category.procedure_code;
+        result.procedure_code = category[0].procedure_code;
       }
       res.json({
         success: true,
