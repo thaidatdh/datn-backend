@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const documentModel = require("../models/document.model");
 const translator = require("../utils/translator");
+const firebaseStorage = require("../utils/storage");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -118,17 +119,36 @@ exports.patient_document = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    if (req.body.filepath == null) {
+    if (req.body.data == null || req.body.file_name == null) {
       return res.json({
         success: false,
         message: await translator.FailedMessage(
           constants.ACTION.INSERT,
-          "document failed. Require file path",
+          "document failed. Require document data and file name",
           req.query.lang
         ),
       });
     }
-    const rs = await documentModel.insert(req.body);
+    const filePath = firebaseStorage.getDocumentFilePath(
+      req.body.patient,
+      req.body.file_name
+    );
+    const url = await firebaseStorage.uploadBase64String(
+      req.body.data,
+      filePath
+    );
+    if (url == null) {
+      return res.json({
+        success: false,
+        message: await translator.FailedMessage(
+          constants.ACTION.INSERT,
+          "document failed. Can not upload file",
+          req.query.lang
+        ),
+      });
+    }
+    const requestBody = Object.assign(req.body, { file_path: url });
+    const rs = await documentModel.insert(requestBody);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
@@ -207,6 +227,8 @@ exports.delete = async function (req, res) {
     const document = documentModel.findById(req.params.document_id);
     if (document) {
       await documentModel.deleteOne({ _id: req.params.document_id });
+      const filePath = firebaseStorage.getDocumentFilePath(document.patient, document.file_path)
+      await firebaseStorage.deleteFile(filePath);
       res.json({
         success: true,
       });

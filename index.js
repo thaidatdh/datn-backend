@@ -5,6 +5,9 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const authMiddleware = require("./middlewares/auth.middleware");
 require("dotenv").config();
+global.XMLHttpRequest = require("xhr2");
+const firebaseStorage = require("./utils/storage");
+firebaseStorage.initialize();
 // create express app
 const app = express();
 app.use(cors());

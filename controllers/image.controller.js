@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const imageModel = require("../models/images.model");
 const translator = require("../utils/translator");
+const firebaseStorage = require("../utils/storage");
 //For index
 exports.index = async function (req, res) {
   try {
@@ -78,7 +79,35 @@ exports.image_of_patient = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
-    const imageInfo = req.body;
+    if (req.body.data == null || req.body.file_name == null) {
+      return res.json({
+        success: false,
+        message: await translator.FailedMessage(
+          constants.ACTION.INSERT,
+          "image failed. Require image data and file name",
+          req.query.lang
+        ),
+      });
+    }
+    const filePath = firebaseStorage.getImageFilePath(
+      req.body.patient,
+      req.body.file_name
+    );
+    const url = await firebaseStorage.uploadBase64String(
+      req.body.data,
+      filePath
+    );
+    if (url == null) {
+      return res.json({
+        success: false,
+        message: await translator.FailedMessage(
+          constants.ACTION.INSERT,
+          "image failed. Can not upload image",
+          req.query.lang
+        ),
+      });
+    }
+    const imageInfo = Object.assign(req.body, { image_path: url });
     const rs = await imageModel.insert(imageInfo);
     return res.json({ success: true, payload: rs });
   } catch (err) {
@@ -151,6 +180,11 @@ exports.delete = async function (req, res) {
     const image = imageModel.findById(req.params.image_id);
     if (image) {
       await imageModel.deleteOne({ _id: req.params.image_id });
+      const filePath = firebaseStorage.getImageFilePath(
+        image.patient,
+        image.image_path
+      );
+      await firebaseStorage.deleteFile(filePath);
       res.json({
         success: true,
       });
