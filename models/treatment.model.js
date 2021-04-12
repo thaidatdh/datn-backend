@@ -81,6 +81,11 @@ module.exports.get = async function (query, populateOptions) {
       select: { _id: 1, name: 1, description: 1 },
     });
   }
+  if (populateOptions.get_procedure) {
+    promise.populate({
+      path: "procedure_code",
+    });
+  }
   if (populateOptions.get_patient) {
     promise.populate({
       path: "patient",
@@ -201,16 +206,16 @@ module.exports.updateTreatment = async function (treatment, req) {
   treatment.treatment_date = req.treatment_date
     ? Date.parse(req.treatment_date)
     : treatment.treatment_date;
-  treatment.patient =
-    req.patient !== undefined ? req.patient : treatment.patient;
+  //treatment.patient =
+  //  req.patient !== undefined ? req.patient : treatment.patient;
   treatment.assistant =
     req.assistant !== undefined ? req.assistant : treatment.assistant;
   treatment.provider =
     req.provider !== undefined ? req.provider : treatment.provider;
-  treatment.procedure_code =
+  /*treatment.procedure_code =
     req.procedure_code && Procedure
       ? req.procedure_code
-      : treatment.procedure_code;
+      : treatment.procedure_code;*/
   treatment.tooth = req.tooth !== undefined ? req.tooth : treatment.tooth;
   treatment.surface =
     req.surface !== undefined ? req.surface : treatment.surface;

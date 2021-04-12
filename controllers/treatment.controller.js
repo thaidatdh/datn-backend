@@ -11,6 +11,7 @@ exports.index = async function (req, res) {
       get_patient: req.query.get_patient == "true",
       get_staff: req.query.get_staff == "true",
       get_plan: req.query.get_plan == "true",
+      get_procedure: req.query.get_procedure == "true",
       limit: req.query.limit,
       page: req.query.page,
     };
@@ -49,6 +50,7 @@ exports.patient_treatment = async function (req, res) {
       get_patient: req.query.get_patient == "true",
       get_staff: req.query.get_staff == "true",
       get_plan: req.query.get_plan == "true",
+      get_procedure: req.query.get_procedure == "true",
       limit: req.query.limit,
       page: req.query.page,
     };
@@ -167,6 +169,7 @@ exports.detail = async function (req, res) {
       get_patient: req.query.get_patient == "true",
       get_staff: req.query.get_staff == "true",
       get_plan: req.query.get_plan == "true",
+      get_procedure: req.query.get_procedure == "true",
     };
     const treatments = await TreatmentModel.get(
       { _id: req.params.treatment_id },
