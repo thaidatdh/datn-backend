@@ -31,6 +31,9 @@ const PatientSchema = mongoose.Schema(
     },
     email_recall: Boolean,
     appt_reminder: Boolean,
+    plaque_index: Number,
+    bleeding_index: Number,
+    halitosis: Number,
     gender: {
       type: String,
       default: "NOT_SPECIFY", //MALE, FEMALE, NOT_SPECIFY
@@ -146,6 +149,13 @@ module.exports.insert = async function (patientInfo) {
   patient.patient_balance = 0.0;
   //patient.insurance_balance = 0.0;
   patient.credit_amount = 0.0;
+  patient.plaque_index = patientInfo.plaque_index
+    ? patientInfo.plaque_index
+    : 0;
+  patient.bleeding_index = patientInfo.bleeding_index
+    ? patientInfo.bleeding_index
+    : 0;
+  patient.halitosis = patientInfo.halitosis ? patientInfo.halitosis : 0;
   if (patient.new_patient == false && patient.patient_id == null) {
     patient.patient_id = generatePatientId();
     patient.patient_id_numeric = toNumber(patient.patient_id);
@@ -153,8 +163,8 @@ module.exports.insert = async function (patientInfo) {
   const insertedPatient = await patient.save();
   const tooth_type =
     insertedPatient.dob == null || calculateAge(insertedPatient.dob) > 13
-      ? "ADULT"
-      : "CHILD";
+      ? constants.TOOTH.TOOTH_TYPE_ADULT
+      : constants.TOOTH.TOOTH_TYPE_CHILD;
   ToothModel.init_tooth_for_patient(insertedPatient._id, tooth_type);
   const result = await Object.assign({}, insertedPatient._doc);
   result.user = await Object.assign({}, insertedUser._doc);
@@ -335,13 +345,12 @@ module.exports.updateBalance = async (patient_id, amount, type) => {
   const originalAmount = parseFloat(Patient.patient_balance.toString());
   if (type === constants.TRANSACTION.INCREASE) {
     Patient.patient_balance = originalAmount + amountNumber;
-  }
-  else if (type == constants.TRANSACTION.DECREASE) {
+  } else if (type == constants.TRANSACTION.DECREASE) {
     Patient.patient_balance = originalAmount - amountNumber;
   }
   await Patient.save();
   return true;
-}
+};
 module.exports.updateCredit = async (patient_id, amount, type) => {
   const Patient = await PatientModel.findById(patient_id);
   if (!Patient) {

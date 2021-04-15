@@ -11,6 +11,11 @@ const ToothSchema = mongoose.Schema(
     tooth_number: Number,
     condition: String,
     tooth_note: String,
+    cold: Number,
+    percussion: Number,
+    palpation: Number,
+    heat: Number,
+    electricity: Number,
     tooth_type: {
       type: String,
       default: "ADULT",
@@ -30,7 +35,26 @@ module.exports.insert = async function (toothInfo) {
   tooth.tooth_number = toothInfo.tooth_number ? toothInfo.tooth_number : null;
   tooth.condition = toothInfo.condition ? toothInfo.condition : null;
   tooth.tooth_note = toothInfo.tooth_note ? toothInfo.tooth_note : null;
-  tooth.tooth_type = toothInfo.tooth_type ? toothInfo.tooth_type : "ADULT";
+  tooth.tooth_type = toothInfo.tooth_type
+    ? toothInfo.tooth_type
+    : constants.TOOTH.DEFAULT_TOOTH_TYPE;
+  tooth.cold = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.cold)
+    ? toothInfo.cold
+    : constants.TOOTH.DEFAULT_TOOTH_STATUS;
+  tooth.percussion = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.percussion)
+    ? toothInfo.percussion
+    : constants.TOOTH.DEFAULT_TOOTH_STATUS;
+  tooth.palpation = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.palpation)
+    ? toothInfo.palpation
+    : constants.TOOTH.DEFAULT_TOOTH_STATUS;
+  tooth.heat = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.heat)
+    ? toothInfo.heat
+    : constants.TOOTH.DEFAULT_TOOTH_STATUS;
+  tooth.electricity = constants.TOOTH.TOOTH_STATUS.includes(
+    toothInfo.electricity
+  )
+    ? toothInfo.electricity
+    : constants.TOOTH.DEFAULT_TOOTH_STATUS;
   return await tooth.save();
 };
 module.exports.updateTooth = async function (tooth, toothInfo) {
@@ -49,6 +73,23 @@ module.exports.updateTooth = async function (tooth, toothInfo) {
     ? toothInfo.tooth_type
     : tooth.tooth_type;
   tooth.condition = toothInfo.condition ? toothInfo.condition : tooth.condition;
+  tooth.cold = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.cold)
+    ? toothInfo.cold
+    : tooth.cold;
+  tooth.percussion = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.percussion)
+    ? toothInfo.percussion
+    : tooth.percussion;
+  tooth.palpation = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.palpation)
+    ? toothInfo.palpation
+    : tooth.palpation;
+  tooth.heat = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.heat)
+    ? toothInfo.heat
+    : tooth.heat;
+  tooth.electricity = constants.TOOTH.TOOTH_STATUS.includes(
+    toothInfo.electricity
+  )
+    ? toothInfo.electricity
+    : tooth.electricity;
   return await tooth.save();
 };
 

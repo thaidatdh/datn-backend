@@ -90,6 +90,13 @@ module.exports = {
   TREATMENT: {
     UPDATE_BALANCE_STATUS: ["EXISTING", "COMPLETED"],
   },
+  TOOTH: {
+    DEFAULT_TOOTH_TYPE: "ADULT",
+    TOOTH_TYPE_CHILD: "CHILD",
+    TOOTH_TYPE_ADULT: "ADULT",
+    TOOTH_STATUS: [-1, 0, 1, 2, 3],
+    DEFAULT_TOOTH_STATUS: -1,
+  },
 };
 module.exports.RANDOM_COLOR = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);

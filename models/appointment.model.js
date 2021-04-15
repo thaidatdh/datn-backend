@@ -3,6 +3,8 @@ const constants = require("../constants/constants");
 const Patient = require("./patient.model");
 const Staff = require("./staff.model");
 const Chair = require("./chair.model");
+const RecallModel = require("./recall.model");
+const TreatmentModel = require("./treatment.model");
 const AppointmentSchema = mongoose.Schema(
   {
     patient: {
@@ -130,6 +132,16 @@ module.exports.insert = async function (apptInfo) {
   appointment.note = apptInfo.note ? apptInfo.note : null;
   appointment.status = apptInfo.status ? apptInfo.status : "New";
   const rs = await appointment.save();
+  if (apptInfo.recall_link) {
+    for (const recallId in apptInfo.recall_link) {
+      await RecallModel.linkAppt(recallId, rs._id);
+    }
+  }
+  if (apptInfo.treatment_link){
+    for (const treatment_id in apptInfo.treatment_link) {
+      await TreatmentModel.linkAppt(treatment_id, rs._id);
+    }
+  }
   return rs;
 };
 module.exports.updateAppt = async function (apptInfo, appointment_id) {
@@ -161,5 +173,25 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
   appointment.status =
     apptInfo.status !== undefined ? apptInfo.status : appointment.status;
   const rs = await appointment.save();
+  if (apptInfo.recall_link) {
+    for (const recallId in apptInfo.recall_link) {
+      await RecallModel.linkAppt(recallId, rs._id);
+    }
+  }
+  if (apptInfo.treatment_link) {
+    for (const treatment_id in apptInfo.treatment_link) {
+      await TreatmentModel.linkAppt(treatment_id, rs._id);
+    }
+  }
+  if (apptInfo.recall_unlink) {
+    for (const recallId in apptInfo.recall_unlink) {
+      await RecallModel.linkAppt(recallId, null);
+    }
+  }
+  if (apptInfo.treatment_unlink) {
+    for (const treatment_id in apptInfo.treatment_unlink) {
+      await TreatmentModel.linkAppt(treatment_id, null);
+    }
+  }
   return rs;
 };

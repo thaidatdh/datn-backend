@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const chairModel = require("../models/chair.model");
 const appointmentModel = require("../models/appointment.model");
+const treatmentModel = require("../models/treatment.model");
+const recallModel = require("../models/recall.model");
 const blockModel = require("../models/appointment.block.model");
 const translator = require("../utils/translator");
 const { RANDOM_COLOR } = require("../constants/constants");
@@ -341,6 +343,14 @@ exports.delete_appointment = async function (req, res) {
     const appointment = await appointmentModel.getById(appointment_id, {});
     if (appointment) {
       await appointmentModel.deleteOne({ _id: appointment_id });
+      await treatmentModel.updateMany(
+        { appointment: appointment_id },
+        { $set: { appointment: null } }
+      );
+      await recallModel.updateMany(
+        { appointment: appointment_id },
+        { $set: { appointment: null } }
+      );
       res.json({
         success: true,
       });

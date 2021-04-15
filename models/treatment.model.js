@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 require("./treatment.plan.model");
 const Patient = require("./patient.model");
-const Staff = require("./staff.model");
 const ProcedureModel = require("./procedure.code.model");
-const Appointment = require("./appointment.model");
 const RecallModel = require("./recall.model");
 const TreatmentSchema = mongoose.Schema(
   {
@@ -261,4 +259,12 @@ module.exports.updateTreatment = async function (treatment, req) {
     );
   }
   return await treatment.save();
+};
+module.exports.linkAppt = async function (treatment_id, appointment_id) {
+  const treatment = await TreatmentModel.findById(treatment_id);
+  if (treatment) {
+    treatment.appointment = appointment_id;
+    return await treatment.save();
+  }
+  return null;
 };

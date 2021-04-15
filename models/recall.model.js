@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
-const Patient = require("./patient.model");
-const Appointment = require("./appointment.model");
-const Procedure = require("./procedure.code.model");
 const { calculateDateRecallByInterval } = require("../utils/utils");
 const RecallSchema = mongoose.Schema(
   {
@@ -128,3 +125,11 @@ module.exports.updateRecall = async function (recall, recallInfo) {
       : recall.is_active;
   return await recall.save();
 };
+module.exports.linkAppt = async function(recall_id, appointment_id) {
+  const recall = await RecallModel.findById(recall_id);
+  if (recall) {
+    recall.appointment = appointment_id;
+    return await recall.save();
+  }
+  return null;
+}
