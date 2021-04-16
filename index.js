@@ -8,6 +8,7 @@ require("dotenv").config();
 global.XMLHttpRequest = require("xhr2");
 const firebaseStorage = require("./utils/storage");
 firebaseStorage.initialize();
+global.atob = require("atob");
 // create express app
 const app = express();
 app.use(cors());

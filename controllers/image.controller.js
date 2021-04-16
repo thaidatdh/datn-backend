@@ -80,7 +80,7 @@ exports.image_of_patient = async function (req, res) {
 exports.add = async function (req, res) {
   try {
     if (req.body.data == null || req.body.file_name == null) {
-      return res.json({
+      return res.status(403).json({
         success: false,
         message: await translator.FailedMessage(
           constants.ACTION.INSERT,
@@ -93,16 +93,16 @@ exports.add = async function (req, res) {
       req.body.patient,
       req.body.file_name
     );
+    console.log(req.body.data.substring(0,20));
     const url = await firebaseStorage.uploadBase64String(
       req.body.data,
       filePath
     );
     if (url == null) {
-      return res.json({
+      return res.status(401).json({
         success: false,
-        message: await translator.FailedMessage(
-          constants.ACTION.INSERT,
-          "image failed. Can not upload image",
+        message: await translator.Translate(
+          "Insert image failed. Can not upload image",
           req.query.lang
         ),
       });

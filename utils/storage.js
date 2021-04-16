@@ -44,9 +44,10 @@ module.exports.uploadBase64String = async function (base64String, path) {
     // Data URL string
     var message = base64String;
     //"data:text/plain;base64,5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB";
-    await ref.putString(message, "data_url");
+    const rs = await ref.putString(message, "data_url");
     return ref.getDownloadURL();
   } catch (err) {
+    console.log(err);
     return null;
   }
 };
