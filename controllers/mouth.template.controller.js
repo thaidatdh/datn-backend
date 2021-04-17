@@ -15,7 +15,7 @@ exports.index = async function (req, res) {
     const result = [];
     for (const mouth of mouths) {
       let mouthObject = Object.assign({}, mouth._doc);
-      mouthObject.frames = [...mouth.frames];
+      mouthObject.frames = mouth.frames;
       result.push(mouthObject);
     }
     res.json({
@@ -60,9 +60,11 @@ exports.detail = async function (req, res) {
       options
     );
     if (mouth && mouth.length > 0) {
+      let result = mouth[0];
+      result.frames = mouth[0].frames;
       res.json({
         success: true,
-        payload: mouth[0],
+        payload: result,
       });
     } else {
       res.status(404).json({

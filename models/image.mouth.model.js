@@ -14,6 +14,7 @@ const ImageMouthSchema = mongoose.Schema(
       ref: "patient",
       required: true,
     },
+    template: mongoose.Types.ObjectId,
   },
   {
     timestamps: true,
@@ -33,7 +34,7 @@ const MouthModel = (module.exports = mongoose.model(
 
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = MouthModel.find(query);
+  const promise = MouthModel.find(query).sort({ entry_date: -1});
   // Limit
   if (populateOptions.limit) {
     promise.limit(Number.parseInt(populateOptions.limit));
@@ -56,6 +57,7 @@ module.exports.insert = async function (req) {
   mouth.note = req.note ? req.note : null;
   mouth.entry_date = req.entry_date ? req.entry_date : Date.now();
   mouth.patient = req.patient ? req.patient : null;
+  mouth.template = req.template ? req.template : null;
   return await mouth.save();
 };
 module.exports.insertWithFrames = async function (req) {
@@ -65,6 +67,7 @@ module.exports.insertWithFrames = async function (req) {
   mouth.note = req.note ? req.note : null;
   mouth.entry_date = req.entry_date ? req.entry_date : Date.now();
   mouth.patient = req.patient ? req.patient : null;
+  mouth.template = req.template ? req.template : null;
   const insertedMouth = await mouth.save();
   let inseredFrameList = [];
   for (const frame of req.frames) {
@@ -83,5 +86,6 @@ module.exports.updateMouth = async function (mouth, req) {
   mouth.note = req.note !== undefined ? req.note : mouth.note;
   mouth.entry_date = req.entry_date ? req.entry_date : mouth.entry_date;
   mouth.patient = req.patient !== undefined ? req.patient : mouth.patient;
+  mouth.template = req.template !== undefined ? req.template : mouth.template;
   return await mouth.save();
 };

@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const imageModel = require("../models/images.model");
+const imageFrameModel = require("../models/image.frame.model");
 const translator = require("../utils/translator");
 const firebaseStorage = require("../utils/storage");
 //For index
@@ -89,11 +90,10 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const filePath = firebaseStorage.getImageFilePath(
+    const filePath = await firebaseStorage.getImageFilePath(
       req.body.patient,
       req.body.file_name
     );
-    console.log(req.body.data.substring(0,20));
     const url = await firebaseStorage.uploadBase64String(
       req.body.data,
       filePath
@@ -107,7 +107,10 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const imageInfo = Object.assign(req.body, { image_path: url });
+    const imageInfo = Object.assign(req.body, {
+      image_path: url,
+      storage_path: filePath,
+    });
     const rs = await imageModel.insert(imageInfo);
     return res.json({ success: true, payload: rs });
   } catch (err) {
@@ -177,14 +180,14 @@ exports.update = async function (req, res) {
 };
 exports.delete = async function (req, res) {
   try {
-    const image = imageModel.findById(req.params.image_id);
+    const image = await imageModel.findById(req.params.image_id);
     if (image) {
-      await imageModel.deleteOne({ _id: req.params.image_id });
-      const filePath = firebaseStorage.getImageFilePath(
-        image.patient,
-        image.image_path
+      await imageFrameModel.updateMany(
+        { image: req.params.image_id },
+        { $set: { image: null } }
       );
-      await firebaseStorage.deleteFile(filePath);
+      await imageModel.deleteOne({ _id: req.params.image_id });
+      await firebaseStorage.deleteFile(image.storage_path);
       res.json({
         success: true,
       });

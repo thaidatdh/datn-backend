@@ -41,24 +41,33 @@ exports.patient_mouth = async function (req, res) {
       get_frames: req.query.get_frames == "true",
       limit: req.query.limit,
     };
-
-    const mouths = await MouthModel.get({ patient: patient_id }, options);
-    const result = [];
-    for (const mouth of mouths) {
-      let mouthObject = Object.assign({}, mouth._doc);
-      mouthObject.frames = [...mouth.frames];
-      result.push(mouthObject);
+    let query = { patient: patient_id };
+    if (req.query.template !== undefined || req.query.template === "others") {
+      query = Object.assign(query, {
+        template: req.query.template === "others" ? null : req.query.template,
+      });
+    }
+    const mouths = await MouthModel.get(query, options);
+    let result = mouths;
+    if (options.get_frames) {
+      result = [];
+      for (const mouth of mouths) {
+        let mouthObject = Object.assign({}, mouth._doc);
+        mouthObject.frames = mouth.frames;
+        result.push(mouthObject);
+      }
     }
     res.json({
       success: true,
       payload: result,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.GET,
-        "mouth list of patient " + patient_id + "failed",
+        "mouth list of patient " + patient_id,
         req.query.lang
       ),
       exeption: err,
@@ -116,7 +125,11 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail ", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail ",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -142,7 +155,11 @@ exports.update = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -215,7 +232,11 @@ exports.detail_frame = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

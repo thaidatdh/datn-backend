@@ -13,6 +13,7 @@ const DocumentSchema = mongoose.Schema(
     file_name: String,
     name: String,
     description: String,
+    storage_path: String,
     category: {
       type: mongoose.Types.ObjectId,
       ref: "document_category",
@@ -41,6 +42,9 @@ module.exports.insert = async function (documentinfo) {
     ? documentinfo.description
     : null;
   document.category = documentinfo.category ? documentinfo.category : null;
+  document.storage_path = documentinfo.storage_path
+    ? documentinfo.storage_path
+    : null;
   return await document.save();
 };
 module.exports.updateDocument = async function (document, documentinfo) {

@@ -250,6 +250,15 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
     patientInfo.credit_amount != undefined
       ? patientInfo.credit_amount
       : patient.credit_amount;
+  patient.plaque_index = patientInfo.plaque_index
+    ? patientInfo.plaque_index
+    : patient.plaque_index;
+  patient.bleeding_index = patientInfo.bleeding_index
+    ? patientInfo.bleeding_index
+    : patient.bleeding_index;
+  patient.halitosis = patientInfo.halitosis
+    ? patientInfo.halitosis
+    : patient.halitosis;
   if (patient.new_patient === true) {
     if (patient.patient_id == null) {
       patient.patient_id = await generatePatientId();

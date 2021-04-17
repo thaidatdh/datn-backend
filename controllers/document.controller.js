@@ -129,7 +129,7 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    const filePath = firebaseStorage.getDocumentFilePath(
+    const filePath = await firebaseStorage.getDocumentFilePath(
       req.body.patient,
       req.body.file_name
     );
@@ -140,14 +140,16 @@ exports.add = async function (req, res) {
     if (url == null) {
       return res.json({
         success: false,
-        message: await translator.FailedMessage(
-          constants.ACTION.INSERT,
-          "document failed. Can not upload file",
+        message: await translator.Translate(
+          "Insert document failed. Can not upload file",
           req.query.lang
         ),
       });
     }
-    const requestBody = Object.assign(req.body, { file_path: url });
+    const requestBody = Object.assign(req.body, {
+      image_path: url,
+      storage_path: filePath,
+    });
     const rs = await documentModel.insert(requestBody);
     return res.json({ success: true, payload: rs });
   } catch (err) {
@@ -227,8 +229,7 @@ exports.delete = async function (req, res) {
     const document = documentModel.findById(req.params.document_id);
     if (document) {
       await documentModel.deleteOne({ _id: req.params.document_id });
-      const filePath = firebaseStorage.getDocumentFilePath(document.patient, document.file_path)
-      await firebaseStorage.deleteFile(filePath);
+      await firebaseStorage.deleteFile(document.storage_path);
       res.json({
         success: true,
       });

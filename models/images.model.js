@@ -11,6 +11,7 @@ const ImagesSchema = mongoose.Schema(
     image_name: String,
     file_name: String,
     image_path: String,
+    storage_path: String,
   },
   {
     timestamps: true,
@@ -43,6 +44,7 @@ module.exports.insert = async function (imageInfo) {
   image.image_path = imageInfo.image_path ? imageInfo.image_path : null;
   image.image_name = imageInfo.image_name ? imageInfo.image_name : null;
   image.file_name = imageInfo.file_name ? imageInfo.file_name : null;
+  image.storage_path = imageInfo.storage_path ? imageInfo.storage_path : null;
   return await image.save();
 };
 module.exports.updateImage = async function (image, imageInfo) {

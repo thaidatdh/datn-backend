@@ -51,15 +51,52 @@ module.exports.uploadBase64String = async function (base64String, path) {
     return null;
   }
 };
-module.exports.getDocumentFilePath = function (patient_id, file_name) {
-  if (patient_id) {
-    return patient_id + "/Documents/" + file_name;
+const isExists = async (path) => {
+  const ref = firebase.storage().ref().child(path);
+  try {
+    await ref.getDownloadURL();
+  } catch (err) {
+    return false;
   }
-  return "/Documents/" + file_name;
+  return true;
 };
-module.exports.getImageFilePath = function (patient_id, file_name) {
+module.exports.getDocumentFilePath = async function (patient_id, file_name) {
+  let path = "";
   if (patient_id) {
-    return patient_id + "/Images/" + file_name;
+    path = "Patient-" + patient_id + "/Documents/" + file_name;
+  } else {
+    path = "/Documents/" + file_name;
   }
-  return "/Images/" + file_name;
+  let count = 0;
+  let isExisted = await isExists(path);
+  while (isExisted) {
+    count = count + 1;
+    if (patient_id) {
+      path = "Patient-" + patient_id + "/Documents/" + count + "-" + file_name;
+    } else {
+      path = "/Documents/" + count + "-" + file_name;
+    }
+    isExisted = await isExists(path);
+  }
+  return path;
+};
+module.exports.getImageFilePath = async function (patient_id, file_name) {
+  let path = "";
+  if (patient_id) {
+    path = "Patient-" + patient_id + "/Images/" + file_name;
+  } else {
+    path = "/Images/" + file_name;
+  }
+  let count = 0;
+  let isExisted = await isExists(path);
+  while (isExisted) {
+    count = count + 1;
+    if (patient_id) {
+      path = "Patient-" + patient_id + "/Images/" + count + "-" + file_name;
+    } else {
+      path = "/Images/" + count + "-" + file_name;
+    }
+    isExisted = await isExists(path);
+  }
+  return path;
 };
