@@ -18,6 +18,7 @@ const ProgressNoteSchema = mongoose.Schema(
     note_date: Date,
     tooth: String,
     surface: String,
+    title: String,
   },
   {
     timestamps: true,
@@ -88,6 +89,7 @@ module.exports.insert = async function (noteInfo) {
   note.content = noteInfo.content ? noteInfo.content : null;
   note.tooth = noteInfo.tooth ? noteInfo.tooth : null;
   note.surface = noteInfo.surface ? noteInfo.surface : null;
+  note.title = noteInfo.title ? noteInfo.title : null;
   return await note.save();
 };
 module.exports.updateProgressNote = async function (note, noteInfo) {
@@ -99,5 +101,6 @@ module.exports.updateProgressNote = async function (note, noteInfo) {
   note.content = noteInfo.content ? noteInfo.content : note.content;
   note.tooth = noteInfo.tooth ? noteInfo.tooth : note.tooth;
   note.surface = noteInfo.surface ? noteInfo.surface : note.surface;
+  note.title = noteInfo.title ? noteInfo.title : note.title;
   return await note.save();
 };

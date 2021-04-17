@@ -3,6 +3,7 @@ const constants = require("../constants/constants");
 const Patient = require("./patient.model");
 const Staff = require("./staff.model");
 const FrameModel = require("./image.frame.model");
+const TemplageModel = require("./image.mouth.template.model");
 const ImageMouthSchema = mongoose.Schema(
   {
     name: String,
@@ -58,6 +59,12 @@ module.exports.insert = async function (req) {
   mouth.entry_date = req.entry_date ? req.entry_date : Date.now();
   mouth.patient = req.patient ? req.patient : null;
   mouth.template = req.template ? req.template : null;
+  if (mouth.thumbnail == null && mouth.template != null) {
+    const mouthTemplate = await TemplageModel.findById(outh.template);
+    if (mouthTemplate) {
+      mouth.thumbnail = mouthTemplate.thumbnail;
+    }
+  }
   return await mouth.save();
 };
 module.exports.insertWithFrames = async function (req) {
@@ -68,6 +75,12 @@ module.exports.insertWithFrames = async function (req) {
   mouth.entry_date = req.entry_date ? req.entry_date : Date.now();
   mouth.patient = req.patient ? req.patient : null;
   mouth.template = req.template ? req.template : null;
+  if (mouth.thumbnail == null && mouth.template != null) {
+    const mouthTemplate = await TemplageModel.findById(outh.template);
+    if (mouthTemplate) {
+      mouth.thumbnail = mouthTemplate.thumbnail;
+    }
+  }
   const insertedMouth = await mouth.save();
   let inseredFrameList = [];
   for (const frame of req.frames) {
