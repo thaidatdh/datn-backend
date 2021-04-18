@@ -56,9 +56,9 @@ exports.patient_recall = async function (req, res) {
     let query = { patient: patient_id };
     if (req.query.date) {
       const fromDate = new Date(req.query.date);
-      query = {
+      query = Object.assign(query, {
         recall_date: { $gte: fromDate },
-      };
+      });
     }
     if (req.query.link == "true") {
       query = Object.assign(query, {
