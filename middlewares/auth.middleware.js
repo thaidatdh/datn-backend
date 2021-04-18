@@ -12,23 +12,25 @@ const nonSecurePaths = [
   "/api/authorization/refresh-token",
   "/api/authorization/patient/signin",
   "/api/",
+  "/api/swagger-ui-bundle.js",
+  "/api/swagger-ui-standalone-preset.js",
+  "/api/swagger-ui-init.js",
+  "/api/favicon-32x32.png",
+  "/api/swagger-ui.css",
 ];
 
 exports.verifyUser = async (request, response, next) => {
-  const regex = new RegExp('/api/([\\w-\\d])+.\\w+');
   if (
     process.env.DATABASE_DEBUG_SKIP_AUTHORIZATION == "true" ||
-    nonSecurePaths.includes(request.path) ||
-    regex.test(request.path)
+    nonSecurePaths.includes(request.path)
   ) {
     return next();
   }
   let token = request.header("Authorization");
+  if (!token) token = request.body ? request.body.token : null;
+  if (!token) token = request.query ? request.query.token : null;
   if (!token)
-    token =
-      request.body.token ||
-      request.query.token ||
-      request.headers["x-access-token"];
+    token = request.headers ? request.headers["x-access-token"] : null;
   if (!token)
     return response.status(403).send({
       success: false,
