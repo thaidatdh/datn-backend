@@ -42,10 +42,15 @@ exports.signin_staff = async function (req, res) {
               { user: user._id },
               { one: true, limit: 1 }
             );
-            const returnUser = Object.assign(user, {
-              password: undefined,
-              staff_id: returnStaff ? returnStaff._id : null,
-            });
+            const returnUser = await Object.assign(
+              {
+                staff_id: returnStaff ? returnStaff._id : null,
+              },
+              user._doc,
+              {
+                password: undefined,
+              }
+            );
             const expiredTimeToken = process.env.TOKEN_EXPIRE
               ? Number.parseInt(process.env.TOKEN_EXPIRE)
               : 3600;
@@ -53,13 +58,9 @@ exports.signin_staff = async function (req, res) {
             expiredDateToken.setTime(
               expiredDateToken.getTime() + expiredTimeToken * 1000
             );
-            const token = jwt.sign(
-              returnUser.toJSON(),
-              process.env.TOKEN_SECRET,
-              {
-                expiresIn: expiredTimeToken, //1h
-              }
-            );
+            const token = jwt.sign(returnUser, process.env.TOKEN_SECRET, {
+              expiresIn: expiredTimeToken, //1h
+            });
             const expiredTimeRefreshToken = process.env.TOKEN_EXPIRE_REFRESH
               ? Number.parseInt(process.env.TOKEN_EXPIRE_REFRESH)
               : 86400;
@@ -67,10 +68,8 @@ exports.signin_staff = async function (req, res) {
             expiredDateRefreshToken.setTime(
               expiredDateRefreshToken.getTime() + expiredTimeRefreshToken * 1000
             );
-            console.log(expiredDateRefreshToken);
-            console.log(expiredDateToken);
             const refreshToken = jwt.sign(
-              returnUser.toJSON(),
+              returnUser,
               process.env.TOKEN_SECRET_REFRESH,
               {
                 expiresIn: expiredTimeRefreshToken, //1d
