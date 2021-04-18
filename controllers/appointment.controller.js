@@ -291,6 +291,9 @@ exports.appointment_info = async function (req, res) {
 exports.add_appointment = async function (req, res) {
   try {
     let apptInfo = req.body;
+    if (apptInfo.provider == null) {
+      apptInfo.provider = req.default_provider_id;
+    }
     const rs = await appointmentModel.insert(apptInfo);
     //link treatment and recall here
     return res.json({ success: true, payload: rs });
@@ -453,6 +456,9 @@ exports.block_info = async function (req, res) {
 exports.add_block = async function (req, res) {
   try {
     let apptInfo = req.body;
+    if (apptInfo.provider == null) {
+      apptInfo.provider = req.default_provider_id;
+    }
     const rs = await blockModel.insert(apptInfo);
     //link treatment and recall here
     return res.json({ success: true, payload: rs });

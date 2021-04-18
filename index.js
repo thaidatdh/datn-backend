@@ -22,6 +22,7 @@ const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
 // Connecting to the database
+mongoose.set("useUnifiedTopology", true);
 mongoose
   .connect(process.env.MONGO_DB, {
     useNewUrlParser: true,

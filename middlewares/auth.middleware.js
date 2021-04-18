@@ -42,6 +42,18 @@ exports.verifyUser = async (request, response, next) => {
   try {
     const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
     request.decoded = decoded;
+    if (decoded.user_type === constants.USER.USER_TYPE_PROVIDER) {
+      request.default_provider_id = decoded.staff_id;
+    }
+    if (decoded.is_active == false) {
+      return response.status(403).send({
+        success: false,
+        message: await translator.Translate(
+          "Inactive staff. Access denied",
+          request.query.lang
+        ),
+      });
+    }
     const isAuthorized =
       decoded.user_type == constants.USER.USER_TYPE_ADMIN
         ? true

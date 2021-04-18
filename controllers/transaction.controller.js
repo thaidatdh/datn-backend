@@ -98,6 +98,9 @@ exports.add = async function (req, res) {
         ),
       });
     }
+    if (req.body.provider == null) {
+      req.body.provider = req.default_provider_id;
+    }
     const rs = await TransactionModel.insert(req.body);
     if (rs != null) {
       return res.json({ success: true, payload: rs });

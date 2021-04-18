@@ -45,6 +45,7 @@ exports.signin_staff = async function (req, res) {
             const returnUser = await Object.assign(
               {
                 staff_id: returnStaff ? returnStaff._id : null,
+                is_active: returnStaff ? returnStaff.is_active : false,
               },
               user._doc,
               {
