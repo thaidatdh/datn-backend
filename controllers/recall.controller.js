@@ -55,15 +55,15 @@ exports.patient_recall = async function (req, res) {
     };
     let query = { patient: patient_id };
     if (req.query.date) {
-      const fromDate = new Date(req.query.fromDate);
+      const fromDate = new Date(req.query.date);
       query = {
         recall_date: { $gte: fromDate },
       };
     }
     if (req.query.link == "true") {
-      query = {
+      query = Object.assign(query, {
         appointment: null,
-      };
+      });
     }
     const recalls = await RecallModel.get(query, options);
     let result = {
