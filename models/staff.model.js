@@ -143,7 +143,7 @@ module.exports.updateStaff = async function (staff, staffInfo) {
   const result = await Object.assign({}, updatedStaff._doc);
   result.user = await Object.assign({}, updatedUser._doc);
   return result;
-};;
+};
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = StaffModel.find(query);
@@ -183,5 +183,13 @@ module.exports.get = async function (query, populateOptions) {
     promise.populate("specialty");
   }
   const resultQuery = await promise.exec();
-  return resultQuery;
+  if (populateOptions.one) {
+    if (resultQuery.length > 0) {
+      return resultQuery[0];
+    } else {
+      return null;
+    }
+  } else {
+    return resultQuery;
+  }
 };

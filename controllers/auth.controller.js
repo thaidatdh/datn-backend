@@ -38,7 +38,14 @@ exports.signin_staff = async function (req, res) {
           const isMatch = await user.comparePassword(req.body.password);
           if (isMatch) {
             // if user is found and password is right create a token
-            const returnUser = Object.assign(user, { password: undefined });
+            const returnStaff = await StaffModel.get(
+              { user: user._id },
+              { one: true, limit: 1 }
+            );
+            const returnUser = Object.assign(user, {
+              password: undefined,
+              staff_id: returnStaff ? returnStaff._id : null,
+            });
             const expiredTimeToken = process.env.TOKEN_EXPIRE
               ? Number.parseInt(process.env.TOKEN_EXPIRE)
               : 3600;
@@ -46,9 +53,13 @@ exports.signin_staff = async function (req, res) {
             expiredDateToken.setTime(
               expiredDateToken.getTime() + expiredTimeToken * 1000
             );
-            const token = jwt.sign(user.toJSON(), process.env.TOKEN_SECRET, {
-              expiresIn: expiredTimeToken, //1h
-            });
+            const token = jwt.sign(
+              returnUser.toJSON(),
+              process.env.TOKEN_SECRET,
+              {
+                expiresIn: expiredTimeToken, //1h
+              }
+            );
             const expiredTimeRefreshToken = process.env.TOKEN_EXPIRE_REFRESH
               ? Number.parseInt(process.env.TOKEN_EXPIRE_REFRESH)
               : 86400;
@@ -59,7 +70,7 @@ exports.signin_staff = async function (req, res) {
             console.log(expiredDateRefreshToken);
             console.log(expiredDateToken);
             const refreshToken = jwt.sign(
-              user.toJSON(),
+              returnUser.toJSON(),
               process.env.TOKEN_SECRET_REFRESH,
               {
                 expiresIn: expiredTimeRefreshToken, //1d
