@@ -5,6 +5,7 @@ const ImageMouthTemplateSchema = mongoose.Schema(
   {
     name: String,
     thumbnail: String,
+    order: Number,
   },
   {
     timestamps: true,
@@ -23,18 +24,13 @@ const MouthTemplateModel = (module.exports = mongoose.model(
 ));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = MouthTemplateModel.find(query);
+  const promise = MouthTemplateModel.find(query).sort("order");
   // Limit
   if (populateOptions.limit) {
     promise.limit(Number.parseInt(populateOptions.limit));
   }
   if (populateOptions.get_frames) {
-    promise.populate({
-      path: "frames",
-      populate: {
-        path: "image",
-      },
-    });
+    promise.populate("frames");
   }
   const resultQuery = await promise.exec();
   return resultQuery;
@@ -43,12 +39,23 @@ module.exports.insert = async function (req) {
   let mouth = new MouthTemplateModel();
   mouth.name = req.name ? req.name : null;
   mouth.thumbnail = req.thumbnail ? req.thumbnail : null;
+  mouth.order = req.order ? req.order : 0;
+  mouth.order = req.order ? req.order : 0;
+  if (mouth.order === 0) {
+    const newOrder = await MouthTemplateModel.estimatedDocumentCount();
+    mouth.order = newOrder + 1;
+  }
   return await mouth.save();
 };
 module.exports.insertWithFrames = async function (req) {
   let mouth = new MouthTemplateModel();
   mouth.name = req.name ? req.name : null;
   mouth.thumbnail = req.thumbnail ? req.thumbnail : null;
+  mouth.order = req.order ? req.order : 0;
+  if (mouth.order === 0) {
+    const newOrder = await MouthTemplateModel.estimatedDocumentCount();
+    mouth.order = newOrder + 1;
+  }
   const insertedMouth = await mouth.save();
   let inseredFrameList = [];
   for (const frame of req.frames) {

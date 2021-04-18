@@ -60,7 +60,7 @@ exports.detail = async function (req, res) {
       options
     );
     if (mouth && mouth.length > 0) {
-      let result = mouth[0];
+      let result = Object.assign({}, mouth[0]._doc);
       result.frames = mouth[0].frames;
       res.json({
         success: true,
@@ -78,7 +78,11 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -178,7 +182,11 @@ exports.detail_frame = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }

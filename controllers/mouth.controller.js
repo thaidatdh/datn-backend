@@ -107,8 +107,8 @@ exports.detail = async function (req, res) {
     };
     const mouth = await MouthModel.get({ _id: req.params.mouth_id }, options);
     if (mouth && mouth.length > 0) {
-      const result = Object.assign({}, mouth[0]);
-      result.frames = [...mouth[0].frames];
+      const result = Object.assign({}, mouth[0]._doc);
+      result.frames = mouth[0].frames;
       res.json({
         success: true,
         payload: result,

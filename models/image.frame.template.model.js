@@ -44,7 +44,7 @@ module.exports.insert = async function (req) {
 };
 module.exports.insertWithMountId = async function (image_mouth_id, req) {
   let frame = new FrameTemplateModel();
-  frame.image_mouth_id = image_mouth_id ? image_mouth_id : null;
+  frame.image_mouth_template_id = image_mouth_id ? image_mouth_id : null;
   frame.image = req.image ? req.image : null;
   frame.order = req.order ? req.order : 0;
   frame.width_ratio = req.width_ratio ? req.width_ratio : 0;
