@@ -53,8 +53,19 @@ exports.patient_recall = async function (req, res) {
       limit: req.query.limit,
       page: req.query.page,
     };
-
-    const recalls = await RecallModel.get({ patient: patient_id }, options);
+    let query = { patient: patient_id };
+    if (req.query.date) {
+      const fromDate = new Date(req.query.fromDate);
+      query = {
+        recall_date: { $gte: fromDate },
+      };
+    }
+    if (req.query.link == "true") {
+      query = {
+        appointment: null,
+      };
+    }
+    const recalls = await RecallModel.get(query, options);
     let result = {
       success: true,
       payload: recalls,

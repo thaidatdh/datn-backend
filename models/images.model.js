@@ -23,7 +23,7 @@ const ImageModel = (module.exports = mongoose.model("image", ImagesSchema));
 
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = ImageModel.find(query);
+  const promise = ImageModel.find(query).sort({ createdAt: -1});
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(
