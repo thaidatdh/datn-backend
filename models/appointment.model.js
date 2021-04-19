@@ -56,18 +56,48 @@ module.exports.get = async function (query, populateOptions) {
     path: "patient",
     populate: {
       path: "user",
+      select: {
+        _id: 1,
+        password: 0,
+      },
     },
   });
   promise.populate({
     path: "provider",
+    select: {
+      _id: 1,
+      user: 1,
+      provider_color: 1,
+      staff_type: 1,
+      display_id: 1,
+      is_active: 1,
+    },
     populate: {
       path: "user",
+      select: {
+        _id: 1,
+        first_name: 1,
+        last_name: 1,
+      },
     },
   });
   promise.populate({
     path: "assistant",
+    select: {
+      _id: 1,
+      user: 1,
+      provider_color: 1,
+      staff_type: 1,
+      display_id: 1,
+      is_active: 1,
+    },
     populate: {
       path: "user",
+      select: {
+        _id: 1,
+        first_name: 1,
+        last_name: 1,
+      },
     },
   });
   promise.populate("chair");
@@ -92,18 +122,47 @@ module.exports.getById = async function (id, populateOptions) {
     path: "patient",
     populate: {
       path: "user",
+      select: {
+        password: 0,
+      },
     },
   });
   promise.populate({
     path: "provider",
+    select: {
+      _id: 1,
+      user: 1,
+      provider_color: 1,
+      staff_type: 1,
+      display_id: 1,
+      is_active: 1,
+    },
     populate: {
       path: "user",
+      select: {
+        _id: 1,
+        first_name: 1,
+        last_name: 1,
+      },
     },
   });
   promise.populate({
     path: "assistant",
+    select: {
+      _id: 1,
+      user: 1,
+      provider_color: 1,
+      staff_type: 1,
+      display_id: 1,
+      is_active: 1,
+    },
     populate: {
       path: "user",
+      select: {
+        _id: 1,
+        first_name: 1,
+        last_name: 1,
+      },
     },
   });
   promise.populate("chair");
@@ -133,12 +192,12 @@ module.exports.insert = async function (apptInfo) {
   appointment.status = apptInfo.status ? apptInfo.status : "New";
   const rs = await appointment.save();
   if (apptInfo.recall_link) {
-    for (const recallId in apptInfo.recall_link) {
+    for (const recallId of apptInfo.recall_link) {
       await RecallModel.linkAppt(recallId, rs._id);
     }
   }
   if (apptInfo.treatment_link){
-    for (const treatment_id in apptInfo.treatment_link) {
+    for (const treatment_id of apptInfo.treatment_link) {
       await TreatmentModel.linkAppt(treatment_id, rs._id);
     }
   }
@@ -174,22 +233,22 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
     apptInfo.status !== undefined ? apptInfo.status : appointment.status;
   const rs = await appointment.save();
   if (apptInfo.recall_link) {
-    for (const recallId in apptInfo.recall_link) {
+    for (const recallId of apptInfo.recall_link) {
       await RecallModel.linkAppt(recallId, rs._id);
     }
   }
   if (apptInfo.treatment_link) {
-    for (const treatment_id in apptInfo.treatment_link) {
+    for (const treatment_id of apptInfo.treatment_link) {
       await TreatmentModel.linkAppt(treatment_id, rs._id);
     }
   }
   if (apptInfo.recall_unlink) {
-    for (const recallId in apptInfo.recall_unlink) {
+    for (const recallId of apptInfo.recall_unlink) {
       await RecallModel.linkAppt(recallId, null);
     }
   }
   if (apptInfo.treatment_unlink) {
-    for (const treatment_id in apptInfo.treatment_unlink) {
+    for (const treatment_id of apptInfo.treatment_unlink) {
       await TreatmentModel.linkAppt(treatment_id, null);
     }
   }

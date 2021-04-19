@@ -294,8 +294,8 @@ exports.add_appointment = async function (req, res) {
     if (apptInfo.provider == null) {
       apptInfo.provider = req.default_provider_id;
     }
-    const rs = await appointmentModel.insert(apptInfo);
-    //link treatment and recall here
+    let rs = await appointmentModel.insert(apptInfo);
+    returnValue = appointmentModel.getById(rs._id);
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
