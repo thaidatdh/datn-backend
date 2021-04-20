@@ -295,8 +295,8 @@ exports.add_appointment = async function (req, res) {
       apptInfo.provider = req.default_provider_id;
     }
     let rs = await appointmentModel.insert(apptInfo);
-    returnValue = appointmentModel.getById(rs._id);
-    return res.json({ success: true, payload: rs });
+    let returnValue = await appointmentModel.getById(rs._id);
+    return res.json({ success: true, payload: returnValue });
   } catch (err) {
     return res.status(500).json({
       success: false,
