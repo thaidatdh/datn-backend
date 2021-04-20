@@ -260,12 +260,21 @@ exports.appointment_info = async function (req, res) {
   try {
     const options = {
       limit: req.query.limit,
+      get_treatments: req.query.get_treatments == "true",
+      get_recalls: req.query.get_recalls == "true",
     };
     const appointment = await appointmentModel.getById(appointment_id, options);
     if (appointment) {
+      let result = Object.assign({}, appointment._doc);
+      if (options.get_treatments) {
+        result.treatments = appointment.treatments;
+      }
+      if (options.get_recalls) {
+        result.recalls = appointment.recalls;
+      }
       res.json({
         success: true,
-        payload: appointment,
+        payload: result,
       });
     } else {
       res.status(404).json({
@@ -295,7 +304,10 @@ exports.add_appointment = async function (req, res) {
       apptInfo.provider = req.default_provider_id;
     }
     let rs = await appointmentModel.insert(apptInfo);
-    let returnValue = await appointmentModel.getById(rs._id);
+    let returnValue = await appointmentModel.getById(rs._id, {
+      get_treatments: true,
+      get_recalls: true,
+    });
     return res.json({ success: true, payload: returnValue });
   } catch (err) {
     return res.status(500).json({

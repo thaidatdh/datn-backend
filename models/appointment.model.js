@@ -45,6 +45,12 @@ AppointmentSchema.virtual("treatments", {
   foreignField: "appointment",
   justOne: false,
 });
+AppointmentSchema.virtual("recalls", {
+  ref: "recall",
+  localField: "_id",
+  foreignField: "appointment",
+  justOne: false,
+});
 const AppointmentModel = (module.exports = mongoose.model(
   "appointment",
   AppointmentSchema
@@ -108,6 +114,12 @@ module.exports.get = async function (query, populateOptions) {
         Number.parseInt(populateOptions.page)
     );
   }
+  if (populateOptions.get_treatments) {
+    promise.populate("treatments");
+  }
+  if (populateOptions.get_recalls) {
+    promise.populate("recalls");
+  }
   if (populateOptions.limit) {
     promise.limit(Number.parseInt(populateOptions.limit));
   }
@@ -166,6 +178,12 @@ module.exports.getById = async function (id, populateOptions) {
     },
   });
   promise.populate("chair");
+  if (populateOptions.get_treatments) {
+    promise.populate("treatments");
+  }
+  if (populateOptions.get_recalls) {
+    promise.populate("recalls");
+  }
   // Limit
   if (populateOptions.limit) {
     promise.limit(Number.parseInt(populateOptions.limit));
@@ -196,7 +214,7 @@ module.exports.insert = async function (apptInfo) {
       await RecallModel.linkAppt(recallId, rs._id);
     }
   }
-  if (apptInfo.treatment_link){
+  if (apptInfo.treatment_link) {
     for (const treatment_id of apptInfo.treatment_link) {
       await TreatmentModel.linkAppt(treatment_id, rs._id);
     }
