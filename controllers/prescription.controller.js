@@ -140,17 +140,18 @@ exports.detail = async function (req, res) {
     const options = {
       get_details: req.query.get_details == "true",
       get_provider: req.query.get_provider == "true",
+      one: true
     };
     const prescription = await PrescriptionModel.get(
       { _id: req.params.prescription_id },
       options
     );
-    if (prescription && prescription.length > 0) {
-      let result = await Object.assign({}, prescription[0]._doc);
-      result.details = prescription[0].details;
+    if (prescription) {
+      const resultReturn = await Object.assign({}, prescription._doc);
+      resultReturn.details = prescription.details;
       res.json({
         success: true,
-        payload: result,
+        payload: resultReturn,
       });
     } else {
       res.status(404).json({
