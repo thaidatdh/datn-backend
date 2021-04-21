@@ -70,10 +70,6 @@ module.exports.insertWithPrescriptionId = async function (
   return await detail.save();
 };
 module.exports.updateDetail = async function (detail, req) {
-  detail.prescription_id =
-    req.prescription_id !== undefined
-      ? req.prescription_id
-      : detail.prescription_id;
   detail.is_deleted =
     req.is_deleted !== undefined ? req.is_deleted : detail.is_deleted;
   detail.status = req.status ? req.status : detail.status;

@@ -70,3 +70,20 @@ module.exports.updateFrame = async function (frame, req) {
   frame.y_ratio = req.y_ratio ? req.y_ratio : frame.y_ratio;
   return await frame.save();
 };
+module.exports.updateFrameById = async function (frame_id, req) {
+  try {
+    let frame = await FrameModel.findById(frame_id);
+    if (frame) {
+      frame.image = req.image !== undefined ? req.image : frame.image;
+      frame.order = req.order ? req.order : frame.order;
+      frame.width_ratio = req.width_ratio ? req.width_ratio : frame.width_ratio;
+      frame.height_ratio = req.height_ratio
+        ? req.height_ratio
+        : frame.height_ratio;
+      frame.x_ratio = req.x_ratio ? req.x_ratio : frame.x_ratio;
+      frame.y_ratio = req.y_ratio ? req.y_ratio : frame.y_ratio;
+      return await frame.save();
+    }
+  } catch (e) {}
+  return null;
+};

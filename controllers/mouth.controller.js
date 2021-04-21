@@ -87,6 +87,18 @@ exports.add = async function (req, res) {
       });
     }
     const rs = await MouthModel.insertWithFrames(req.body);
+    const insertedResult = await MouthModel.get(
+      { _id: rs._id },
+      { get_frames: true }
+    );
+    if (insertedResult && insertedResult.length > 0) {
+      const returnResult = Object.assign({}, updatedResult[0]._doc);
+      returnResult.frames = insertedResult[0].frames;
+      return res.json({
+        success: true,
+        payload: returnResult,
+      });
+    }
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
@@ -139,7 +151,19 @@ exports.update = async function (req, res) {
     let mouth = await MouthModel.findById(req.params.mouth_id);
     if (mouth) {
       const result = await MouthModel.updateMouth(mouth, req.body);
-      res.json({
+      const updatedResult = await MouthModel.get(
+        { _id: result._id },
+        { get_frames: true }
+      );
+      if (updatedResult && updatedResult.length > 0) {
+        const returnResult = Object.assign({}, updatedResult[0]._doc);
+        returnResult.frames = updatedResult[0].frames;
+        return res.json({
+          success: true,
+          payload: returnResult,
+        });
+      }
+      return res.json({
         success: true,
         payload: result,
       });

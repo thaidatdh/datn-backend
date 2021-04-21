@@ -98,7 +98,10 @@ module.exports.updateMouth = async function (mouth, req) {
   mouth.thumbnail = req.thumbnail ? req.thumbnail : mouth.thumbnail;
   mouth.note = req.note !== undefined ? req.note : mouth.note;
   mouth.entry_date = req.entry_date ? req.entry_date : mouth.entry_date;
-  mouth.patient = req.patient !== undefined ? req.patient : mouth.patient;
-  mouth.template = req.template !== undefined ? req.template : mouth.template;
-  return await mouth.save();
+  await mouth.save();
+  if (req.frames) {
+    for(const frame of req.frames) {
+      await FrameModel.updateFrameById(frame._id, frame);
+    }
+  }
 };

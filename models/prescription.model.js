@@ -16,6 +16,7 @@ const PrescriptionSchema = mongoose.Schema(
       required: true,
     },
     prescription_date: Date,
+    is_delete: Boolean,
   },
   {
     timestamps: true,
@@ -61,8 +62,7 @@ module.exports.get = async function (query, populateOptions) {
   if (populateOptions.one) {
     if (resultQuery.length > 0) {
       return resultQuery[0];
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -75,6 +75,7 @@ module.exports.insert = async function (req) {
   prescription.prescription_date = req.prescription_date
     ? req.prescription_date
     : Date.now();
+  prescription.is_delete = req.is_delete ? req.is_delete : false;
   return await prescription.save();
 };
 module.exports.insertWithDetails = async function (req) {
@@ -84,6 +85,9 @@ module.exports.insertWithDetails = async function (req) {
   prescription.prescription_date = req.prescription_date
     ? req.prescription_date
     : Date.now();
+  prescription.is_delete = req.is_delete
+    ? req.is_delete
+    : prescription.is_delete;
   const insertedPrescription = await prescription.save();
   let inseredDetailList = [];
   for (const detail of req.details) {
