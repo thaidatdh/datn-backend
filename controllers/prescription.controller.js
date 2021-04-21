@@ -140,7 +140,7 @@ exports.detail = async function (req, res) {
       options
     );
     if (prescription && prescription.length > 0) {
-      const result = Object.assign({}, prescription[0]);
+      let result = await Object.assign({}, prescription[0]._doc);
       result.details = prescription[0].details;
       res.json({
         success: true,
@@ -158,7 +158,11 @@ exports.detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail ", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail ",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -189,14 +193,20 @@ exports.update = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
 };
 exports.delete = async function (req, res) {
   try {
-    const prescription = PrescriptionModel.findById(req.params.prescription_id);
+    const prescription = await PrescriptionModel.findById(
+      req.params.prescription_id
+    );
     if (prescription) {
       await PrescriptionModel.deleteOne({ _id: req.params.prescription_id });
       res.json({
@@ -225,7 +235,7 @@ exports.delete = async function (req, res) {
 };
 exports.add_detail = async function (req, res) {
   try {
-    const request = Object.assign(req.body, {
+    const request = Object.assign({}, req.body, {
       image_prescription_id: req.params.prescription_id,
     });
     const rs = await DetailModel.insert(request);
@@ -262,7 +272,11 @@ exports.detail_detail = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
@@ -299,7 +313,7 @@ exports.update_detail = async function (req, res) {
 };
 exports.delete_detail = async function (req, res) {
   try {
-    const detail = DetailModel.findById(req.params.detail_id);
+    const detail = await DetailModel.findById(req.params.detail_id);
     if (detail) {
       await DetailModel.deleteOne({ _id: req.params.detail_id });
       res.json({
