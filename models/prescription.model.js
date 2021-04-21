@@ -58,6 +58,14 @@ module.exports.get = async function (query, populateOptions) {
     });
   }
   const resultQuery = await promise.exec();
+  if (populateOptions.one) {
+    if (resultQuery.length > 0) {
+      return resultQuery[0];
+    }
+    else {
+      return null;
+    }
+  }
   return resultQuery;
 };
 module.exports.insert = async function (req) {
