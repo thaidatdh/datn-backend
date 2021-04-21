@@ -116,7 +116,9 @@ exports.add = async function (req, res) {
       req.body.provider = req.default_provider_id;
     }
     const rs = await PrescriptionModel.insertWithDetails(req.body);
-    return res.json({ success: true, payload: rs });
+    let result = Object.assign({}, rs);
+    result.details = rs.details;
+    return res.json({ success: true, payload: result });
   } catch (err) {
     return res.status(500).json({
       success: false,
