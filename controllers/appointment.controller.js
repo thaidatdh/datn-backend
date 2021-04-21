@@ -305,8 +305,8 @@ exports.add_appointment = async function (req, res) {
     }
     let rs = await appointmentModel.insert(apptInfo);
     let returnValue = await appointmentModel.getById(rs._id, {
-      get_treatments: true,
-      get_recalls: true,
+      //get_treatments: true,
+      //get_recalls: true,
     });
     return res.json({ success: true, payload: returnValue });
   } catch (err) {
@@ -330,7 +330,10 @@ exports.update_appointment = async function (req, res) {
     );
     if (rs) {
       //link treatment and recall here
-      return res.json({ success: true, payload: rs });
+      let returnValue = await appointmentModel.getById(rs._id, {
+
+      });
+      return res.json({ success: true, payload: returnValue });
     } else {
       return res.status(404).json({
         success: false,
