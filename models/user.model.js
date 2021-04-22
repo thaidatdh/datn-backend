@@ -30,10 +30,18 @@ const UserSchema = mongoose.Schema(
 );
 UserSchema.pre("save", function (next) {
   var user = this;
-  if (!user.password || !user.username) {
+  if (
+    (!user.password || !user.username) &&
+    user.user_type != constants.USER.USER_TYPE_PATIENT
+  ) {
     user.password = null;
     user.username = null;
     return next();
+  } else if (
+    (user.password || !user.username) &&
+    user.user_type == constants.USER.USER_TYPE_PATIENT
+  ) {
+    user.username = user.mobile_phone ? user.mobile_phone : user.home_phone;
   }
   if (this.isModified("password") || this.isNew) {
     bcrypt.genSalt(10, function (err, salt) {
