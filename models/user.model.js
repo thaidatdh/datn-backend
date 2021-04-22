@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 var bcrypt = require("bcrypt-nodejs");
+const { formatPhone } = require("../utils/utils");
 const UserSchema = mongoose.Schema(
   {
     first_name: String,
@@ -76,9 +77,13 @@ module.exports.insert = async function (userInfo) {
   user.first_name = userInfo.first_name ? userInfo.first_name : "";
   user.last_name = userInfo.last_name ? userInfo.last_name : "";
   user.fax = userInfo.fax ? userInfo.fax : null;
-  user.mobile_phone = userInfo.mobile_phone ? userInfo.mobile_phone : null;
+  user.mobile_phone = userInfo.mobile_phone
+    ? formatPhone(userInfo.mobile_phone)
+    : null;
   user.address = userInfo.address ? userInfo.address : null;
-  user.home_phone = userInfo.home_phone ? userInfo.home_phone : null;
+  user.home_phone = userInfo.home_phone
+    ? formatPhone(userInfo.home_phone)
+    : null;
   user.facebook = userInfo.facebook ? userInfo.facebook : null;
   user.email = userInfo.email ? userInfo.email : null;
   user.username = userInfo.username ? userInfo.username : null;
@@ -104,10 +109,12 @@ module.exports.updateUser = async function (user_id, userInfo) {
     userInfo.address !== undefined ? userInfo.address : user.address;
   user.mobile_phone =
     userInfo.mobile_phone !== undefined
-      ? userInfo.mobile_phone
+      ? formatPhone(userInfo.mobile_phone)
       : user.mobile_phone;
   user.home_phone =
-    userInfo.home_phone !== undefined ? userInfo.home_phone : user.home_phone;
+    userInfo.home_phone !== undefined
+      ? formatPhone(userInfo.home_phone)
+      : user.home_phone;
   user.facebook =
     userInfo.facebook !== undefined ? userInfo.facebook : user.facebook;
   user.email = userInfo.email !== undefined ? userInfo.email : user.email;

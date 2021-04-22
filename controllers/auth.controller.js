@@ -7,6 +7,7 @@ const UserModel = require("../models/user.model");
 const StaffModel = require("../models/staff.model");
 const PatientModel = require("../models/patient.model");
 const translator = require("../utils/translator");
+const { formatPhone } = require("../utils/utils");
 let tokenList = {};
 exports.signin_staff = async function (req, res) {
   try {
@@ -131,10 +132,11 @@ exports.signin_staff = async function (req, res) {
 };
 exports.signin_patient = async function (req, res) {
   try {
+    const formatedPhone = formatPhone(req.body.phone);
     const user = await UserModel.findOne({
       $or: [
-        { mobile_phone: req.body.phone },
-        { home_phone: req.body.phone },
+        { mobile_phone: formatedPhone },
+        { home_phone: formatedPhone },
         { username: req.body.phone },
       ],
       user_type: constants.USER.USER_TYPE_PATIENT,
