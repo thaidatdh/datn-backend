@@ -38,7 +38,8 @@ UserSchema.pre("save", function (next) {
     user.username = null;
     return next();
   } else if (
-    (user.password || !user.username) &&
+    user.password &&
+    !user.username &&
     user.user_type == constants.USER.USER_TYPE_PATIENT
   ) {
     user.username = user.mobile_phone ? user.mobile_phone : user.home_phone;
