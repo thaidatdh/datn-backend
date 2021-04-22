@@ -113,3 +113,14 @@ module.exports.updateUser = async function (user_id, userInfo) {
     userInfo.language !== undefined ? userInfo.language : user.language;
   return await user.save();
 };
+module.exports.generateEncryptedPassword = async function (password) {
+  return await new Promise((resolve, reject) => {
+    bcrypt.genSalt(10, function (err, salt) {
+      if (err) reject(err);
+      bcrypt.hash(password, salt, null, function (err, hash) {
+        if (err) reject(err);
+        resolve(hash);
+      });
+    });
+  });
+};

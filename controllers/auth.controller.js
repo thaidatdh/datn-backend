@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const UserModel = require("../models/user.model");
 const StaffModel = require("../models/staff.model");
+const PatientModel = require("../models/patient.model");
 const translator = require("../utils/translator");
 let tokenList = {};
 exports.signin_staff = async function (req, res) {
@@ -22,7 +23,7 @@ exports.signin_staff = async function (req, res) {
       });
     } else {
       // check if password matches
-      if (req.body.password.length < 1) {
+      if (req.body.password.length < 8) {
         return res.status(422).send({
           success: false,
           value: req.body.password,
@@ -52,6 +53,16 @@ exports.signin_staff = async function (req, res) {
                 password: undefined,
               }
             );
+            if (returnUser.is_active == false) {
+              return res.status(403).send({
+                success: false,
+                message: await translator.Translate(
+                  "Inactive Staff. Access denied.",
+                  req.query.lang
+                ),
+                param: "inactive",
+              });
+            }
             const expiredTimeToken = process.env.TOKEN_EXPIRE
               ? Number.parseInt(process.env.TOKEN_EXPIRE)
               : 3600;
@@ -121,24 +132,28 @@ exports.signin_staff = async function (req, res) {
 exports.signin_patient = async function (req, res) {
   try {
     const user = await UserModel.findOne({
-      username: req.body.username,
+      $or: [
+        { mobile_phone: req.body.phone },
+        { home_phone: req.body.phone },
+        { username: req.body.phone },
+      ],
       user_type: constants.USER.USER_TYPE_PATIENT,
     });
     if (!user) {
       return res.status(403).send({
         success: false,
         message:
-          "The username that you've entered doesn't match any patient account.",
+          "The phone that you've entered doesn't match any staff account.",
         param: "emailNotRegistered",
       });
     } else {
       // check if password matches
-      if (req.body.password.length < 8) {
+      if (req.body.password.length < 6) {
         return res.status(422).send({
           success: false,
           value: req.body.password,
           message: await translator.Translate(
-            "Password must be at least 8 chars long",
+            "Password must be at least 6 chars long",
             req.query.lang
           ),
           param: "password",
@@ -148,31 +163,86 @@ exports.signin_patient = async function (req, res) {
         try {
           const isMatch = await user.comparePassword(req.body.password);
           if (isMatch) {
-            const returnUser = Object.assign(user, { password: undefined });
-            const token = jwt.sign(user.toJSON());
+            // if user is found and password is right create a token
+            const returnPatient = await PatientModel.get(
+              { user: user._id },
+              { one: true, limit: 1 }
+            );
+            const returnUser = await Object.assign(
+              {
+                patient_id: returnPatient ? returnPatient._id : null,
+                display_id: returnPatient ? returnPatient.patient_id : null,
+                is_active: returnPatient ? returnPatient.is_active : false,
+              },
+              user._doc,
+              {
+                password: undefined,
+              }
+            );
+            const expiredTimeToken = process.env.TOKEN_EXPIRE
+              ? Number.parseInt(process.env.TOKEN_EXPIRE)
+              : 3600;
+            let expiredDateToken = new Date();
+            expiredDateToken.setTime(
+              expiredDateToken.getTime() + expiredTimeToken * 1000
+            );
+            const token = jwt.sign(returnUser, process.env.TOKEN_SECRET, {
+              expiresIn: expiredTimeToken, //1h
+            });
+            const expiredTimeRefreshToken = process.env.TOKEN_EXPIRE_REFRESH
+              ? Number.parseInt(process.env.TOKEN_EXPIRE_REFRESH)
+              : 86400;
+            let expiredDateRefreshToken = new Date();
+            expiredDateRefreshToken.setTime(
+              expiredDateRefreshToken.getTime() + expiredTimeRefreshToken * 1000
+            );
+            const refreshToken = jwt.sign(
+              returnUser,
+              process.env.TOKEN_SECRET_REFRESH,
+              {
+                expiresIn: expiredTimeRefreshToken, //1d
+              }
+            );
+            tokenList[refreshToken] = user;
             // return the information including token as JSON
             return res.json({
               success: true,
               user: returnUser,
               token: token,
+              refreshToken: refreshToken,
+              expirationTime: expiredDateToken,
+              expirationRefreshTime: expiredDateRefreshToken,
             });
           } else {
             return res.status(403).send({
               success: false,
               message: await translator.Translate(
-                "Email or password is not correct",
+                "Phone or password is not correct",
                 req.query.lang
               ),
-              param: "emailPassword",
+              param: "phonePassword",
             });
           }
         } catch (error) {
-          return res.status(500).send("Internal server error");
+          console.log(error);
+          return res.status(500).send({
+            success: false,
+            message: await translator.Translate(
+              "Internal server error when compare password",
+              req.query.lang
+            ),
+          });
         }
       }
     }
   } catch (err) {
-    return res.status(500).send("Internal server error");
+    return res.status(500).send({
+      success: false,
+      message: await translator.Translate(
+        "Internal server error",
+        req.query.lang
+      ),
+    });
   }
 };
 

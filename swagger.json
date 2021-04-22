@@ -4648,6 +4648,177 @@
         }
       }
     },
+    "/authorization/patient/signin": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "[Web|Patient] Sign In",
+        "description": "Sign In for web",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "example": "805-479-7985"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "user": {
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "string - ObjectID"
+                        },
+                        "patient_id": {
+                          "type": "string",
+                          "example": "string - ObjectID _id table patient"
+                        },
+                        "display_id": {
+                          "type": "string",
+                          "example": "string - string, patient_id table patient"
+                        },
+                        "first_name": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "last_name": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "fax": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "mobile_phone": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "home_phone": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "facebook": {
+                          "type": "string",
+                          "example": null
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "address": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": null
+                        },
+                        "password": {
+                          "type": "string",
+                          "example": null
+                        },
+                        "user_type": {
+                          "type": "string",
+                          "example": "PATIENT"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "string"
+                        }
+                      }
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Invalid request body",
+                      "description": "depend on what type"
+                    },
+                    "param": {
+                      "type": "string",
+                      "example": "password(nullable)",
+                      "description": "nullable"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "password(nullable)",
+                      "description": "nullable"
+                    },
+                    "location": {
+                      "type": "string",
+                      "example": "body(nullable)",
+                      "description": "nullable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "default": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/authorization/refresh-token": {
       "post": {
         "tags": ["Authorization"],

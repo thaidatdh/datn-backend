@@ -22,7 +22,9 @@ module.exports.insert = async function (req) {
   let access = new AccessModel();
   access.role = req.role ? req.role : constants.USER.USER_TYPE_STAFF;
   access.path = req.path ? req.path : null;
-  access.action = req.action ? req.action : constants.ACCESS_GROUP.ACTION_SETTING.DEFAULT;
+  access.action = req.action
+    ? req.action
+    : constants.ACCESS_GROUP.ACTION_SETTING.DEFAULT;
   access.is_front_end =
     req.is_front_end !== undefined ? req.is_front_end : true;
   return await access.save();
@@ -42,17 +44,26 @@ module.exports.isBackendAuthorized = async function (role, path, method) {
   }).sort({
     path: -1,
   });
-  console.log(accessList);
   let pathValue = path;
   if (pathValue.includes("?")) {
     pathValue = pathValue.substring(0, path.indexOf("?"));
+  }
+  if (role == constants.USER.USER_TYPE_PATIENT && method == "GET") {
+    return true;
+  } else if (
+    role == constants.USER.USER_TYPE_PATIENT &&
+    method == "PATCH" &&
+    pathValue.startsWith("/patient")
+  ) {
+    return false;
+  } else if (role == constants.USER.USER_TYPE_PATIENT && method != "GET") {
+    return false;
   }
   for (const model of accessList) {
     if (
       pathValue.startsWith(model.path) &&
       constants.ACCESS_GROUP.ACTION[model.action].includes(method)
     ) {
-      console.log("True");
       return true;
     }
   }
