@@ -76,7 +76,7 @@ module.exports.insertWithFrames = async function (req) {
   mouth.patient = req.patient ? req.patient : null;
   mouth.template = req.template ? req.template : null;
   if (mouth.thumbnail == null && mouth.template != null) {
-    const mouthTemplate = await TemplageModel.findById(outh.template);
+    const mouthTemplate = await TemplageModel.findById(mouth.template);
     if (mouthTemplate) {
       mouth.thumbnail = mouthTemplate.thumbnail;
     }

@@ -92,7 +92,7 @@ exports.add = async function (req, res) {
       { get_frames: true }
     );
     if (insertedResult && insertedResult.length > 0) {
-      const returnResult = Object.assign({}, updatedResult[0]._doc);
+      const returnResult = Object.assign({}, insertedResult[0]._doc);
       returnResult.frames = insertedResult[0].frames;
       return res.json({
         success: true,
@@ -152,7 +152,7 @@ exports.update = async function (req, res) {
     if (mouth) {
       const result = await MouthModel.updateMouth(mouth, req.body);
       const updatedResult = await MouthModel.get(
-        { _id: result._id },
+        { _id: req.params.mouth_id },
         { get_frames: true }
       );
       if (updatedResult && updatedResult.length > 0) {
@@ -180,7 +180,7 @@ exports.update = async function (req, res) {
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
-        constants.ACTION.GET,
+        constants.ACTION.UPDATE,
         "detail",
         req.query.lang
       ),
