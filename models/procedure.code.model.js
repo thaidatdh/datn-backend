@@ -44,6 +44,8 @@ const ProcedureCodeSchema = mongoose.Schema(
     collection: "procedure_code",
   }
 );
+ProcedureCodeSchema.set("toJSON", { virtuals: true });
+ProcedureCodeSchema.set("toObject", { virtuals: true });
 
 const ProcedureModel = (module.exports = mongoose.model(
   "procedure_code",

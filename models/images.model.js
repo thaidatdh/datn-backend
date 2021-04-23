@@ -18,6 +18,8 @@ const ImagesSchema = mongoose.Schema(
     collection: "images",
   }
 );
+ImagesSchema.set("toJSON", { virtuals: true });
+ImagesSchema.set("toObject", { virtuals: true });
 
 const ImageModel = (module.exports = mongoose.model("image", ImagesSchema));
 

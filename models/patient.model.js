@@ -48,6 +48,8 @@ const PatientSchema = mongoose.Schema(
     collection: "patients",
   }
 );
+PatientSchema.set("toJSON", { virtuals: true });
+PatientSchema.set("toObject", { virtuals: true });
 
 const PatientModel = (module.exports = mongoose.model(
   "patient",

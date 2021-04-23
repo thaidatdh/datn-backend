@@ -51,6 +51,9 @@ AppointmentSchema.virtual("recalls", {
   foreignField: "appointment",
   justOne: false,
 });
+AppointmentSchema.set("toJSON", { virtuals: true });
+AppointmentSchema.set("toObject", { virtuals: true });
+
 const AppointmentModel = (module.exports = mongoose.model(
   "appointment",
   AppointmentSchema

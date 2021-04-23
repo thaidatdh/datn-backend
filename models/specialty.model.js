@@ -10,6 +10,8 @@ const SpecialtySchema = mongoose.Schema(
     collection: "specialty",
   }
 );
+SpecialtySchema.set("toJSON", { virtuals: true });
+SpecialtySchema.set("toObject", { virtuals: true });
 
 const SpecialtyModel = (module.exports = mongoose.model(
   "specialty",

@@ -55,6 +55,8 @@ const TreatmentSchema = mongoose.Schema(
     collection: "treatments",
   }
 );
+TreatmentSchema.set("toJSON", { virtuals: true });
+TreatmentSchema.set("toObject", { virtuals: true });
 
 const TreatmentModel = (module.exports = mongoose.model(
   "treatment",

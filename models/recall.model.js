@@ -32,6 +32,8 @@ const RecallSchema = mongoose.Schema(
     collection: "recalls",
   }
 );
+RecallSchema.set("toJSON", { virtuals: true });
+RecallSchema.set("toObject", { virtuals: true });
 
 const RecallModel = (module.exports = mongoose.model("recall", RecallSchema));
 module.exports.get = async function (query, populateOptions) {

@@ -26,7 +26,8 @@ const ToothSchema = mongoose.Schema(
     collection: "tooth",
   }
 );
-
+ToothSchema.set("toJSON", { virtuals: true });
+ToothSchema.set("toObject", { virtuals: true });
 const ToothModel = (module.exports = mongoose.model("tooth", ToothSchema));
 
 module.exports.insert = async function (toothInfo) {

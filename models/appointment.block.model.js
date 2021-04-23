@@ -27,6 +27,8 @@ const AppointmentBlockSchema = mongoose.Schema(
     collection: "appointment_blocks",
   }
 );
+AppointmentBlockSchema.set("toJSON", { virtuals: true });
+AppointmentBlockSchema.set("toObject", { virtuals: true });
 
 const AppointmentBlockModel = (module.exports = mongoose.model(
   "appointment_block",

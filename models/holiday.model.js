@@ -12,6 +12,9 @@ const HolidaySchema = mongoose.Schema(
     collection: "holiday",
   }
 );
+HolidaySchema.set("toJSON", { virtuals: true });
+HolidaySchema.set("toObject", { virtuals: true });
+
 const HolidayModel = (module.exports = mongoose.model(
   "holiday",
   HolidaySchema

@@ -17,6 +17,9 @@ const ProviderWorkingTimeSchema = mongoose.Schema(
     collection: "provider_working_time",
   }
 );
+ProviderWorkingTimeSchema.set("toJSON", { virtuals: true });
+ProviderWorkingTimeSchema.set("toObject", { virtuals: true });
+
 module.exports = mongoose.model(
   "provider_working_time",
   ProviderWorkingTimeSchema

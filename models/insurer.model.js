@@ -16,6 +16,8 @@ const InsurerSchema = mongoose.Schema(
     collection: "insurers",
   }
 );
+InsurerSchema.set("toJSON", { virtuals: true });
+InsurerSchema.set("toObject", { virtuals: true });
 
 const InsurerModel = (module.exports = mongoose.model(
   "insurer",

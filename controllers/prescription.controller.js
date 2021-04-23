@@ -15,14 +15,6 @@ exports.index = async function (req, res) {
     };
     const prescriptions = await PrescriptionModel.get({}, options);
     let resultList = prescriptions;
-    if (options.get_details) {
-      resultList = [];
-      for (const prescription of prescriptions) {
-        let prescriptionObject = Object.assign({}, prescription._doc);
-        prescriptionObject.details = prescription.details;
-        resultList.push(prescriptionObject);
-      }
-    }
     let result = {
       success: true,
       payload: resultList,
@@ -66,14 +58,6 @@ exports.patient_prescription = async function (req, res) {
       options
     );
     let resultList = prescriptions;
-    if (options.get_details) {
-      resultList = [];
-      for (const prescription of prescriptions) {
-        let prescriptionObject = Object.assign({}, prescription._doc);
-        prescriptionObject.details = prescription.details;
-        resultList.push(prescriptionObject);
-      }
-    }
     let result = {
       success: true,
       payload: resultList,
@@ -120,9 +104,7 @@ exports.add = async function (req, res) {
       { _id: rs._id },
       { get_details: true, get_provider: true, one: true }
     );
-    const resultReturn = await Object.assign({}, result._doc);
-    resultReturn.details = result.details;
-    return res.json({ success: true, payload: resultReturn });
+    return res.json({ success: true, payload: result });
   } catch (err) {
     return res.status(500).json({
       success: false,
@@ -147,11 +129,9 @@ exports.detail = async function (req, res) {
       options
     );
     if (prescription) {
-      const resultReturn = await Object.assign({}, prescription._doc);
-      resultReturn.details = prescription.details;
       res.json({
         success: true,
-        payload: resultReturn,
+        payload: prescription,
       });
     } else {
       res.status(404).json({

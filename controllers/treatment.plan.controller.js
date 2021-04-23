@@ -13,15 +13,9 @@ exports.index = async function (req, res) {
       page: req.query.page,
     };
     const plans = await TreatmentPlanModel.get({}, options);
-    const resultList = [...plans];
-    if (options.get_treatment) {
-      for (let i = 0; i < plans.length; i++) {
-        resultList[i].treatments = plans[i].treatments;
-      }
-    }
     let result = {
       success: true,
-      payload: resultList,
+      payload: plans,
     };
     if (options.page && options.limit) {
       const totalCount = await TreatmentPlanModel.estimatedDocumentCount();
@@ -60,15 +54,9 @@ exports.patient_treatment_plan = async function (req, res) {
       { patient: patient_id },
       options
     );
-    const resultList = [...plans];
-    if (options.get_treatment) {
-      for (let i = 0; i < plans.length; i++) {
-        resultList[i].treatments = plans[i].treatments;
-      }
-    }
     let result = {
       success: true,
-      payload: resultList,
+      payload: plans,
     };
     if (options.page && options.limit) {
       const totalCount = await TreatmentPlanModel.countDocuments({
@@ -132,11 +120,9 @@ exports.detail = async function (req, res) {
       options
     );
     if (plans && plans.length > 0) {
-      const plan = plans[0];
-      plan.treatments = plan.treatments;
       res.json({
         success: true,
-        payload: plan,
+        payload: plans[0],
       });
     } else {
       res.status(404).json({

@@ -25,6 +25,8 @@ const ProgressNoteSchema = mongoose.Schema(
     collection: "progress_note",
   }
 );
+ProgressNoteSchema.set("toJSON", { virtuals: true });
+ProgressNoteSchema.set("toObject", { virtuals: true });
 
 const ProgressNoteModel = (module.exports = mongoose.model(
   "progress_note",

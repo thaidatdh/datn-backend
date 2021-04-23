@@ -18,6 +18,8 @@ TreatmentPlanSchema.virtual("treatments", {
   foreignField: "treatment_plan",
   justOne: false,
 });
+TreatmentPlanSchema.set("toJSON", { virtuals: true });
+TreatmentPlanSchema.set("toObject", { virtuals: true });
 const TreatmentPlanModel = (module.exports = mongoose.model(
   "treatment_plan",
   TreatmentPlanSchema

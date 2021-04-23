@@ -15,6 +15,9 @@ const ImageFrameTemplateSchema = mongoose.Schema(
     collection: "image_frame_template",
   }
 );
+ImageFrameTemplateSchema.set("toJSON", { virtuals: true });
+ImageFrameTemplateSchema.set("toObject", { virtuals: true });
+
 const FrameTemplateModel = (module.exports = mongoose.model(
   "image_frame_template",
   ImageFrameTemplateSchema

@@ -25,6 +25,8 @@ const DocumentSchema = mongoose.Schema(
     collection: "document",
   }
 );
+DocumentSchema.set("toJSON", { virtuals: true });
+DocumentSchema.set("toObject", { virtuals: true });
 
 const DocumentModel = (module.exports = mongoose.model(
   "document",

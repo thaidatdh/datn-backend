@@ -16,5 +16,7 @@ const ChairSchema = mongoose.Schema(
     collection: "chairs",
   }
 );
+ChairSchema.set("toJSON", { virtuals: true });
+ChairSchema.set("toObject", { virtuals: true });
 
 module.exports = mongoose.model("chair", ChairSchema);

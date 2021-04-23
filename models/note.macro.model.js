@@ -11,6 +11,8 @@ const NoteMacroSchema = mongoose.Schema(
     collection: "note_macro",
   }
 );
+NoteMacroSchema.set("toJSON", { virtuals: true });
+NoteMacroSchema.set("toObject", { virtuals: true });
 
 const NoteMacroModel = (module.exports = mongoose.model(
   "note_macro",

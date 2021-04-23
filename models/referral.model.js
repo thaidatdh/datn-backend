@@ -29,6 +29,8 @@ const ReferralSchema = mongoose.Schema(
     collection: "referral",
   }
 );
+ReferralSchema.set("toJSON", { virtuals: true });
+ReferralSchema.set("toObject", { virtuals: true });
 
 const ReferralModel = (module.exports = mongoose.model(
   "referral",

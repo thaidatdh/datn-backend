@@ -19,6 +19,8 @@ const PracticeSchema = mongoose.Schema(
     collection: "practice",
   }
 );
+PracticeSchema.set("toJSON", { virtuals: true });
+PracticeSchema.set("toObject", { virtuals: true });
 
 const PracticeModel = (module.exports = mongoose.model(
   "practice",

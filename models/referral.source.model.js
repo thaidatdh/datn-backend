@@ -15,6 +15,8 @@ const ReferralSourceSchema = mongoose.Schema(
     collection: "referral_source",
   }
 );
+ReferralSourceSchema.set("toJSON", { virtuals: true });
+ReferralSourceSchema.set("toObject", { virtuals: true });
 
 const ReferralSourceModel = (module.exports = mongoose.model(
   "referral_source",

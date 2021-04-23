@@ -18,4 +18,7 @@ const PeriodontalDetailSchema = mongoose.Schema(
     collection: "periodontal_detail",
   }
 );
+PeriodontalDetailSchema.set("toJSON", { virtuals: true });
+PeriodontalDetailSchema.set("toObject", { virtuals: true });
+
 module.exports = mongoose.model("periodontal_detail", PeriodontalDetailSchema);

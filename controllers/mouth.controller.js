@@ -12,15 +12,9 @@ exports.index = async function (req, res) {
       limit: req.query.limit,
     };
     const mouths = await MouthModel.get({}, options);
-    const result = [];
-    for (const mouth of mouths) {
-      let mouthObject = Object.assign({}, mouth._doc);
-      mouthObject.frames = [...mouth.frames];
-      result.push(mouthObject);
-    }
     res.json({
       success: true,
-      payload: result,
+      payload: mouths,
     });
   } catch (err) {
     res.status(500).json({
@@ -48,18 +42,9 @@ exports.patient_mouth = async function (req, res) {
       });
     }
     const mouths = await MouthModel.get(query, options);
-    let result = mouths;
-    if (options.get_frames) {
-      result = [];
-      for (const mouth of mouths) {
-        let mouthObject = Object.assign({}, mouth._doc);
-        mouthObject.frames = mouth.frames;
-        result.push(mouthObject);
-      }
-    }
     res.json({
       success: true,
-      payload: result,
+      payload: mouths,
     });
   } catch (err) {
     console.log(err);
@@ -92,11 +77,9 @@ exports.add = async function (req, res) {
       { get_frames: true }
     );
     if (insertedResult && insertedResult.length > 0) {
-      const returnResult = Object.assign({}, insertedResult[0]._doc);
-      returnResult.frames = insertedResult[0].frames;
       return res.json({
         success: true,
-        payload: returnResult,
+        payload: insertedResult[0],
       });
     }
     return res.json({ success: true, payload: rs });
@@ -119,11 +102,9 @@ exports.detail = async function (req, res) {
     };
     const mouth = await MouthModel.get({ _id: req.params.mouth_id }, options);
     if (mouth && mouth.length > 0) {
-      const result = Object.assign({}, mouth[0]._doc);
-      result.frames = mouth[0].frames;
       res.json({
         success: true,
-        payload: result,
+        payload: mouth[0],
       });
     } else {
       res.status(404).json({
@@ -156,11 +137,9 @@ exports.update = async function (req, res) {
         { get_frames: true }
       );
       if (updatedResult && updatedResult.length > 0) {
-        const returnResult = Object.assign({}, updatedResult[0]._doc);
-        returnResult.frames = updatedResult[0].frames;
         return res.json({
           success: true,
-          payload: returnResult,
+          payload: updatedResult[0],
         });
       }
       return res.json({

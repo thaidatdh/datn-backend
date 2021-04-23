@@ -18,6 +18,9 @@ MultiCodeSchema.virtual("procedures", {
   foreignField: "multi_code_id",
   justOne: false,
 });
+MultiCodeSchema.set("toJSON", { virtuals: true });
+MultiCodeSchema.set("toObject", { virtuals: true });
+
 const MultiCodeModel = (module.exports = mongoose.model(
   "multi_code",
   MultiCodeSchema

@@ -17,6 +17,9 @@ ProcedureCategorySchema.virtual("procedure_code", {
   foreignField: "category",
   justOne: false,
 });
+ProcedureCategorySchema.set("toJSON", { virtuals: true });
+ProcedureCategorySchema.set("toObject", { virtuals: true });
+
 const CategoryModel = (module.exports = mongoose.model(
   "procedure_category",
   ProcedureCategorySchema

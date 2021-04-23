@@ -12,15 +12,9 @@ exports.index = async function (req, res) {
       limit: req.query.limit,
     };
     const mouths = await MouthTemplateModel.get({}, options);
-    const result = [];
-    for (const mouth of mouths) {
-      let mouthObject = Object.assign({}, mouth._doc);
-      mouthObject.frames = mouth.frames;
-      result.push(mouthObject);
-    }
     res.json({
       success: true,
-      payload: result,
+      payload: mouths,
     });
   } catch (err) {
     res.status(500).json({
@@ -60,11 +54,9 @@ exports.detail = async function (req, res) {
       options
     );
     if (mouth && mouth.length > 0) {
-      let result = Object.assign({}, mouth[0]._doc);
-      result.frames = mouth[0].frames;
       res.json({
         success: true,
-        payload: result,
+        payload: mouth[0],
       });
     } else {
       res.status(404).json({

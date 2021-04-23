@@ -11,15 +11,9 @@ exports.index = async function (req, res) {
       limit: req.query.limit,
     };
     const multicodes = await MultiCodeModel.get({}, options);
-    const result = [...multicodes];
-    if (options.get_procedures) {
-      for (let i = 0; i < multicodes.length; i++) {
-        result[i].procedures = [...multicodes[i].procedures];
-      }
-    }
     res.json({
       success: true,
-      payload: result,
+      payload: multicodes,
     });
   } catch (err) {
     res.status(500).json({

@@ -23,6 +23,8 @@ const AppointmentRequestSchema = mongoose.Schema(
     collection: "appointment_request",
   }
 );
+AppointmentRequestSchema.set("toJSON", { virtuals: true });
+AppointmentRequestSchema.set("toObject", { virtuals: true });
 
 module.exports = mongoose.model(
   "appointment_request",

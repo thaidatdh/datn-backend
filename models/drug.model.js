@@ -15,6 +15,8 @@ const DrugSchema = mongoose.Schema(
     collection: "drugs",
   }
 );
+DrugSchema.set("toJSON", { virtuals: true });
+DrugSchema.set("toObject", { virtuals: true });
 
 const DrugModel = (module.exports = mongoose.model("drug", DrugSchema));
 

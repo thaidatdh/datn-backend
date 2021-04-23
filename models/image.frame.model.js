@@ -19,6 +19,9 @@ const ImageFrameSchema = mongoose.Schema(
     collection: "image_frame",
   }
 );
+ImageFrameSchema.set("toJSON", { virtuals: true });
+ImageFrameSchema.set("toObject", { virtuals: true });
+
 const FrameModel = (module.exports = mongoose.model(
   "image_frame",
   ImageFrameSchema

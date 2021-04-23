@@ -29,4 +29,7 @@ PeriodontalSchema.virtual("periodontal_detail", {
   foreignField: "periodontal",
   justOne: false,
 });
+PeriodontalSchema.set("toJSON", { virtuals: true });
+PeriodontalSchema.set("toObject", { virtuals: true });
+
 module.exports = mongoose.model("periodontal", PeriodontalSchema);

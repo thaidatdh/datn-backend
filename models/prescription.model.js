@@ -29,6 +29,9 @@ PrescriptionSchema.virtual("details", {
   foreignField: "prescription",
   justOne: false,
 });
+PrescriptionSchema.set("toJSON", { virtuals: true });
+PrescriptionSchema.set("toObject", { virtuals: true });
+
 const PrescriptionModel = (module.exports = mongoose.model(
   "prescription",
   PrescriptionSchema

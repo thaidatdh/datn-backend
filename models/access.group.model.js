@@ -12,6 +12,8 @@ const AccessGroupSchema = mongoose.Schema(
     collection: "access_group",
   }
 );
+AccessGroupSchema.set("toJSON", { virtuals: true });
+AccessGroupSchema.set("toObject", { virtuals: true });
 
 const AccessModel = (module.exports = mongoose.model(
   "access_group",

@@ -25,6 +25,9 @@ const PrescriptionDetailSchema = mongoose.Schema(
     collection: "prescription_detail",
   }
 );
+PrescriptionDetailSchema.set("toJSON", { virtuals: true });
+PrescriptionDetailSchema.set("toObject", { virtuals: true });
+
 const PrescriptionDetailModel = (module.exports = mongoose.model(
   "prescription_detail",
   PrescriptionDetailSchema

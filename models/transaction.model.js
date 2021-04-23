@@ -34,6 +34,8 @@ const TransactionSchema = mongoose.Schema(
     collection: "transactions",
   }
 );
+TransactionSchema.set("toJSON", { virtuals: true });
+TransactionSchema.set("toObject", { virtuals: true });
 
 const TransactionModel = (module.exports = mongoose.model(
   "transaction",

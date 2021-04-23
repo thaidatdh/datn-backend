@@ -28,6 +28,9 @@ ImageMouthSchema.virtual("frames", {
   foreignField: "image_mouth_id",
   justOne: false,
 });
+ImageMouthSchema.set("toJSON", { virtuals: true });
+ImageMouthSchema.set("toObject", { virtuals: true });
+
 const MouthModel = (module.exports = mongoose.model(
   "image_mouth",
   ImageMouthSchema

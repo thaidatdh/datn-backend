@@ -41,6 +41,9 @@ const StaffSchema = mongoose.Schema(
     collection: "staffs",
   }
 );
+StaffSchema.set("toJSON", { virtuals: true });
+StaffSchema.set("toObject", { virtuals: true });
+
 const StaffModel = (module.exports = mongoose.model("staff", StaffSchema));
 module.exports.insert = async function (staffInfo) {
   staffInfo.user_type = staffInfo.staff_type

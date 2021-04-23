@@ -14,6 +14,8 @@ const MultiCodeDetailSchema = mongoose.Schema(
     collection: "multi_code_detail",
   }
 );
+MultiCodeDetailSchema.set("toJSON", { virtuals: true });
+MultiCodeDetailSchema.set("toObject", { virtuals: true });
 
 const MultiCodeDetailModel = (module.exports = mongoose.model(
   "multi_code_detail",

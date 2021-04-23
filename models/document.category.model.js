@@ -10,5 +10,7 @@ const DocumentCategorySchema = mongoose.Schema(
     collection: "document_category",
   }
 );
+DocumentCategorySchema.set("toJSON", { virtuals: true });
+DocumentCategorySchema.set("toObject", { virtuals: true });
 
 module.exports = mongoose.model("document_category", DocumentCategorySchema);

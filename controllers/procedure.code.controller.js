@@ -180,15 +180,9 @@ exports.index_category = async function (req, res) {
       limit: req.query.limit,
     };
     const categories = await categoryModel.get({}, options);
-    const result = [...categories];
-    if (options.get_codes) {
-      for (let i = 0; i < categories.length; i++) {
-        result[i].procedure_code = categories[i].procedure_code;
-      }
-    }
     res.json({
       success: true,
-      payload: result,
+      payload: categories,
     });
   } catch (err) {
     res.status(500).json({
@@ -210,13 +204,9 @@ exports.category_by_id = async function (req, res) {
     const category_id = req.params.category_id;
     const category = await categoryModel.get({ _id: category_id }, options);
     if (category && category.length > 0) {
-      const result = Object.assign({}, category[0]._doc);
-      if (options.get_codes && result) {
-        result.procedure_code = category[0].procedure_code;
-      }
       res.json({
         success: true,
-        payload: result,
+        payload: category[0],
       });
     } else {
       res.status(404).json({

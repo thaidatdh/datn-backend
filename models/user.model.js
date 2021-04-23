@@ -29,6 +29,8 @@ const UserSchema = mongoose.Schema(
     collection: "users",
   }
 );
+UserSchema.set("toJSON", { virtuals: true });
+UserSchema.set("toObject", { virtuals: true });
 UserSchema.pre("save", function (next) {
   var user = this;
   if (
