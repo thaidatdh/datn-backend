@@ -50,6 +50,9 @@ module.exports.isBackendAuthorized = async function (role, path, method) {
   if (pathValue.includes("?")) {
     pathValue = pathValue.substring(0, path.indexOf("?"));
   }
+  if (pathValue.startsWith("/authorization/change-password")) {
+    return true;
+  }
   if (role == constants.USER.USER_TYPE_PATIENT && method == "GET") {
     return true;
   } else if (

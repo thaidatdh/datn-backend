@@ -296,3 +296,78 @@ exports.refresh_token = async function (req, res) {
     });
   }
 };
+
+exports.change_password = async function (req, res) {
+  let old_password = req.body.old_password ? req.body.old_password : "";
+  let password = req.body.password ? req.body.password : "";
+  const user_id = req.decoded ? req.decoded._id : null;
+  if (user_id == null) {
+    return res.status(403).send({
+      success: false,
+      message: "User ID from token not found",
+    });
+  }
+  const user = await UserModel.findById(user_id);
+  if (user == null) {
+    return res.status(403).send({
+      success: false,
+      message: "User not found",
+    });
+  }
+  if (password.length < 8 || old_password.length < 8) {
+    return res.status(422).send({
+      success: false,
+      value: password,
+      message: await translator.Translate(
+        "Password must be at least 8 chars long",
+        req.query.lang
+      ),
+      param: "password",
+      location: "body",
+    });
+  } else {
+    try {
+      const isMatch = await user.comparePassword(old_password);
+      if (isMatch) {
+        user.password = password;
+        const result = await user.save();
+        if (result) {
+          return res.status(200).send({
+            success: true,
+            message: await translator.Translate(
+              "Change password successfully",
+              req.query.lang
+            ),
+          });
+        } else {
+          return res.status(500).send({
+            success: false,
+            message: await translator.Translate(
+              "ERROR! Change password failed.",
+              req.query.lang
+            ),
+          });
+        }
+      } else {
+        return res.status(403).send({
+          success: false,
+          value: password,
+          message: await translator.Translate(
+            "Incorrect Old Password ",
+            req.query.lang
+          ),
+          param: "password",
+          location: "body",
+        });
+      }
+    } catch (err) {
+      return res.status(500).send({
+        success: false,
+        message: await translator.Translate(
+          "Internal server error",
+          req.query.lang
+        ),
+      });
+    }
+  }
+};
