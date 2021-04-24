@@ -172,6 +172,7 @@ exports.delete = async function (req, res) {
     const mouth = MouthModel.findById(req.params.mouth_id);
     if (mouth) {
       await MouthModel.deleteOne({ _id: req.params.mouth_id });
+      await FrameModel.deleteMany({ image_mouth_id: req.params.mouth_id });
       res.json({
         success: true,
       });

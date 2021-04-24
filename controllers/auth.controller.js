@@ -181,39 +181,13 @@ exports.signin_patient = async function (req, res) {
                 password: undefined,
               }
             );
-            const expiredTimeToken = process.env.TOKEN_EXPIRE
-              ? Number.parseInt(process.env.TOKEN_EXPIRE)
-              : 3600;
-            let expiredDateToken = new Date();
-            expiredDateToken.setTime(
-              expiredDateToken.getTime() + expiredTimeToken * 1000
-            );
-            const token = jwt.sign(returnUser, process.env.TOKEN_SECRET, {
-              expiresIn: expiredTimeToken, //1h
-            });
-            const expiredTimeRefreshToken = process.env.TOKEN_EXPIRE_REFRESH
-              ? Number.parseInt(process.env.TOKEN_EXPIRE_REFRESH)
-              : 86400;
-            let expiredDateRefreshToken = new Date();
-            expiredDateRefreshToken.setTime(
-              expiredDateRefreshToken.getTime() + expiredTimeRefreshToken * 1000
-            );
-            const refreshToken = jwt.sign(
-              returnUser,
-              process.env.TOKEN_SECRET_REFRESH,
-              {
-                expiresIn: expiredTimeRefreshToken, //1d
-              }
-            );
-            tokenList[refreshToken] = user;
+            const token = jwt.sign(returnUser, process.env.TOKEN_SECRET);
+
             // return the information including token as JSON
             return res.json({
               success: true,
               user: returnUser,
               token: token,
-              refreshToken: refreshToken,
-              expirationTime: expiredDateToken,
-              expirationRefreshTime: expiredDateRefreshToken,
             });
           } else {
             return res.status(403).send({
