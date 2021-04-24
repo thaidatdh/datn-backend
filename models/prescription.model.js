@@ -88,9 +88,8 @@ module.exports.insertWithDetails = async function (req) {
   prescription.prescription_date = req.prescription_date
     ? req.prescription_date
     : Date.now();
-  prescription.is_delete = req.is_delete
-    ? req.is_delete
-    : prescription.is_delete;
+  prescription.is_delete = req.is_delete ? req.is_delete : false;
+
   const insertedPrescription = await prescription.save();
   let inseredDetailList = [];
   for (const detail of req.details) {
@@ -110,5 +109,7 @@ module.exports.updatePrescription = async function (prescription, req) {
   prescription.prescription_date = req.prescription_date
     ? req.prescription_date
     : prescription.prescription_date;
+  prescription.is_delete =
+    req.is_delete != undefined ? req.is_delete : prescription.is_delete;
   return await prescription.save();
 };
