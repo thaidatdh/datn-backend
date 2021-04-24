@@ -97,6 +97,12 @@ module.exports = {
     TOOTH_STATUS: [-1, 0, 1, 2, 3],
     DEFAULT_TOOTH_STATUS: -1,
   },
+  PROVIDER_SCHEDULE: {
+    MODE_MONTHLY: "MONTHLY",
+    MODE_WEEKLY: "WEEKLY",
+    MODE_AUTO: "AUTO",
+    MODE: ["MONTHLY", "WEEKLY", "AUTO"]
+  },
 };
 module.exports.RANDOM_COLOR = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);
