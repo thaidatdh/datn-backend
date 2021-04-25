@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const ProviderScheduleModel = require("../models/provider.schedule.model");
+const StaffModel = require("../models/staff.model");
 const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
@@ -17,9 +18,7 @@ exports.index = async function (req, res) {
       payload: schedules,
     };
     if (options.page && options.limit) {
-      const totalCount = await ProgressNoteModel.countDocuments({
-        patient: patient_id,
-      });
+      const totalCount = await ProviderScheduleModel.estimatedDocumentCount();
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
@@ -57,8 +56,8 @@ exports.schedule_of_provider = async function (req, res) {
       payload: schedules,
     };
     if (options.page && options.limit) {
-      const totalCount = await ProgressNoteModel.countDocuments({
-        patient: patient_id,
+      const totalCount = await ProviderScheduleModel.countDocuments({
+        provider: req.params.provider_id,
       });
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
@@ -81,6 +80,83 @@ exports.schedule_of_provider = async function (req, res) {
     });
   }
 };
+exports.providers_has_schedule = async function (req, res) {
+  try {
+    const dateValue = new Date(req.params.date);
+    const ListSchedule = await ProviderScheduleModel.find({
+      $or: [
+        {
+          start_date: { $lte: dateValue },
+        },
+        {
+          end_date: { $gte: dateValue },
+        },
+      ],
+    });
+    let ListProviderId = [];
+    for (const schedule of ListSchedule) {
+      if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
+        ListProviderId.push(schedule.provider);
+      }
+    }
+    const providers = await StaffModel.get(
+      { _id: { $in: ListProviderId } },
+      {}
+    );
+    let result = {
+      success: true,
+      payload: providers,
+    };
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Provider list",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+exports.check_if_provider_working = async function (req, res) {
+  try {
+    const dateValue = new Date(req.params.date);
+    const ListSchedule = await ProviderScheduleModel.find({
+      $or: [
+        {
+          start_date: { $lte: dateValue },
+        },
+        {
+          end_date: { $gte: dateValue },
+        },
+      ],
+      provider: req.params.provider_id,
+    });
+    let result = false;
+    for (const schedule of ListSchedule) {
+      if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
+        result = true;
+        break;
+      }
+    }
+    res.json({
+      success: true,
+      payload: result,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Provider list",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
 exports.add = async function (req, res) {
   try {
     if (req.body.provider == null) {
@@ -94,6 +170,19 @@ exports.add = async function (req, res) {
         success: false,
         message: await translator.Translate(
           "Require start date",
+          req.query.lang
+        ),
+      });
+    }
+    const startDate = new Date(req.body.start_date);
+    const endDate = req.body.end_date
+      ? new Date(req.body.end_date)
+      : new Date(startDate);
+    if (endDate < startDate) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Require start date to be before end date",
           req.query.lang
         ),
       });

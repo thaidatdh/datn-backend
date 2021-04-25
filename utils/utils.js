@@ -30,7 +30,7 @@ exports.formatReadableDate = (date) => {
     "/" +
     (dateValue.getMonth() + 1).toString().padStart(2, "0") +
     "/" +
-    dateValue.getFullYear()
+    dateValue.getFullYear().toString().padStart(4, "0")
   );
 };
 exports.toNumber = (number) => {

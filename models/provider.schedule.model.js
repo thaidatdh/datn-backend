@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
-const Staff = require("./staff.model");
+const { formatReadableDate } = require("../utils/utils");
 const ProviderScheduleSchema = mongoose.Schema(
   {
     provider: {
@@ -94,4 +94,31 @@ module.exports.updateSchedule = async function (schedule, scheduleInfo) {
     : schedule.provider;
   schedule.value = scheduleInfo.value ? scheduleInfo.value : schedule.value;
   return await schedule.save();
+};
+module.exports.isAvailable = (scheduleObject, date) => {
+  const dateValue = new Date(date);
+  const mode = scheduleObject.mode;
+  const startDate = new Date(scheduleObject.start_date);
+  const endDate = new Date(scheduleObject.end_date);
+  if (dateValue < startDate || endDate > dateValue) {
+    return false;
+  }
+  const ListValue = scheduleObject.value ? scheduleObject.value.split(",") : [];
+  if (mode == constants.PROVIDER_SCHEDULE.MODE_WEEKLY) {
+    return ListValue.includes(dateValue.getDay());
+  } else if (mode == constants.PROVIDER_SCHEDULE.MODE_MONTHLY) {
+    return ListValue.includes(dateValue.getDate());
+  } else {
+    const dateString = formatReadableDate(dateValue);
+    for (const dateStr of ListValue) {
+      const str = dateStr.includes("/") ? dateStr : formatReadableDate(dateStr);
+      if (str == dateString) {
+        return true;
+      }
+    }
+    return false;
+  }
+};
+module.exports.get_providers = async function (date) {
+  
 };
