@@ -2,10 +2,12 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const chairModel = require("../models/chair.model");
+const PracticeModel = require("../models/practice.model");
 const appointmentModel = require("../models/appointment.model");
 const treatmentModel = require("../models/treatment.model");
 const recallModel = require("../models/recall.model");
 const blockModel = require("../models/appointment.block.model");
+const ProviderScheduleModel = require("../models/provider.schedule.model");
 const translator = require("../utils/translator");
 const { RANDOM_COLOR } = require("../constants/constants");
 //Chair
@@ -235,9 +237,7 @@ exports.appointments_of_patient = async function (req, res) {
       payload: appointments,
     };
     if (options.page && options.limit) {
-      const totalCount = await appointmentModel.countDocuments({
-        patient: patient_id,
-      });
+      const totalCount = await appointmentModel.countDocuments(query);
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
@@ -296,9 +296,83 @@ exports.appointment_info = async function (req, res) {
 };
 exports.add_appointment = async function (req, res) {
   try {
-    let apptInfo = req.body;
+    let apptInfo = Object.assign({}, req.body);
     if (apptInfo.provider == null) {
       apptInfo.provider = req.default_provider_id;
+    }
+    let missingRequiredParams = [];
+    if (apptInfo.patient == null) {
+      missingRequiredParams.push("patient");
+    }
+    if (apptInfo.provider == null) {
+      missingRequiredParams.push("provider");
+    }
+    if (apptInfo.appointment_date == null) {
+      missingRequiredParams.push("appointment_date");
+    }
+    if (apptInfo.appointment_time == null) {
+      missingRequiredParams.push("appointment_time");
+    }
+    if (apptInfo.duration == null) {
+      missingRequiredParams.push("duration");
+    }
+    if (apptInfo.chair == null) {
+      missingRequiredParams.push("chair");
+    }
+    if (missingRequiredParams.length > 0) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Missing Required Fields",
+          req.query.lang
+        ),
+        params: missingRequiredParams,
+      });
+    }
+    const isProviderAvailable = await ProviderScheduleModel.isProviderAvailable(
+      apptInfo.provider,
+      apptInfo.appointment_date
+    );
+    if (isProviderAvailable == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Provider is not working at " + apptInfo.appointment_date,
+          req.query.lang
+        ),
+      });
+    }
+    const practiceCheckResult = await PracticeModel.checkTime(
+      apptInfo.appointment_date,
+      apptInfo.appointment_time,
+      apptInfo.duration
+    );
+    if (practiceCheckResult.success == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          practiceCheckResult.message,
+          req.query.lang
+        ),
+        param: "duration",
+      });
+    }
+    const availableCheckResult = await appointmentModel.checkAvailable(
+      apptInfo.provider,
+      apptInfo.chair,
+      apptInfo.appointment_date,
+      apptInfo.appointment_time,
+      apptInfo.duration
+    );
+    if (availableCheckResult.available == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          availableCheckResult.message,
+          req.query.lang
+        ),
+        param: availableCheckResult.param,
+      });
     }
     let rs = await appointmentModel.insert(apptInfo);
     let returnValue = await appointmentModel.getById(rs._id, {

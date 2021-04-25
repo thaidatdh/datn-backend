@@ -122,25 +122,10 @@ exports.providers_has_schedule = async function (req, res) {
 };
 exports.check_if_provider_working = async function (req, res) {
   try {
-    const dateValue = new Date(req.params.date);
-    const ListSchedule = await ProviderScheduleModel.find({
-      $or: [
-        {
-          start_date: { $lte: dateValue },
-        },
-        {
-          end_date: { $gte: dateValue },
-        },
-      ],
-      provider: req.params.provider_id,
-    });
-    let result = false;
-    for (const schedule of ListSchedule) {
-      if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
-        result = true;
-        break;
-      }
-    }
+    const result = await ProviderScheduleModel.isProviderAvailable(
+      req.params.provider_id,
+      req.params.date
+    );
     res.json({
       success: true,
       payload: result,

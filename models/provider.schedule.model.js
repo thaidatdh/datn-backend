@@ -119,6 +119,28 @@ module.exports.isAvailable = (scheduleObject, date) => {
     return false;
   }
 };
-module.exports.get_providers = async function (date) {
-  
+module.exports.isProviderAvailable = async function (provider, date) {
+  try {
+    const dateValue = new Date(date);
+    const ListSchedule = await ProviderScheduleModel.find({
+      $or: [
+        {
+          start_date: { $lte: dateValue },
+        },
+        {
+          end_date: { $gte: dateValue },
+        },
+      ],
+      provider: provider,
+    });
+    let result = false;
+    for (const schedule of ListSchedule) {
+      if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
+        return true;
+      }
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
 };

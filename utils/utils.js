@@ -37,6 +37,38 @@ exports.toNumber = (number) => {
   const numeric_string = number ? new String(number).replace(/\D/g, "") : null;
   return numeric_string ? parseInt(numeric_string) : 0;
 };
+exports.getDates = (date, time, duration) => {
+  const timeString = time.toString().padStart(4, "0");
+  const hour = parseInt(timeString.substring(0, 2));
+  const minute = parseInt(timeString.substring(2));
+  let startDate = new Date(date);
+  startDate.setHours(hour, minute);
+  const durationInt = parseInt(duration);
+  const endDate = new Date(startDate.getTime() + durationInt * 60 * 1000);
+  return {
+    start: startDate,
+    end: endDate,
+  };
+};
+
+const isOverLap3Start = (current, before, after) => {
+  const beforeDate = new Date(before);
+  const afterDate = new Date(after);
+  const currentDate = new Date(current);
+  return beforeDate <= currentDate && currentDate < afterDate;
+};
+const isOverLap3End = (current, before, after) => {
+  const beforeDate = new Date(before);
+  const afterDate = new Date(after);
+  const currentDate = new Date(current);
+  return beforeDate < currentDate && currentDate <= afterDate;
+};
+exports.isOverlap = (before1, after1, before2, after2) => {
+  return (
+    isOverLap3Start(before1, before2, after2) ||
+    isOverLap3End(after1, before2, after2)
+  );
+};
 exports.calculateAge = (birthday) => {
   if (birthday == null || birthday == undefined) {
     return 20;

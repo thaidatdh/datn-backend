@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const Staff = require("./staff.model");
+const { getDates, isOverlap } = require("../utils/utils");
 const PracticeSchema = mongoose.Schema(
   {
     name: String,
@@ -70,5 +71,46 @@ module.exports.insert = async function (practiceInfo) {
       : "0700";
     practice.end_time = practiceInfo.end_time ? practiceInfo.end_time : "1700";
     return await practice.save();
+  }
+};
+module.exports.checkTime = async (date, time, duration) => {
+  try {
+    const practice = await PracticeModel.findOne();
+    const dateNewAppt = getDates(date, time, duration);
+    const apptStartDate = new Date(dateNewAppt.start);
+    const apptEndDate = new Date(dateNewAppt.end);
+    const StartPracticeDate = new Date(
+      getDates(date, practice.start_time, "0").start
+    );
+
+    const isBeforeStart =
+      apptStartDate < StartPracticeDate || apptEndDate <= StartPracticeDate;
+
+    if (isBeforeStart) {
+      return {
+        success: false,
+        message: "Appointment can't be start before practice working time",
+      };
+    }
+    const EndPracticeDate = new Date(
+      getDates(date, practice.end_time, "0").start
+    );
+    const isAfterEnd =
+      apptEndDate > EndPracticeDate || apptStartDate >= EndPracticeDate;
+    if (isAfterEnd) {
+      return {
+        success: false,
+        message: "Appointment can't be end after practice working time",
+      };
+    }
+    return {
+      success: true,
+      message: "Available",
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: "Exception checking Practice time",
+    };
   }
 };
