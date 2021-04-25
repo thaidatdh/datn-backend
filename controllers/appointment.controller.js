@@ -222,10 +222,14 @@ exports.appointments_of_patient = async function (req, res) {
       page: req.query.page,
       limit: req.query.limit,
     };
-    const appointments = await appointmentModel.get(
-      { patient: patient_id },
-      options
-    );
+    let query = { patient: patient_id };
+    if (req.query.date) {
+      const startDate = new Date(req.query.date);
+      query = Object.assign(query, {
+        appointment_date: { $gte: startDate },
+      });
+    }
+    const appointments = await appointmentModel.get(query, options);
     let result = {
       success: true,
       payload: appointments,
@@ -323,9 +327,7 @@ exports.update_appointment = async function (req, res) {
     );
     if (rs) {
       //link treatment and recall here
-      let returnValue = await appointmentModel.getById(rs._id, {
-
-      });
+      let returnValue = await appointmentModel.getById(rs._id, {});
       return res.json({ success: true, payload: returnValue });
     } else {
       return res.status(404).json({
