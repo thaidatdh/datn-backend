@@ -41,6 +41,12 @@ const StaffSchema = mongoose.Schema(
     collection: "staffs",
   }
 );
+StaffSchema.virtual("schedule", {
+  ref: "provider_schedule",
+  localField: "_id",
+  foreignField: "provider",
+  justOne: false,
+});
 StaffSchema.set("toJSON", { virtuals: true });
 StaffSchema.set("toObject", { virtuals: true });
 
@@ -149,7 +155,7 @@ module.exports.updateStaff = async function (staff, staffInfo) {
 };
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = StaffModel.find(query);
+  const promise = StaffModel.find(query).sort("start_date");
   promise.populate({
     path: "user",
     select: {
@@ -184,6 +190,10 @@ module.exports.get = async function (query, populateOptions) {
   // Specialty
   if (populateOptions.get_specialty) {
     promise.populate("specialty");
+  }
+  // Schedule
+  if (populateOptions.get_schedule) {
+    promise.populate("schedule");
   }
   const resultQuery = await promise.exec();
   if (populateOptions.one) {

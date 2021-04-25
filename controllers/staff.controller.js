@@ -46,13 +46,15 @@ exports.index_provider = async function (req, res) {
     const options = {
       get_access_group: req.query.get_access_group == "true",
       get_specialty: req.query.get_specialty == "true",
+      get_schedule: req.query.get_schedule == "true",
       limit: req.query.limit,
       page: req.query.page,
     };
-    const providerList = await StaffModel.get(
-      { staff_type: constants.STAFF.STAFF_TYPE_PROVIDER },
-      options
-    );
+    let query = { staff_type: constants.STAFF.STAFF_TYPE_PROVIDER };
+    if (req.query.active == "true") {
+      query = Object.assign({}, query, { is_active: true });
+    }
+    const providerList = await StaffModel.get(query, options);
     let result = {
       success: true,
       payload: providerList,

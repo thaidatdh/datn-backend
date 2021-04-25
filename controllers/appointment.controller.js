@@ -10,6 +10,7 @@ const blockModel = require("../models/appointment.block.model");
 const ProviderScheduleModel = require("../models/provider.schedule.model");
 const translator = require("../utils/translator");
 const { RANDOM_COLOR } = require("../constants/constants");
+const { formatReadableDate } = require("../utils/utils");
 //Chair
 exports.chair_index = async function (req, res) {
   try {
@@ -337,7 +338,7 @@ exports.add_appointment = async function (req, res) {
       return res.status(403).json({
         success: false,
         message: await translator.Translate(
-          "Provider is not working at " + apptInfo.appointment_date,
+          "Provider is not working at " + formatReadableDate(apptInfo.appointment_date),
           req.query.lang
         ),
       });
