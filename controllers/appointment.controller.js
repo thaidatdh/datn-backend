@@ -232,6 +232,13 @@ exports.appointments_of_patient = async function (req, res) {
         appointment_date: { $gte: startDate },
       });
     }
+    if (req.query.from && req.query.to) {
+      const startDate = new Date(req.query.from);
+      const endDate = new Date(req.query.to)
+      query = Object.assign(query, {
+        appointment_date: { $gte: startDate, $lte: endDate },
+      });
+    }
     const appointments = await appointmentModel.get(query, options);
     let result = {
       success: true,
