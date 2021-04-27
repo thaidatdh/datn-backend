@@ -10,6 +10,8 @@ const nonSecurePaths = [
   "/api",
   "/api/authorization/signin",
   "/api/authorization/refresh-token",
+  "/api/authorization/profile",
+  "/api/authorization/update-profile",
   "/api/authorization/patient/signin",
   "/api/",
   "/api/swagger-ui-bundle.js",
