@@ -21,6 +21,7 @@ exports.index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -77,6 +78,7 @@ exports.procedure_by_category_id = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),

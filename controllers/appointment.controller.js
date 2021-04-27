@@ -199,6 +199,7 @@ exports.appointments_index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -249,6 +250,7 @@ exports.appointments_of_patient = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),

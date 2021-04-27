@@ -20,6 +20,7 @@ exports.index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -56,6 +57,7 @@ exports.medical_alert_index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -95,6 +97,7 @@ exports.treatment_note_index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -134,6 +137,7 @@ exports.back_note_index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
