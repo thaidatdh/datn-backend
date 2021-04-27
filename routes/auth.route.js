@@ -3,7 +3,7 @@ const authMiddleware = require("../middlewares/auth.middleware");
 let authController = require("../controllers/auth.controller");
 router.route("/signin").post(authController.signin_staff);
 router.route("/change-password").post(authController.change_password);
-router.route("/profile").post(authController.getProfile);
+router.route("/profile").get(authController.getProfile);
 router.route("/update-profile").post(authController.updateProfile);
 router.route("/refresh-token").post(authController.refresh_token);
 router.route("/patient/signin").post(authController.signin_patient);
