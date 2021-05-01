@@ -231,10 +231,18 @@ exports.update = async function (req, res) {
 };
 exports.delete = async function (req, res) {
   try {
-    await NoteMacroModel.findByIdAndDelete(req.params.note_id);
-    res.json({
-      success: true,
-    });
+    let macro = await NoteMacroModel.findById(req.params.note_id);
+    if (macro) {
+      await NoteMacroModel.deleteOne({ _id: req.params.note_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: await translator.NotFoundMessage("Macro", req.query.lang),
+      });
+    }
   } catch (err) {
     res.status(500).json({
       success: false,
