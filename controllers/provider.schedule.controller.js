@@ -161,10 +161,14 @@ exports.add = async function (req, res) {
         ),
       });
     }
+    if (req.body.end_date == null) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate("Require end date", req.query.lang),
+      });
+    }
     const startDate = new Date(req.body.start_date);
-    const endDate = req.body.end_date
-      ? new Date(req.body.end_date)
-      : new Date(startDate);
+    const endDate = new Date(req.body.end_date);
     if (endDate < startDate) {
       return res.status(403).json({
         success: false,

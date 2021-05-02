@@ -193,7 +193,10 @@ module.exports.get = async function (query, populateOptions) {
   }
   // Schedule
   if (populateOptions.get_schedule) {
-    promise.populate("schedule");
+    promise.populate({
+      path: "schedule",
+      options: { sort: { start_date: 1 } },
+    });
   }
   const resultQuery = await promise.exec();
   if (populateOptions.one) {
