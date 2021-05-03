@@ -177,14 +177,13 @@ exports.update_patient_tooth_by_number = async function (req, res) {
       patient: req.params.patient_id,
       tooth_number: tooth_number,
     });
-    const toothInfo = {
-      tooth_type: req.body.tooth_type ? req.body.tooth_type : "ADULT",
-      tooth_note: req.body.tooth_note,
-      condition: req.body.condition,
-    };
+    let toothInfo = Object.assign({}, req.body);
     if (tooth) {
       tooth = await ToothModel.updateTooth(tooth, toothInfo);
     } else {
+      toothInfo = Object.assign(toothInfo, {
+        tooth_type: req.body.tooth_type ? req.body.tooth_type : "ADULT",
+      });
       tooth = await ToothModel.insert(toothInfo);
     }
     res.json({
