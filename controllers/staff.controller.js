@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { SEARCH, STAFF } = require("../constants/constants");
 const constants = require("../constants/constants");
 const StaffModel = require("../models/staff.model");
+const ProviderScheduleModel = require("../models/provider.schedule.model");
 const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
@@ -48,12 +49,39 @@ exports.index_provider = async function (req, res) {
       get_access_group: req.query.get_access_group == "true",
       get_specialty: req.query.get_specialty == "true",
       get_schedule: req.query.get_schedule == "true",
+      schedule_date: req.query.date,
       limit: req.query.limit,
       page: req.query.page,
     };
-    let query = { staff_type: constants.STAFF.STAFF_TYPE_PROVIDER, is_active: true };
+    let query = {
+      staff_type: constants.STAFF.STAFF_TYPE_PROVIDER,
+      is_active: true,
+    };
     if (req.query.active == "true") {
       query = Object.assign({}, query, { is_active: true });
+    }
+    if (options.schedule_date) {
+      const dateValue = new Date(options.schedule_date);
+      const ListSchedule = await ProviderScheduleModel.find({
+        $or: [
+          {
+            start_date: { $lte: dateValue },
+          },
+          {
+            end_date: { $gte: dateValue },
+          },
+          {
+            end_date: null,
+          },
+        ],
+      });
+      let ListProviderId = [];
+      for (const schedule of ListSchedule) {
+        if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
+          ListProviderId.push(schedule.provider);
+        }
+      }
+      query = Object.assign(query, { _id: { $in: ListProviderId } });
     }
     const providerList = await StaffModel.get(query, options);
     let result = {

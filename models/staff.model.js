@@ -193,10 +193,30 @@ module.exports.get = async function (query, populateOptions) {
   }
   // Schedule
   if (populateOptions.get_schedule) {
-    promise.populate({
+    let queryPopulateSchedule = {
       path: "schedule",
       options: { sort: { start_date: 1 } },
-    });
+    };
+    if (populateOptions.schedule_date) {
+      const dateValue = new Date(populateOptions.schedule_date);
+      queryPopulateSchedule = Object.assign(queryPopulateSchedule, {
+        match: {
+          $or: [
+            {
+              start_date: { $lte: dateValue },
+            },
+            {
+              end_date: { $gte: dateValue },
+            },
+            {
+              end_date: null,
+            },
+          ],
+        },
+      });
+    }
+
+    promise.populate(queryPopulateSchedule);
   }
   const resultQuery = await promise.exec();
   if (populateOptions.one) {
