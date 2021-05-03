@@ -12,13 +12,18 @@ exports.index = async function (req, res) {
       limit: req.query.limit,
       page: req.query.page,
     };
-    const schedules = await ProviderScheduleModel.get({}, options);
+    let query = {};
+    if (req.body.date) {
+      const CurrentDate = new Date(req.body.date);
+      query = Object.assign(query, { end_date: { $gte: CurrentDate } });
+    }
+    const schedules = await ProviderScheduleModel.get(query, options);
     let result = {
       success: true,
       payload: schedules,
     };
     if (options.page && options.limit) {
-      const totalCount = await ProviderScheduleModel.estimatedDocumentCount();
+      const totalCount = await ProviderScheduleModel.countDocuments(query);
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
