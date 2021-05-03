@@ -30,7 +30,8 @@ module.exports.get = async function (query, populateOptions) {
   const promise =
     populateOptions.one === true
       ? ProviderScheduleModel.findOne(query)
-      : ProviderScheduleModel.find(query);
+      : ProviderScheduleModel.find(query).sort({ start_date: 1 });
+
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(
