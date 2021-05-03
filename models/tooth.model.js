@@ -74,23 +74,31 @@ module.exports.updateTooth = async function (tooth, toothInfo) {
     ? toothInfo.tooth_type
     : tooth.tooth_type;
   tooth.condition = toothInfo.condition ? toothInfo.condition : tooth.condition;
-  tooth.cold = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.cold)
-    ? toothInfo.cold
-    : tooth.cold;
-  tooth.percussion = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.percussion)
-    ? toothInfo.percussion
-    : tooth.percussion;
-  tooth.palpation = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.palpation)
-    ? toothInfo.palpation
-    : tooth.palpation;
-  tooth.heat = constants.TOOTH.TOOTH_STATUS.includes(toothInfo.heat)
-    ? toothInfo.heat
-    : tooth.heat;
-  tooth.electricity = constants.TOOTH.TOOTH_STATUS.includes(
-    toothInfo.electricity
-  )
-    ? toothInfo.electricity
-    : tooth.electricity;
+  tooth.cold =
+    toothInfo.cold !== undefined &&
+    constants.TOOTH.TOOTH_STATUS.includes(parseInt(toothInfo.cold))
+      ? toothInfo.cold
+      : tooth.cold;
+  tooth.percussion =
+    toothInfo.percussion !== undefined &&
+    constants.TOOTH.TOOTH_STATUS.includes(parseInt(toothInfo.percussion))
+      ? toothInfo.percussion
+      : tooth.percussion;
+  tooth.palpation =
+    toothInfo.palpation !== undefined &&
+    constants.TOOTH.TOOTH_STATUS.includes(parseInt(toothInfo.palpation))
+      ? toothInfo.palpation
+      : tooth.palpation;
+  tooth.heat =
+    toothInfo.heat !== undefined &&
+    constants.TOOTH.TOOTH_STATUS.includes(parseInt(toothInfo.heat))
+      ? toothInfo.heat
+      : tooth.heat;
+  tooth.electricity =
+    toothInfo.electricity !== undefined &&
+    constants.TOOTH.TOOTH_STATUS.includes(parseInt(toothInfo.electricity))
+      ? toothInfo.electricity
+      : tooth.electricity;
   return await tooth.save();
 };
 
