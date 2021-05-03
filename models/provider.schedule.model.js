@@ -86,7 +86,7 @@ module.exports.updateSchedule = async function (schedule, scheduleInfo) {
     : schedule.start_date;
   schedule.end_date = scheduleInfo.end_date
     ? Date.parse(scheduleInfo.end_date)
-    : schedule.end_date;
+    : null;
   schedule.mode = constants.PROVIDER_SCHEDULE.MODE.includes(scheduleInfo.mode)
     ? scheduleInfo.mode
     : schedule.mode;
