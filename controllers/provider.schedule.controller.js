@@ -13,8 +13,8 @@ exports.index = async function (req, res) {
       page: req.query.page,
     };
     let query = {};
-    if (req.body.date) {
-      const CurrentDate = new Date(req.body.date);
+    if (req.query.date) {
+      const CurrentDate = new Date(req.query.date);
       query = Object.assign(query, { end_date: { $gte: CurrentDate } });
     }
     const schedules = await ProviderScheduleModel.get(query, options);
