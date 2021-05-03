@@ -72,7 +72,7 @@ module.exports.insert = async function (scheduleInfo) {
     : null;
   schedule.end_date = scheduleInfo.end_date
     ? Date.parse(scheduleInfo.end_date)
-    : schedule.start_date;
+    : null;
   schedule.mode = constants.PROVIDER_SCHEDULE.MODE.includes(scheduleInfo.mode)
     ? scheduleInfo.mode
     : constants.PROVIDER_SCHEDULE.MODE_AUTO;
@@ -100,6 +100,9 @@ module.exports.isAvailable = (scheduleObject, date) => {
   const dateValue = new Date(date);
   const mode = scheduleObject.mode;
   const startDate = new Date(scheduleObject.start_date);
+  if (scheduleObject.end_date == null) {
+    return true;
+  }
   const endDate = new Date(scheduleObject.end_date);
   if (dateValue < startDate || endDate > dateValue) {
     return false;
@@ -131,10 +134,12 @@ module.exports.isProviderAvailable = async function (provider, date) {
         {
           end_date: { $gte: dateValue },
         },
+        {
+          end_date: null,
+        },
       ],
       provider: provider,
     });
-    let result = false;
     for (const schedule of ListSchedule) {
       if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
         return true;

@@ -15,7 +15,9 @@ exports.index = async function (req, res) {
     let query = {};
     if (req.query.date) {
       const CurrentDate = new Date(req.query.date);
-      query = Object.assign(query, { end_date: { $gte: CurrentDate } });
+      query = Object.assign(query, {
+        $or: [{ end_date: { $gte: CurrentDate } }, { end_date: null }],
+      });
     }
     const schedules = await ProviderScheduleModel.get(query, options);
     let result = {
@@ -53,18 +55,20 @@ exports.schedule_of_provider = async function (req, res) {
       limit: req.query.limit,
       page: req.query.page,
     };
-    const schedules = await ProviderScheduleModel.get(
-      { provider: req.params.provider_id },
-      options
-    );
+    let query = { provider: req.params.provider_id };
+    if (req.query.date) {
+      const CurrentDate = new Date(req.query.date);
+      query = Object.assign(query, {
+        $or: [{ end_date: { $gte: CurrentDate } }, { end_date: null }],
+      });
+    }
+    const schedules = await ProviderScheduleModel.get(query, options);
     let result = {
       success: true,
       payload: schedules,
     };
     if (options.page && options.limit) {
-      const totalCount = await ProviderScheduleModel.countDocuments({
-        provider: req.params.provider_id,
-      });
+      const totalCount = await ProviderScheduleModel.countDocuments(query);
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
@@ -97,6 +101,9 @@ exports.providers_has_schedule = async function (req, res) {
         },
         {
           end_date: { $gte: dateValue },
+        },
+        {
+          end_date: null,
         },
       ],
     });
@@ -166,22 +173,19 @@ exports.add = async function (req, res) {
         ),
       });
     }
-    if (req.body.end_date == null) {
-      return res.status(403).json({
-        success: false,
-        message: await translator.Translate("Require end date", req.query.lang),
-      });
-    }
-    const startDate = new Date(req.body.start_date);
-    const endDate = new Date(req.body.end_date);
-    if (endDate < startDate) {
-      return res.status(403).json({
-        success: false,
-        message: await translator.Translate(
-          "Require start date to be before end date",
-          req.query.lang
-        ),
-      });
+
+    if (req.body.end_date != null) {
+      const startDate = new Date(req.body.start_date);
+      const endDate = new Date(req.body.end_date);
+      if (endDate < startDate) {
+        return res.status(403).json({
+          success: false,
+          message: await translator.Translate(
+            "Require start date to be before end date",
+            req.query.lang
+          ),
+        });
+      }
     }
     if (req.body.value == null) {
       return res.status(403).json({
