@@ -100,18 +100,17 @@ module.exports.isAvailable = (scheduleObject, date) => {
   const dateValue = new Date(date);
   const mode = scheduleObject.mode;
   const startDate = new Date(scheduleObject.start_date);
-  if (scheduleObject.end_date == null) {
+  /*if (scheduleObject.end_date == null) {
     return true;
-  }
-  const endDate = new Date(scheduleObject.end_date);
-  if (dateValue < startDate || endDate > dateValue) {
+  }*/
+  if (dateValue < startDate || (scheduleObject.end_date && (new Date(scheduleObject.end_date)) < dateValue)) {
     return false;
   }
   const ListValue = scheduleObject.value ? scheduleObject.value.split(",") : [];
   if (mode == constants.PROVIDER_SCHEDULE.MODE_WEEKLY) {
-    return ListValue.includes(dateValue.getDay());
+    return ListValue.includes(dateValue.getDay().toString());
   } else if (mode == constants.PROVIDER_SCHEDULE.MODE_MONTHLY) {
-    return ListValue.includes(dateValue.getDate());
+    return ListValue.includes(dateValue.getDate().toString());
   } else {
     const dateString = formatReadableDate(dateValue);
     for (const dateStr of ListValue) {
