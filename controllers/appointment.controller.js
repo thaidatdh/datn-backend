@@ -239,15 +239,32 @@ exports.appointments_of_patient = async function (req, res) {
     }
     if (req.query.from && req.query.to) {
       const startDate = new Date(req.query.from);
-      const endDate = new Date(req.query.to)
+      const endDate = new Date(req.query.to);
       query = Object.assign(query, {
         appointment_date: { $gte: startDate, $lte: endDate },
       });
     }
     const appointments = await appointmentModel.get(query, options);
+    let resultArray = [];
+    for (const appt in appointments) {
+      let appointmentObject = Object.assign({}, appt._doc);
+      if (
+        options.get_treatments == true &&
+        appt.treatments &&
+        appt.treatments.length > 0
+      ) {
+        appointmentObject.service_name = appt.treatments[0].description;
+      } else if (options.get_treatments == false) {
+        appointmentObject.service_name = await appointmentModel.getFirstTreatmentDescription(
+          appt._id
+        );
+      } else {
+        appointmentObject.service_name = null;
+      }
+    }
     let result = {
       success: true,
-      payload: appointments,
+      payload: resultArray,
     };
     if (options.page && options.limit) {
       const totalCount = await appointmentModel.countDocuments(query);
@@ -283,9 +300,23 @@ exports.appointment_info = async function (req, res) {
     };
     const appointment = await appointmentModel.getById(appointment_id, options);
     if (appointment) {
+      let appointmentObject = Object.assign({}, appointment._doc);
+      if (
+        options.get_treatments == true &&
+        appointment.treatments &&
+        appointment.treatments.length > 0
+      ) {
+        appointmentObject.service_name = appointment.treatments[0].description;
+      } else if (options.get_treatments == false) {
+        appointmentObject.service_name = await appointmentModel.getFirstTreatmentDescription(
+          appointment._id
+        );
+      } else {
+        appointmentObject.service_name = null;
+      }
       res.json({
         success: true,
-        payload: appointment,
+        payload: appointmentObject,
       });
     } else {
       res.status(404).json({
@@ -351,7 +382,8 @@ exports.add_appointment = async function (req, res) {
       return res.status(403).json({
         success: false,
         message: await translator.Translate(
-          "Provider is not working at " + formatReadableDate(apptInfo.appointment_date),
+          "Provider is not working at " +
+            formatReadableDate(apptInfo.appointment_date),
           req.query.lang
         ),
       });

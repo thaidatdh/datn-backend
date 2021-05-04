@@ -29,7 +29,6 @@ const AppointmentSchema = mongoose.Schema(
       ref: "chair",
       required: true,
     },
-    serive_name: String,
     appointment_date: Date,
     appointment_time: String,
     duration: String,
@@ -237,10 +236,7 @@ module.exports.insert = async function (apptInfo) {
       await TreatmentModel.linkAppt(treatment_id, rs._id);
     }
   }
-  const serive_name = await getFirstTreatmentDescriptionFunc(rs._id);
-  rs.serive_name = serive_name;
-  const result = await rs.save();
-  return result;
+  return rs;
 };
 module.exports.updateAppt = async function (apptInfo, appointment_id) {
   let appointment = await AppointmentModel.findById(appointment_id);
@@ -289,10 +285,7 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
       await TreatmentModel.linkAppt(treatment_id, null);
     }
   }
-  const serive_name = await getFirstTreatmentDescriptionFunc(rs._id);
-  rs.serive_name = serive_name;
-  const result = await rs.save();
-  return result;
+  return rs;
 };
 
 module.exports.checkAvailable = async function (
