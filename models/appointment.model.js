@@ -29,6 +29,7 @@ const AppointmentSchema = mongoose.Schema(
       ref: "chair",
       required: true,
     },
+    serive_name: String,
     appointment_date: Date,
     appointment_time: String,
     duration: String,
@@ -196,7 +197,20 @@ module.exports.getById = async function (id, populateOptions) {
   const resultQuery = await promise.exec();
   return resultQuery;
 };
-
+const getFirstTreatmentDescriptionFunc = module.exports.getFirstTreatmentDescription = async function (appointment_id) {
+  try {
+    const treatment = await TreatmentModel.findOne({
+      appointment: appointment_id,
+    });
+    if (treatment) {
+      return treatment.description;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+};
 module.exports.insert = async function (apptInfo) {
   let appointment = new AppointmentModel();
   appointment.patient = apptInfo.patient ? apptInfo.patient : null;
@@ -223,7 +237,10 @@ module.exports.insert = async function (apptInfo) {
       await TreatmentModel.linkAppt(treatment_id, rs._id);
     }
   }
-  return rs;
+  const serive_name = getFirstTreatmentDescriptionFunc(rs._id);
+  rs.serive_name = serive_name;
+  const result = await rs.save();
+  return result;
 };
 module.exports.updateAppt = async function (apptInfo, appointment_id) {
   let appointment = await AppointmentModel.findById(appointment_id);
@@ -272,7 +289,10 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
       await TreatmentModel.linkAppt(treatment_id, null);
     }
   }
-  return rs;
+  const serive_name = getFirstTreatmentDescriptionFunc(rs._id);
+  rs.serive_name = serive_name;
+  const result = await rs.save();
+  return result;
 };
 
 module.exports.checkAvailable = async function (
