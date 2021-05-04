@@ -237,7 +237,7 @@ module.exports.insert = async function (apptInfo) {
       await TreatmentModel.linkAppt(treatment_id, rs._id);
     }
   }
-  const serive_name = getFirstTreatmentDescriptionFunc(rs._id);
+  const serive_name = await getFirstTreatmentDescriptionFunc(rs._id);
   rs.serive_name = serive_name;
   const result = await rs.save();
   return result;
@@ -289,7 +289,7 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
       await TreatmentModel.linkAppt(treatment_id, null);
     }
   }
-  const serive_name = getFirstTreatmentDescriptionFunc(rs._id);
+  const serive_name = await getFirstTreatmentDescriptionFunc(rs._id);
   rs.serive_name = serive_name;
   const result = await rs.save();
   return result;
