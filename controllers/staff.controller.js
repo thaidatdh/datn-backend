@@ -293,6 +293,7 @@ exports.autocomplete = async function (req, res) {
   if (options.schedule_date) {
     const dateValue = new Date(options.schedule_date);
     const ListSchedule = await ProviderScheduleModel.find({
+      start_date: { $lte: dateValue },
       $or: [
         {
           end_date: { $gte: dateValue },

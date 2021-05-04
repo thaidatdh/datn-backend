@@ -127,10 +127,8 @@ module.exports.isProviderAvailable = async function (provider, date) {
   try {
     const dateValue = new Date(date);
     const ListSchedule = await ProviderScheduleModel.find({
+      start_date: { $lte: dateValue },
       $or: [
-        {
-          start_date: { $lte: dateValue },
-        },
         {
           end_date: { $gte: dateValue },
         },

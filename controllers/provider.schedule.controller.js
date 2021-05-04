@@ -95,6 +95,7 @@ exports.providers_has_schedule = async function (req, res) {
   try {
     const dateValue = new Date(req.params.date);
     const ListSchedule = await ProviderScheduleModel.find({
+      start_date: { $lte: dateValue },
       $or: [
         {
           end_date: { $gte: dateValue },
