@@ -197,21 +197,19 @@ module.exports.get = async function (query, populateOptions) {
       path: "schedule",
       options: { sort: { start_date: 1 } },
     };
-    if (populateOptions.schedule_date) {
-      const dateValue = new Date(populateOptions.schedule_date);
-      queryPopulateSchedule = Object.assign(queryPopulateSchedule, {
-        match: {
-          $or: [
-            {
-              end_date: { $gte: dateValue },
-            },
-            {
-              end_date: null,
-            },
-          ],
-        },
-      });
-    }
+    const dateValue = new Date();
+    queryPopulateSchedule = Object.assign(queryPopulateSchedule, {
+      match: {
+        $or: [
+          {
+            end_date: { $gte: dateValue },
+          },
+          {
+            end_date: null,
+          },
+        ],
+      },
+    });
 
     promise.populate(queryPopulateSchedule);
   }
