@@ -65,9 +65,6 @@ exports.index_provider = async function (req, res) {
       const ListSchedule = await ProviderScheduleModel.find({
         $or: [
           {
-            start_date: { $lte: dateValue },
-          },
-          {
             end_date: { $gte: dateValue },
           },
           {
@@ -263,6 +260,9 @@ exports.delete = async function (req, res) {
 };
 
 exports.autocomplete = async function (req, res) {
+  const options = {
+    schedule_date: req.query.date,
+  };
   const searchType =
     req.query.type && SEARCH.AUTO_COMPLETE_PATIENT_TYPE.includes(req.query.type)
       ? req.query.type
@@ -278,7 +278,7 @@ exports.autocomplete = async function (req, res) {
     $regex: "^" + searchData,
     $options: "i",
   };
-  const matchSearch =
+  let matchSearch =
     searchType == SEARCH.AUTO_COMPLETE_TYPE_NAME
       ? {
           $or: [{ name: regexSearch }, { last_name: regexSearch }],
@@ -290,6 +290,26 @@ exports.autocomplete = async function (req, res) {
           is_active: true,
           staff_type: staffType,
         };
+  if (options.schedule_date) {
+    const dateValue = new Date(options.schedule_date);
+    const ListSchedule = await ProviderScheduleModel.find({
+      $or: [
+        {
+          end_date: { $gte: dateValue },
+        },
+        {
+          end_date: null,
+        },
+      ],
+    });
+    let ListProviderId = [];
+    for (const schedule of ListSchedule) {
+      if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
+        ListProviderId.push(schedule.provider);
+      }
+    }
+    matchSearch = Object.assign(matchSearch, { _id: { $in: ListProviderId } });
+  }
   try {
     const result = await StaffModel.aggregate([
       {

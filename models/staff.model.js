@@ -203,9 +203,6 @@ module.exports.get = async function (query, populateOptions) {
         match: {
           $or: [
             {
-              start_date: { $lte: dateValue },
-            },
-            {
               end_date: { $gte: dateValue },
             },
             {
