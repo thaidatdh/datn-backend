@@ -157,6 +157,8 @@ exports.delete_chair = async function (req, res) {
 exports.appointments_index = async function (req, res) {
   try {
     const options = {
+      get_treatments: req.query.get_treatments == "true",
+      get_recalls: req.query.get_recalls == "true",
       limit: req.query.limit,
       page: req.query.page,
     };
@@ -223,6 +225,8 @@ exports.appointments_of_patient = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
+      get_treatments: req.query.get_treatments == "true",
+      get_recalls: req.query.get_recalls == "true",
       page: req.query.page,
       limit: req.query.limit,
     };
