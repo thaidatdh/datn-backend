@@ -14,7 +14,7 @@ exports.index = async function (req, res) {
       limit: req.query.limit,
       page: req.query.page,
     };
-    const recall = await RecallModel.get({}, options);
+    const recalls = await RecallModel.get({}, options);
     let result = {
       success: true,
       payload: recalls,
