@@ -261,6 +261,7 @@ exports.appointments_of_patient = async function (req, res) {
       } else {
         appointmentObject.service_name = null;
       }
+      resultArray.push(appointmentObject)
     }
     let result = {
       success: true,
