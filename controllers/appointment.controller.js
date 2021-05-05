@@ -246,8 +246,10 @@ exports.appointments_of_patient = async function (req, res) {
     }
     const appointments = await appointmentModel.get(query, options);
     let resultArray = [];
-    for (const appt in appointments) {
+    for (const appt of appointments) {
       let appointmentObject = Object.assign({}, appt._doc);
+      appointmentObject.treatments = appt.treatments;
+      appointmentObject.recalls = appt.recalls;
       if (
         options.get_treatments == true &&
         appt.treatments &&
