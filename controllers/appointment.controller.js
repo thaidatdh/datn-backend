@@ -304,6 +304,8 @@ exports.appointment_info = async function (req, res) {
     const appointment = await appointmentModel.getById(appointment_id, options);
     if (appointment) {
       let appointmentObject = Object.assign({}, appointment._doc);
+      appointmentObject.treatments = appointment.treatments;
+      appointmentObject.recalls = appointment.recalls;
       if (
         options.get_treatments == true &&
         appointment.treatments &&

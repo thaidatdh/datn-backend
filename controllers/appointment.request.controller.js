@@ -16,7 +16,7 @@ exports.index = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.GET,
-        "apptRequest list",
+        "Appointment Request list",
         req.query.lang
       ),
       exeption: err,
@@ -55,7 +55,7 @@ exports.patient_request = async function (req, res) {
       success: false,
       message: await translator.FailedMessage(
         constants.ACTION.GET,
-        "recall list of patient " + patient_id + "failed",
+        "Appointment Request list of patient " + patient_id + "failed",
         req.query.lang
       ),
       exeption: err,
@@ -113,7 +113,11 @@ exports.apptRequest = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Appointment Request",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
