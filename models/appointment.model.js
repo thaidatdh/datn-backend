@@ -293,7 +293,8 @@ module.exports.checkAvailable = async function (
   chair,
   date,
   time,
-  duration
+  duration,
+  appointID
 ) {
   try {
     if (process.env.DATABASE_DEBUG_SKIP_VALIDATE == "true") {
@@ -309,6 +310,9 @@ module.exports.checkAvailable = async function (
     const todayAppointmentList = await AppointmentModel.find(query);
     const dateNewAppt = getDates(date, time, duration);
     for (const appt of todayAppointmentList) {
+      if (appointID && appt._id.toString() === appointID.toString()){
+        continue;
+      }
       const dateAppt = getDates(
         appt.appointment_date,
         appt.appointment_time,
