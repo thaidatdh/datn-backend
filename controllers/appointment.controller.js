@@ -475,7 +475,7 @@ exports.update_appointment = async function (req, res) {
     const currentDate = new Date(currentAppointment.appointment_date);
     if (
       apptInfo.provider != currentAppointment.provider ||
-      newDate != currentDate
+      newDate.getTime() != currentDate.getTime()
     ) {
       const isProviderAvailable = await ProviderScheduleModel.isProviderAvailable(
         apptInfo.provider,
@@ -513,7 +513,8 @@ exports.update_appointment = async function (req, res) {
       apptInfo.chair,
       apptInfo.appointment_date,
       apptInfo.appointment_time,
-      apptInfo.duration
+      apptInfo.duration,
+      currentAppointment._id
     );
     if (availableCheckResult.available == false) {
       return res.status(403).json({
