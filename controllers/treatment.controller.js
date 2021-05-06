@@ -69,7 +69,11 @@ exports.patient_treatment = async function (req, res) {
         treatment_date: DateRange,
       });
     }
-
+    if (req.query.link == "true") {
+      query = Object.assign(query, {
+        appointment: null,
+      });
+    }
     const treatments = await TreatmentModel.get(query, options);
     let result = {
       success: true,
