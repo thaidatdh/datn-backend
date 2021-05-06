@@ -254,7 +254,7 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
     : appointment.assistant;
   appointment.chair = apptInfo.chair ? apptInfo.chair : appointment.chair;
   appointment.appointment_date = apptInfo.appointment_date
-    ? Date.parse(apptInfo.appointment_date)
+    ? new Date(apptInfo.appointment_date)
     : appointment.appointment_date;
   appointment.appointment_time = apptInfo.appointment_time
     ? apptInfo.appointment_time
@@ -296,6 +296,9 @@ module.exports.checkAvailable = async function (
   duration
 ) {
   try {
+    if (process.env.DATABASE_DEBUG_SKIP_VALIDATE == "true") {
+      return true;
+    }
     const startDate = new Date(date);
     const endDate = new Date(
       new Date(startDate).setDate(startDate.getDate() + 1)

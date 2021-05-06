@@ -263,7 +263,7 @@ exports.appointments_of_patient = async function (req, res) {
       } else {
         appointmentObject.service_name = null;
       }
-      resultArray.push(appointmentObject)
+      resultArray.push(appointmentObject);
     }
     let result = {
       success: true,
@@ -446,6 +446,86 @@ exports.add_appointment = async function (req, res) {
 exports.update_appointment = async function (req, res) {
   try {
     let apptInfo = req.body;
+    const currentAppointment = await appointmentModel.findById(
+      req.params.appointment_id
+    );
+    if (currentAppointment == null) {
+      return res.status(404).json({
+        success: false,
+        message: await translator.NotFoundMessage(
+          "Appointment",
+          req.query.lang
+        ),
+      });
+    }
+    apptInfo.appointment_date = apptInfo.appointment_date
+      ? apptInfo.appointment_date
+      : currentAppointment.appointment_date;
+    apptInfo.appointment_time = apptInfo.appointment_time
+      ? apptInfo.appointment_time
+      : currentAppointment.appointment_time;
+    apptInfo.duration = apptInfo.duration
+      ? apptInfo.duration
+      : currentAppointment.duration;
+    apptInfo.chair = apptInfo.chair ? apptInfo.chair : currentAppointment.chair;
+    apptInfo.provider = apptInfo.provider
+      ? apptInfo.provider
+      : currentAppointment.provider;
+    const newDate = new Date(apptInfo.appointment_date);
+    const currentDate = new Date(currentAppointment.appointment_date);
+    if (
+      apptInfo.provider != currentAppointment.provider ||
+      newDate != currentDate
+    ) {
+      const isProviderAvailable = await ProviderScheduleModel.isProviderAvailable(
+        apptInfo.provider,
+        apptInfo.appointment_date
+      );
+      if (isProviderAvailable == false) {
+        return res.status(403).json({
+          success: false,
+          message: await translator.Translate(
+            "Provider is not working at " +
+              formatReadableDate(apptInfo.appointment_date),
+            req.query.lang
+          ),
+        });
+      }
+    }
+
+    const practiceCheckResult = await PracticeModel.checkTime(
+      apptInfo.appointment_date,
+      apptInfo.appointment_time,
+      apptInfo.duration
+    );
+    if (practiceCheckResult.success == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          practiceCheckResult.message,
+          req.query.lang
+        ),
+        param: "duration",
+      });
+    }
+    const availableCheckResult = await appointmentModel.checkAvailable(
+      apptInfo.provider,
+      apptInfo.chair,
+      apptInfo.appointment_date,
+      apptInfo.appointment_time,
+      apptInfo.duration
+    );
+    if (availableCheckResult.available == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          availableCheckResult.message,
+          req.query.lang
+        ),
+        param: availableCheckResult.param,
+      });
+    }
+
     const rs = await appointmentModel.updateAppt(
       apptInfo,
       req.params.appointment_id

@@ -75,6 +75,9 @@ module.exports.insert = async function (practiceInfo) {
 };
 module.exports.checkTime = async (date, time, duration) => {
   try {
+    if (process.env.DATABASE_DEBUG_SKIP_VALIDATE == "true") {
+      return true;
+    }
     const practice = await PracticeModel.findOne();
     const dateNewAppt = getDates(date, time, duration);
     const apptStartDate = new Date(dateNewAppt.start);

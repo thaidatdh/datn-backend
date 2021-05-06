@@ -124,6 +124,9 @@ module.exports.isAvailable = (scheduleObject, date) => {
 };
 module.exports.isProviderAvailable = async function (provider, date) {
   try {
+    if (process.env.DATABASE_DEBUG_SKIP_VALIDATE == "true") {
+      return true;
+    }
     const dateValue = new Date(date);
     const ListSchedule = await ProviderScheduleModel.find({
       start_date: { $lte: dateValue },
