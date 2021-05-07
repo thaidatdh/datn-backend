@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const { formatReadableDate } = require("../utils/utils");
+const moment = require("moment");
+
 const ProviderScheduleSchema = mongoose.Schema(
   {
     provider: {
@@ -148,5 +150,74 @@ module.exports.isProviderAvailable = async function (provider, date) {
     return false;
   } catch (e) {
     return false;
+  }
+};
+
+module.exports.nextAvailableDate = function (schedules, date) {
+  try {
+    let dates = [];
+    let momentDate = moment(date).utc();
+    for (let schedule of schedules){
+      if (schedule.mode === constants.PROVIDER_SCHEDULE.MODE_MONTHLY){
+        // Create Hash map
+        let temp = schedule.value.split(",");
+        let scheObj = Object.create(null);
+        for (val of temp){
+          scheObj[val] = true;
+        }
+
+        if (temp.length > 0){
+          let now = moment(new Date(moment(schedule.start_date).format("YYYY-MM-DD")));
+          if (now < date){
+            now = moment(momentDate).utc();
+          }
+          let endDate = schedule.end_date? moment(new Date(moment(schedule.end_date).format("YYYY-MM-DD"))) : null;
+          while (!endDate || now.isSameOrBefore(endDate)){
+            if (scheObj[now.date()] && moment.duration(now.diff(momentDate)).asDays() >= 1){ 
+              dates.push(now._d);
+              break;
+            }
+            now.add(1, 'days');
+          }
+        }
+      } else if (schedule.mode === constants.PROVIDER_SCHEDULE.MODE_WEEKLY){
+        // Create Hash map
+        let temp = schedule.value.split(",");
+        let scheObj = Object.create(null);
+        for (val of temp){
+          scheObj[val] = true;
+        }
+
+        if (temp.length > 0){
+          let now = moment(new Date(moment(schedule.start_date).format("YYYY-MM-DD")));
+          if (now < date){
+            now = moment(momentDate).utc();
+          }
+          let endDate = schedule.end_date? moment(new Date(moment(schedule.end_date).format("YYYY-MM-DD"))) : null;
+          while (!endDate || now.isSameOrBefore(endDate)){
+            if (scheObj[now.day()] && moment.duration(now.diff(momentDate)).asDays() >= 1){
+              dates.push(now._d);
+              break;
+            }
+            now.add(1, 'days');
+          }
+        }
+      } else if (schedule.mode === constants.PROVIDER_SCHEDULE.MODE_AUTO){
+        let temp = schedule.value.split(",");
+        for (let val of temp){
+          const dateVal = moment(new Date(val)).utc();
+          if (moment.duration(dateVal.diff(momentDate)).asDays() >= 1){
+            dates.push(dateVal);
+          }
+        }
+      }
+    }
+    if (dates.length === 0){
+      return null;
+    } else {
+      return new Date(Math.min(...dates));
+    }
+  } catch (e) {
+    return null;
   }
 };

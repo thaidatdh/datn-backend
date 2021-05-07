@@ -4,6 +4,7 @@ const constants = require("../constants/constants");
 const ProviderScheduleModel = require("../models/provider.schedule.model");
 const StaffModel = require("../models/staff.model");
 const translator = require("../utils/translator");
+
 //For index
 exports.index = async function (req, res) {
   try {
@@ -299,6 +300,36 @@ exports.delete = async function (req, res) {
       message: await translator.FailedMessage(
         constants.ACTION.DELETE,
         "Provider Schedule",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+
+exports.next_available_date_provider = async function (req, res) {
+  try {
+    const options = {
+      limit: req.query.limit,
+      page: req.query.page,
+    };
+    const nowDate = (req.query.date)? new Date(req.query.date) : new Date();
+    let query = { 
+      provider: req.params.provider_id,
+      $or: [{ end_date: { $gte: nowDate } }, { end_date: null }]
+    };
+    const schedules = await ProviderScheduleModel.get(query, options);
+    let result = {
+      success: true,
+      payload: ProviderScheduleModel.nextAvailableDate(schedules, nowDate),
+    };
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Provider schedule of provider",
         req.query.lang
       ),
       exeption: err,
