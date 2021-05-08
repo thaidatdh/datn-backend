@@ -65,8 +65,6 @@ module.exports.isBackendAuthorized = async function (role, path, method) {
     pathValue.startsWith("/patient")
   ) {
     return false;
-  } else if (role == constants.USER.USER_TYPE_PATIENT && method != "GET") {
-    return false;
   }
   for (const model of accessList) {
     if (
