@@ -103,6 +103,12 @@ module.exports = {
     MODE_AUTO: "AUTO",
     MODE: ["MONTHLY", "WEEKLY", "AUTO"]
   },
+  APPOINTMENT_REQUEST: {
+    MODE_NEW: "NEW",
+    MODE_ACCEPTED: "ACCEPTED",
+    MODE_REJECTED: "REJECTED",
+    MODES: ["NEW", "ACCEPTED", "REJECTED"]
+  }
 };
 module.exports.RANDOM_COLOR = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);

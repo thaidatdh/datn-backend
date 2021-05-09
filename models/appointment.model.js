@@ -5,6 +5,7 @@ const Staff = require("./staff.model");
 const Chair = require("./chair.model");
 const RecallModel = require("./recall.model");
 const TreatmentModel = require("./treatment.model");
+const AppointmentRequestModel = require("./appointment.request.model");
 const { getDates, isOverlap } = require("../utils/utils");
 const AppointmentSchema = mongoose.Schema(
   {
@@ -196,7 +197,9 @@ module.exports.getById = async function (id, populateOptions) {
   const resultQuery = await promise.exec();
   return resultQuery;
 };
-const getFirstTreatmentDescriptionFunc = module.exports.getFirstTreatmentDescription = async function (appointment_id) {
+const getFirstTreatmentDescriptionFunc = (module.exports.getFirstTreatmentDescription = async function (
+  appointment_id
+) {
   try {
     const treatment = await TreatmentModel.findOne({
       appointment: appointment_id,
@@ -209,7 +212,7 @@ const getFirstTreatmentDescriptionFunc = module.exports.getFirstTreatmentDescrip
   } catch (e) {
     return null;
   }
-};
+});
 module.exports.insert = async function (apptInfo) {
   let appointment = new AppointmentModel();
   appointment.patient = apptInfo.patient ? apptInfo.patient : null;
@@ -235,6 +238,14 @@ module.exports.insert = async function (apptInfo) {
     for (const treatment_id of apptInfo.treatment_link) {
       await TreatmentModel.linkAppt(treatment_id, rs._id);
     }
+  }
+  if (apptInfo.request_id) {
+    try {
+      await AppointmentRequestModel.updateMany(
+        { _id: apptInfo.request_id },
+        { status: constants.APPOINTMENT_REQUEST.MODE_ACCEPTED }
+      );
+    } catch (e) {}
   }
   return rs;
 };
@@ -310,7 +321,7 @@ module.exports.checkAvailable = async function (
     const todayAppointmentList = await AppointmentModel.find(query);
     const dateNewAppt = getDates(date, time, duration);
     for (const appt of todayAppointmentList) {
-      if (appointID && appt._id.toString() === appointID.toString()){
+      if (appointID && appt._id.toString() === appointID.toString()) {
         continue;
       }
       const dateAppt = getDates(
