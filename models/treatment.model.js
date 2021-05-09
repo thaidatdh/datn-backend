@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
+const { getToothSurface } = require("../utils/utils");
 require("./treatment.plan.model");
 const Patient = require("./patient.model");
 const ProcedureModel = require("./procedure.code.model");
@@ -49,6 +50,7 @@ const TreatmentSchema = mongoose.Schema(
     },
     mark_type: String,
     status: String,
+    selected_tooth_raw: mongoose.Schema.Types.Mixed,
   },
   {
     timestamps: true,
@@ -169,6 +171,12 @@ module.exports.insert = async function (req) {
     ? req.description
     : Procedure.description;
   treatment.mark_type = req.mark_type ? req.mark_type : Procedure.mark_type;
+  treatment.selected_tooth_raw = req.RawData ? req.RawData : null;
+  if (req.RawData) {
+    const toothSurface = getToothSurface(req.RawData);
+    treatment.tooth = toothSurface.tooth;
+    treatment.surface = toothSurface.surface;
+  }
   const treatmentResult = await treatment.save();
   if (
     Procedure.auto_recall === true &&
@@ -240,6 +248,14 @@ module.exports.updateTreatment = async function (treatment, req) {
     constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(req.status) &&
     !constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(treatment.status);
   treatment.status = req.status ? req.status : treatment.status;
+  treatment.selected_tooth_raw = req.RawData
+    ? req.RawData
+    : treatment.selected_tooth_raw;
+  if (req.RawData) {
+    const toothSurface = getToothSurface(req.RawData);
+    treatment.tooth = toothSurface.tooth;
+    treatment.surface = toothSurface.surface;
+  }
   if (Procedure) {
     treatment.ada_code =
       req.ada_code != undefined ? req.ada_code : Procedure.procedure_code;
