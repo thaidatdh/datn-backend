@@ -62,7 +62,7 @@ const AppointmentModel = (module.exports = mongoose.model(
 ));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = AppointmentModel.find(query);
+  const promise = AppointmentModel.find(query).sort({ appointment_date: -1 });
   promise.populate({
     path: "patient",
     populate: {

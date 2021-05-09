@@ -64,7 +64,7 @@ const TreatmentModel = (module.exports = mongoose.model(
 ));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = TreatmentModel.find(query).sort("treatment_date");
+  const promise = TreatmentModel.find(query).sort({ treatment_date: -1 });
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(
@@ -185,7 +185,7 @@ module.exports.insert = async function (req) {
     };
     try {
       await RecallModel.insertAutoRecall(autoRecallInfo);
-    }catch(errorRecall) {
+    } catch (errorRecall) {
       console.log(errorRecall);
     }
   }
