@@ -86,3 +86,77 @@ exports.formatPhone = (phoneNumberString) => {
   }
   return cleaned;
 };
+const getSurface = (exports.getSurface = (toothData) => {
+  let surfaceData = "";
+  if (toothData.distal == true || toothData.distal == "true") {
+    surfaceData = surfaceData + "D";
+  }
+  if (toothData.mesial == true || toothData.mesial == "true") {
+    surfaceData = surfaceData + "M";
+  }
+  if (toothData.insial == true || toothData.insial == "true") {
+    surfaceData = surfaceData + "I";
+  }
+  if (toothData.occlusal == true || toothData.occlusal == "true") {
+    surfaceData = surfaceData + "O";
+  }
+  if (toothData.facial == true || toothData.facial == "true") {
+    surfaceData = surfaceData + "F";
+  }
+  if (toothData.lingual == true || toothData.lingual == "true") {
+    surfaceData = surfaceData + "L";
+  }
+  if (toothData.top == true || toothData.top == "true") {
+    surfaceData = surfaceData + "T";
+  }
+  if (toothData.root == true || toothData.root == "true") {
+    surfaceData = surfaceData + "R";
+  }
+  if (toothData.buccal == true || toothData.buccal == "true") {
+    surfaceData = surfaceData + "B";
+  }
+  return surfaceData;
+});
+const isContinuousIntArray = (exports.isContinuousIntArray = (intArray) => {
+  for (let indexValue = 0; indexValue < intArray.length - 1; indexValue++) {
+    const nextInt = parseInt(intArray[indexValue + 1]);
+    const expectedNextInt = parseInt(intArray[indexValue]) + 1;
+    if (expectedNextInt != nextInt) {
+      return false;
+    }
+  }
+  return true;
+});
+exports.getToothSurface = (rawRequestData) => {
+  if (rawRequestData == null) {
+    return {
+      tooth: null,
+      surface: null,
+    };
+  }
+  let tooth = "";
+  let surface = "";
+  const data = [...rawRequestData].sort((a, b) => {
+    return parseInt(a.toothNumber) - parseInt(b.toothNumber);
+  });
+  let toothArray = [];
+  let surfaceArray = [];
+  for (const toothData of data) {
+    if (toothData.isSelected == true || toothData.isSelected == "true") {
+      toothArray.push(toothData.toothNumber);
+      let surfaceData = getSurface(toothData);
+      if (surfaceData != "" && surfaceData != null) {
+        surfaceData = "[" + toothData.toothNumber + "]" + surfaceData;
+        surfaceArray.push(surfaceData);
+      }
+    }
+  }
+  tooth = isContinuousIntArray(toothArray)
+    ? toothArray[0] + "-" + toothArray[toothArray.length - 1]
+    : toothArray.join(",");
+  surface = surfaceArray.join(",");
+  return {
+    tooth: tooth,
+    surface: surface,
+  };
+};

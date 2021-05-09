@@ -39,7 +39,7 @@ const PrescriptionModel = (module.exports = mongoose.model(
 
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = PrescriptionModel.find(query);
+  const promise = PrescriptionModel.find(query).sort({ prescription_date: -1});
   if (populateOptions.get_provider) {
     promise.populate("provider");
   }

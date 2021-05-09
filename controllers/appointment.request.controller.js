@@ -6,7 +6,9 @@ const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const apptRequest = await ApptRequestModel.find();
+    const apptRequest = await ApptRequestModel.find({
+      status: constants.APPOINTMENT_REQUEST.MODE_NEW,
+    });
     res.json({
       success: true,
       payload: apptRequest,
@@ -107,7 +109,10 @@ exports.apptRequest = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.NotFoundMessage("Appointment Request", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Appointment Request",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
@@ -126,7 +131,10 @@ exports.update = async function (req, res) {
   try {
     let apptRequest = await ApptRequestModel.findById(req.params.request_id);
     if (apptRequest) {
-      const result = await ApptRequestModel.updateRequest(apptRequest, req.body);
+      const result = await ApptRequestModel.updateRequest(
+        apptRequest,
+        req.body
+      );
       res.json({
         success: true,
         payload: result,
@@ -134,7 +142,10 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.NotFoundMessage("Appointment Request", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Appointment Request",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
@@ -151,7 +162,10 @@ exports.update = async function (req, res) {
 };
 exports.delete = async function (req, res) {
   try {
-    await ApptRequestModel.deleteOne({ _id: req.params.request_id });
+    await ApptRequestModel.updateMany(
+      { _id: req.params.request_id },
+      { status: constants.APPOINTMENT_REQUEST.MODE_REJECTED }
+    );
     res.json({
       success: true,
     });
