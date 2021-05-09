@@ -115,23 +115,25 @@ exports.index = async function (req, res) {
     }
     const result = {
       success: true,
-      treatment: treatment_count,
-      procedure: procedure_count,
-      appointment: {
-        count: appointment_count,
-        chart: appointmentStatistic,
-      },
-      patient: {
-        patient_total: patient_active + patient_inactive,
-        patient_active: patient_active,
-        patient_inactive: patient_inactive,
-        new_patient_total: patient_new,
-        new_patient_in_range: patient_new_in_range,
-      },
-      payment: {
-        summary: payment[0],
-        chart: paymentStatistic,
-      },
+      payload: {
+        treatment: treatment_count,
+        procedure: procedure_count,
+        appointment: {
+          count: appointment_count,
+          chart: appointmentStatistic,
+        },
+        patient: {
+          patient_total: patient_active + patient_inactive,
+          patient_active: patient_active,
+          patient_inactive: patient_inactive,
+          new_patient_total: patient_new,
+          new_patient_in_range: patient_new_in_range,
+        },
+        payment: {
+          summary: payment[0],
+          chart: paymentStatistic,
+        },
+      }
     };
 
     res.json(result);
