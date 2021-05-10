@@ -6,13 +6,61 @@ const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
   try {
-    const apptRequest = await ApptRequestModel.find({
-      status: constants.APPOINTMENT_REQUEST.MODE_NEW,
-    });
-    res.json({
-      success: true,
-      payload: apptRequest,
-    });
+    const result = await ApptRequestModel.aggregate([
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patient",
+          foreignField: "_id",
+          as: "PatientData",
+        },
+      },
+      {
+        $unwind: "$PatientData",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "PatientData.user",
+          foreignField: "_id",
+          as: "UserData",
+        },
+      },
+      {
+        $unwind: "$UserData",
+      },
+      {
+        $addFields: {
+          patient_id: {
+            $concat: ["", "$PatientData.patient_id"],
+          },
+          first_name: {
+            $concat: ["$UserData.first_name", ""],
+          },
+          last_name: {
+            $concat: ["", "$UserData.last_name"],
+          },
+        },
+      },
+      {
+        $match: {
+          status: constants.APPOINTMENT_REQUEST.MODE_NEW,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          patient: 1,
+          patient_id: 1,
+          first_name: 1,
+          last_name: 1,
+          request_date: 1,
+          note: 1,
+          status: 1,
+        },
+      },
+    ]);
+    res.json({ success: true, payload: result });
   } catch (err) {
     res.status(500).json({
       success: false,
