@@ -127,6 +127,32 @@ const isContinuousIntArray = (exports.isContinuousIntArray = (intArray) => {
   }
   return true;
 });
+const GetSurfaceString = (surfaceArray) => {
+  let map = [];
+  for (const data of surfaceArray) {
+    const dataSplit = data.split(/[\[\]]/g).filter((n) => n != "");
+    const dataMapIndex = map.findIndex((n) => n.key == dataSplit[1]);
+    if (dataMapIndex == -1) {
+      let dataArray = [];
+      dataArray.push(dataSplit[0]);
+      map.push({ key: dataSplit[1], value: dataArray });
+    } else {
+      let dataMap = Object.assign({}, map[dataMapIndex]);
+      let dataArray = dataMap.value.slice();
+      dataArray.push(dataSplit[0]);
+      dataMap.value = dataArray;
+      map[dataMapIndex] = dataMap;
+    }
+  }
+  let resultArray = [];
+  for (const data of map) {
+    const surface = data.key;
+    const tooth = data.value ? data.value.join(",") : "";
+    const surfaceString = (tooth != "" ? "[" + tooth + "]" : "") + surface;
+    resultArray.push(surfaceString);
+  }
+  return resultArray.join(";");
+};
 exports.getToothSurface = (rawRequestData) => {
   if (rawRequestData == null) {
     return {
@@ -154,7 +180,7 @@ exports.getToothSurface = (rawRequestData) => {
   tooth = isContinuousIntArray(toothArray)
     ? toothArray[0] + "-" + toothArray[toothArray.length - 1]
     : toothArray.join(",");
-  surface = surfaceArray.join(",");
+  surface = GetSurfaceString(surfaceArray);
   return {
     tooth: tooth,
     surface: surface,
