@@ -57,6 +57,7 @@ exports.index = async function (req, res) {
           request_date: 1,
           note: 1,
           status: 1,
+          createdAt: 1
         },
       },
     ]);
