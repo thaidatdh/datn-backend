@@ -88,9 +88,6 @@ exports.formatPhone = (phoneNumberString) => {
 };
 const getSurface = (exports.getSurface = (toothData) => {
   let surfaceData = "";
-  if (toothData.distal == true || toothData.distal == "true") {
-    surfaceData = surfaceData + "D";
-  }
   if (toothData.mesial == true || toothData.mesial == "true") {
     surfaceData = surfaceData + "M";
   }
@@ -100,20 +97,23 @@ const getSurface = (exports.getSurface = (toothData) => {
   if (toothData.occlusal == true || toothData.occlusal == "true") {
     surfaceData = surfaceData + "O";
   }
-  if (toothData.facial == true || toothData.facial == "true") {
-    surfaceData = surfaceData + "F";
+  if (toothData.top == true || toothData.top == "true") {
+    surfaceData = surfaceData + "T";
+  }
+  if (toothData.distal == true || toothData.distal == "true") {
+    surfaceData = surfaceData + "D";
   }
   if (toothData.lingual == true || toothData.lingual == "true") {
     surfaceData = surfaceData + "L";
   }
-  if (toothData.top == true || toothData.top == "true") {
-    surfaceData = surfaceData + "T";
+  if (toothData.buccal == true || toothData.buccal == "true") {
+    surfaceData = surfaceData + "B";
+  }
+  if (toothData.facial == true || toothData.facial == "true") {
+    surfaceData = surfaceData + "F";
   }
   if (toothData.root == true || toothData.root == "true") {
     surfaceData = surfaceData + "R";
-  }
-  if (toothData.buccal == true || toothData.buccal == "true") {
-    surfaceData = surfaceData + "B";
   }
   return surfaceData;
 });
