@@ -41,7 +41,23 @@ module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
   const promise = PrescriptionModel.find(query).sort({ prescription_date: -1});
   if (populateOptions.get_provider) {
-    promise.populate("provider");
+    promise.populate({
+      path: "provider",
+      select: {
+        staff_type: 1,
+        display_id: 1,
+        is_active: 1,
+        user: 1,
+      },
+      populate: {
+        path: "user",
+        select: {
+          _id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    });
   }
   // Limit
   if (populateOptions.limit && populateOptions.page) {
