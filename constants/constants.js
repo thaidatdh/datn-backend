@@ -89,6 +89,7 @@ module.exports = {
   },
   TREATMENT: {
     UPDATE_BALANCE_STATUS: ["EXISTING", "COMPLETED"],
+    STATUS_PLAN: "PLAN",
   },
   TOOTH: {
     DEFAULT_TOOTH_TYPE: "ADULT",

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const chairModel = require("../models/chair.model");
 const AppointmentModel = require("../models/appointment.model");
+const AppointmentRequestModel = require("../models/appointment.request.model");
 const TreatmentModel = require("../models/treatment.model");
 const procedureCodeModel = require("../models/procedure.code.model");
 const PatientModel = require("../models/patient.model");
@@ -19,12 +20,33 @@ const readFileAsync = promisify(fs.readFile);
 jsreport.init();
 exports.index = async function (req, res) {
   try {
+    if (req.query.startDate == null) {
+      res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Statistic Report require start date",
+          req.query.lang
+        ),
+      });
+    }
+    if (req.query.endDate == null) {
+      res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Statistic Report require end date",
+          req.query.lang
+        ),
+      });
+    }
     const startDate = new Date(req.query.startDate);
     const endDate = new Date(
       new Date(req.query.endDate).setDate(
         new Date(req.query.endDate).getDate() + 1
       )
     );
+    const chartDayGap = req.query.chartDayGap
+      ? Number.parseInt(req.query.chartDayGap)
+      : 1;
     if (startDate >= endDate) {
       return res.status(400).json({
         success: false,
@@ -39,8 +61,20 @@ exports.index = async function (req, res) {
     const appointment_count = await AppointmentModel.countDocuments({
       appointment_date: DateRange,
     });
+    const appointment_request_stat = await AppointmentRequestModel.aggregate([
+      {
+        $match: {
+          request_date: DateRange,
+        },
+      },
+      { $group: { _id: "$status", count: { $sum: 1 } } },
+    ]);
     const treatment_count = await TreatmentModel.countDocuments({
       treatment_date: DateRange,
+    });
+    const treatment_plan_count = await TreatmentModel.countDocuments({
+      treatment_date: DateRange,
+      status: constants.TREATMENT.STATUS_PLAN,
     });
     const procedure_count = await procedureCodeModel.estimatedDocumentCount();
     const patient_active = await PatientModel.countDocuments({
@@ -56,6 +90,7 @@ exports.index = async function (req, res) {
       new_patient: true,
       active_date: DateRange,
     });
+    const practiceWorkingTime = await PracticeModel.findOne({});
     const payment = await TreatmentModel.aggregate([
       { $match: { treatment_date: DateRange } },
       {
@@ -71,9 +106,7 @@ exports.index = async function (req, res) {
     let appointmentStatistic = [];
     let paymentStatistic = [];
     let tempDate = new Date(startDate.toString("yyyy-MM-dd"));
-    let chartDayGap = req.query.chartDayGap
-      ? Number.parseInt(req.query.chartDayGap)
-      : 1;
+    
     while (tempDate < endDate) {
       const dayDiff =
         (endDate.getTime() - tempDate.getTime()) / (1000 * 3600 * 24);
@@ -81,8 +114,9 @@ exports.index = async function (req, res) {
       const tempDateEnd = new Date(
         new Date(tempDate).setDate(tempDate.getDate() + gap)
       );
+      const tempDateRange = { $gte: tempDate, $lt: tempDateEnd };
       const apptCount = await AppointmentModel.countDocuments({
-        appointment_date: { $gte: tempDate, $lt: tempDateEnd },
+        appointment_date: tempDateRange,
       });
 
       appointmentStatistic.push({
@@ -92,7 +126,7 @@ exports.index = async function (req, res) {
         gap: gap,
       });
       const treatmentStat = await TreatmentModel.aggregate([
-        { $match: { treatment_date: { $gte: tempDate, $lt: tempDateEnd } } },
+        { $match: { treatment_date: tempDateRange } },
         {
           $group: {
             _id: undefined,
@@ -110,14 +144,31 @@ exports.index = async function (req, res) {
             date_end: tempDateEnd,
           })
         );
+      } else {
+        paymentStatistic.push({
+          total_fee: 0,
+          total_patient_amount: 0,
+          total_discount_amount: 0,
+          date: tempDate,
+          date_end: tempDateEnd,
+          gap: gap,
+        });
       }
       tempDate = new Date(tempDateEnd.getTime());
     }
     const result = {
       success: true,
       payload: {
-        treatment: treatment_count,
+        practice: {
+          start_time: practiceWorkingTime.start_time,
+          end_time: practiceWorkingTime.end_time,
+        },
+        treatment: {
+          total: treatment_count,
+          plan_count: treatment_plan_count,
+        },
         procedure: procedure_count,
+        appointment_request: appointment_request_stat,
         appointment: {
           count: appointment_count,
           chart: appointmentStatistic,
@@ -133,7 +184,7 @@ exports.index = async function (req, res) {
           summary: payment[0],
           chart: paymentStatistic,
         },
-      }
+      },
     };
 
     res.json(result);
@@ -563,7 +614,7 @@ exports.report_appointment = async function (req, res) {
       No_Show: 0,
     };
     for (const appointment of AppointmentData) {
-      const field = appointment.status.toString().replace(" ","_");
+      const field = appointment.status.toString().replace(" ", "_");
       if (TotalData[field] == undefined) {
         TotalData[field] = 1;
       } else {
