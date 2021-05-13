@@ -38,7 +38,7 @@ const ReferralModel = (module.exports = mongoose.model(
 ));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = ReferralModel.find(query);
+  const promise = populateOptions.one ? ReferralModel.findOne(query) : ReferralModel.find(query);
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(
