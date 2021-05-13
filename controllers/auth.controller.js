@@ -289,12 +289,12 @@ exports.change_password = async function (req, res) {
         message: "User not found",
       });
     }
-    if (password.length < 8 || old_password.length < 8) {
+    if (password.length < 6 || old_password.length < 6) {
       return res.status(422).send({
         success: false,
         value: password,
         message: await translator.Translate(
-          "Password must be at least 8 chars long",
+          "Password must be at least 6 chars long",
           req.query.lang
         ),
         param: "password",
@@ -330,7 +330,7 @@ exports.change_password = async function (req, res) {
             "Incorrect Old Password ",
             req.query.lang
           ),
-          param: "password",
+          param: "old_password",
           location: "body",
         });
       }
