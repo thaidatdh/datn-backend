@@ -437,7 +437,7 @@ exports.report_treatment_history = async function (req, res) {
     //res.contentType("application/pdf").send(ReportFile.content);
     const payload = Buffer.from(ReportFile.content).toString("base64");
     res.json({
-      sucess: true,
+      success: true,
       payload: payload,
     });
   } catch (e) {
@@ -673,7 +673,7 @@ exports.report_appointment = async function (req, res) {
     //res.contentType("application/pdf").send(ReportFile.content);
     const payload = Buffer.from(ReportFile.content).toString('base64');
     res.json({
-      sucess: true,
+      success: true,
       payload: payload,
     });
   } catch (e) {
