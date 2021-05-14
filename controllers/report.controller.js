@@ -106,7 +106,7 @@ exports.index = async function (req, res) {
     let appointmentStatistic = [];
     let paymentStatistic = [];
     let tempDate = new Date(startDate.toString("yyyy-MM-dd"));
-    
+
     while (tempDate < endDate) {
       const dayDiff =
         (endDate.getTime() - tempDate.getTime()) / (1000 * 3600 * 24);
@@ -309,9 +309,8 @@ exports.report_treatment_history = async function (req, res) {
       if (startDate >= endDate) {
         return res.status(400).json({
           success: false,
-          message: await translator.FailedMessage(
-            constants.ACTION.GET,
-            "Statistic Report",
+          message: await translator.Translate(
+            "Statistic Report require start date <= end date",
             req.query.lang
           ),
         });
@@ -320,6 +319,14 @@ exports.report_treatment_history = async function (req, res) {
       endDateStr = formatReadableDate(new Date(req.query.endDate));
       const DateRange = { $gte: startDate, $lt: endDate };
       Query = Object.assign(Query, { treatment_date: DateRange });
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Statistic Report require start date and end date",
+          req.query.lang
+        ),
+      });
     }
     const Patient = await PatientModel.get(
       { _id: req.params.patient_id },
@@ -427,10 +434,21 @@ exports.report_treatment_history = async function (req, res) {
       },
       data: data,
     });
-    res.contentType("application/pdf").send(ReportFile.content);
+    //res.contentType("application/pdf").send(ReportFile.content);
+    const payload = Buffer.from(ReportFile.content).toString("base64");
+    res.json({
+      sucess: true,
+      payload: payload,
+    });
   } catch (e) {
-    console.log(e);
-    res.end(e.message);
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Statistic Report",
+        req.query.lang
+      ),
+    });
   }
 };
 exports.report_appointment = async function (req, res) {
@@ -455,9 +473,8 @@ exports.report_appointment = async function (req, res) {
       if (startDate >= endDate) {
         return res.status(400).json({
           success: false,
-          message: await translator.FailedMessage(
-            constants.ACTION.GET,
-            "Statistic Report",
+          message: await translator.Translate(
+            "Statistic Report require start date <= end date",
             req.query.lang
           ),
         });
@@ -466,6 +483,15 @@ exports.report_appointment = async function (req, res) {
       endDateStr = formatReadableDate(new Date(req.query.endDate));
       const DateRange = { $gte: startDate, $lt: endDate };
       Query = Object.assign(Query, { appointment_date: DateRange });
+    }
+    else {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Statistic Report require start date and end date",
+          req.query.lang
+        ),
+      });
     }
     const Patient = await PatientModel.get(
       { _id: req.query.patient_id },
@@ -644,9 +670,20 @@ exports.report_appointment = async function (req, res) {
       },
       data: data,
     });
-    res.contentType("application/pdf").send(ReportFile.content);
+    //res.contentType("application/pdf").send(ReportFile.content);
+    const payload = Buffer.from(ReportFile.content).toString('base64');
+    res.json({
+      sucess: true,
+      payload: payload,
+    });
   } catch (e) {
-    console.log(e);
-    res.end(e.message);
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Statistic Report",
+        req.query.lang
+      ),
+    });
   }
 };
