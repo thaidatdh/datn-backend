@@ -99,6 +99,7 @@ exports.update_chair = async function (req, res) {
     if (chair) {
       chair.name = req.body.name !== undefined ? req.body.name : chair.name;
       chair.order = req.body.name !== undefined ? req.body.order : chair.order;
+      chair.color = req.body.color !== undefined ? req.body.color : chair.color;
       chair.is_deleted =
         req.body.is_deleted !== undefined
           ? req.body.is_deleted
