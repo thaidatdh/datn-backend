@@ -30,12 +30,44 @@ exports.formatReadableDate = (date) => {
     "/" +
     (dateValue.getMonth() + 1).toString().padStart(2, "0") +
     "/" +
-    dateValue.getFullYear()
+    dateValue.getFullYear().toString().padStart(4, "0")
   );
 };
 exports.toNumber = (number) => {
   const numeric_string = number ? new String(number).replace(/\D/g, "") : null;
   return numeric_string ? parseInt(numeric_string) : 0;
+};
+exports.getDates = (date, time, duration) => {
+  const timeString = time.toString().padStart(4, "0");
+  const hour = parseInt(timeString.substring(0, 2));
+  const minute = parseInt(timeString.substring(2));
+  let startDate = new Date(date);
+  startDate.setHours(hour, minute);
+  const durationInt = parseInt(duration);
+  const endDate = new Date(startDate.getTime() + durationInt * 60 * 1000);
+  return {
+    start: startDate,
+    end: endDate,
+  };
+};
+
+const isOverLap3Start = (current, before, after) => {
+  const beforeDate = new Date(before);
+  const afterDate = new Date(after);
+  const currentDate = new Date(current);
+  return beforeDate <= currentDate && currentDate < afterDate;
+};
+const isOverLap3End = (current, before, after) => {
+  const beforeDate = new Date(before);
+  const afterDate = new Date(after);
+  const currentDate = new Date(current);
+  return beforeDate < currentDate && currentDate <= afterDate;
+};
+exports.isOverlap = (before1, after1, before2, after2) => {
+  return (
+    isOverLap3Start(before1, before2, after2) ||
+    isOverLap3End(after1, before2, after2)
+  );
 };
 exports.calculateAge = (birthday) => {
   if (birthday == null || birthday == undefined) {
@@ -53,4 +85,104 @@ exports.formatPhone = (phoneNumberString) => {
     return match[1] + "-" + match[2] + "-" + match[3];
   }
   return cleaned;
+};
+const getSurface = (exports.getSurface = (toothData) => {
+  let surfaceData = "";
+  if (toothData.mesial == true || toothData.mesial == "true") {
+    surfaceData = surfaceData + "M";
+  }
+  if (toothData.insial == true || toothData.insial == "true") {
+    surfaceData = surfaceData + "I";
+  }
+  if (toothData.occlusal == true || toothData.occlusal == "true") {
+    surfaceData = surfaceData + "O";
+  }
+  if (toothData.top == true || toothData.top == "true") {
+    surfaceData = surfaceData + "T";
+  }
+  if (toothData.distal == true || toothData.distal == "true") {
+    surfaceData = surfaceData + "D";
+  }
+  if (toothData.lingual == true || toothData.lingual == "true") {
+    surfaceData = surfaceData + "L";
+  }
+  if (toothData.buccal == true || toothData.buccal == "true") {
+    surfaceData = surfaceData + "B";
+  }
+  if (toothData.facial == true || toothData.facial == "true") {
+    surfaceData = surfaceData + "F";
+  }
+  if (toothData.root == true || toothData.root == "true") {
+    surfaceData = surfaceData + "R";
+  }
+  return surfaceData;
+});
+const isContinuousIntArray = (exports.isContinuousIntArray = (intArray) => {
+  for (let indexValue = 0; indexValue < intArray.length - 1; indexValue++) {
+    const nextInt = parseInt(intArray[indexValue + 1]);
+    const expectedNextInt = parseInt(intArray[indexValue]) + 1;
+    if (expectedNextInt != nextInt) {
+      return false;
+    }
+  }
+  return true;
+});
+const GetSurfaceString = (surfaceArray) => {
+  let map = [];
+  for (const data of surfaceArray) {
+    const dataSplit = data.split(/[\[\]]/g).filter((n) => n != "");
+    const dataMapIndex = map.findIndex((n) => n.key == dataSplit[1]);
+    if (dataMapIndex == -1) {
+      let dataArray = [];
+      dataArray.push(dataSplit[0]);
+      map.push({ key: dataSplit[1], value: dataArray });
+    } else {
+      let dataMap = Object.assign({}, map[dataMapIndex]);
+      let dataArray = dataMap.value.slice();
+      dataArray.push(dataSplit[0]);
+      dataMap.value = dataArray;
+      map[dataMapIndex] = dataMap;
+    }
+  }
+  let resultArray = [];
+  for (const data of map) {
+    const surface = data.key;
+    const tooth = data.value ? data.value.join(",") : "";
+    const surfaceString = (tooth != "" ? "[" + tooth + "]" : "") + surface;
+    resultArray.push(surfaceString);
+  }
+  return resultArray.join(";");
+};
+exports.getToothSurface = (rawRequestData) => {
+  if (rawRequestData == null) {
+    return {
+      tooth: null,
+      surface: null,
+    };
+  }
+  let tooth = "";
+  let surface = "";
+  const data = [...rawRequestData].sort((a, b) => {
+    return parseInt(a.toothNumber) - parseInt(b.toothNumber);
+  });
+  let toothArray = [];
+  let surfaceArray = [];
+  for (const toothData of data) {
+    if (toothData.isSelected == true || toothData.isSelected == "true") {
+      toothArray.push(toothData.toothNumber);
+      let surfaceData = getSurface(toothData);
+      if (surfaceData != "" && surfaceData != null) {
+        surfaceData = "[" + toothData.toothNumber + "]" + surfaceData;
+        surfaceArray.push(surfaceData);
+      }
+    }
+  }
+  tooth = isContinuousIntArray(toothArray)
+    ? toothArray[0] + "-" + toothArray[toothArray.length - 1]
+    : toothArray.join(",");
+  surface = GetSurfaceString(surfaceArray);
+  return {
+    tooth: tooth,
+    surface: surface,
+  };
 };

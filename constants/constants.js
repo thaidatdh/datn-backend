@@ -26,7 +26,7 @@ module.exports = {
   },
   USER: {
     DEFAULT_PASSWORD: "hello123",
-    USER_TYPE_STAFF: "ADMIN",
+    USER_TYPE_ADMIN: "ADMIN",
     USER_TYPE_STAFF: "STAFF",
     USER_TYPE_PROVIDER: "PROVIDER",
     USER_TYPE_PATIENT: "PATIENT",
@@ -89,6 +89,7 @@ module.exports = {
   },
   TREATMENT: {
     UPDATE_BALANCE_STATUS: ["EXISTING", "COMPLETED"],
+    STATUS_PLAN: "PLAN",
   },
   TOOTH: {
     DEFAULT_TOOTH_TYPE: "ADULT",
@@ -97,6 +98,18 @@ module.exports = {
     TOOTH_STATUS: [-1, 0, 1, 2, 3],
     DEFAULT_TOOTH_STATUS: -1,
   },
+  PROVIDER_SCHEDULE: {
+    MODE_MONTHLY: "MONTHLY",
+    MODE_WEEKLY: "WEEKLY",
+    MODE_AUTO: "AUTO",
+    MODE: ["MONTHLY", "WEEKLY", "AUTO"]
+  },
+  APPOINTMENT_REQUEST: {
+    MODE_NEW: "NEW",
+    MODE_ACCEPTED: "ACCEPTED",
+    MODE_REJECTED: "REJECTED",
+    MODES: ["NEW", "ACCEPTED", "REJECTED"]
+  }
 };
 module.exports.RANDOM_COLOR = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16);

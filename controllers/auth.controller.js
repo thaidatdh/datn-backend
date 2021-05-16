@@ -280,26 +280,26 @@ exports.change_password = async function (req, res) {
       message: "User ID from token not found",
     });
   }
-  const user = await UserModel.findById(user_id);
-  if (user == null) {
-    return res.status(403).send({
-      success: false,
-      message: "User not found",
-    });
-  }
-  if (password.length < 8 || old_password.length < 8) {
-    return res.status(422).send({
-      success: false,
-      value: password,
-      message: await translator.Translate(
-        "Password must be at least 8 chars long",
-        req.query.lang
-      ),
-      param: "password",
-      location: "body",
-    });
-  } else {
-    try {
+  try {
+    const user = await UserModel.findById(user_id);
+    if (user == null) {
+      return res.status(403).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+    if (password.length < 6 || old_password.length < 6) {
+      return res.status(422).send({
+        success: false,
+        value: password,
+        message: await translator.Translate(
+          "Password must be at least 6 chars long",
+          req.query.lang
+        ),
+        param: "password",
+        location: "body",
+      });
+    } else {
       const isMatch = await user.comparePassword(old_password);
       if (isMatch) {
         user.password = password;
@@ -329,18 +329,131 @@ exports.change_password = async function (req, res) {
             "Incorrect Old Password ",
             req.query.lang
           ),
-          param: "password",
+          param: "old_password",
           location: "body",
         });
       }
-    } catch (err) {
-      return res.status(500).send({
-        success: false,
-        message: await translator.Translate(
-          "Internal server error",
-          req.query.lang
-        ),
-      });
     }
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: await translator.Translate(
+        "Internal server error",
+        req.query.lang
+      ),
+    });
+  }
+};
+exports.updateProfile = async function (req, res) {
+  if (req.decoded == null) {
+    return res.status(403).send({
+      success: false,
+      message: "Decode data from token not found",
+    });
+  }
+  let is_patient = false;
+  let id = null;
+  const requestBody = Object.assign({}, req.body);
+  if (
+    req.decoded &&
+    req.decoded.user_type == constants.USER.USER_TYPE_PATIENT
+  ) {
+    is_patient = true;
+    id = req.decoded.patient_id;
+  } else {
+    is_patient = false;
+    id = req.decoded.staff_id;
+  }
+  if (id == null) {
+    return res.status(403).send({
+      success: false,
+      message: "ID from token not found",
+    });
+  }
+  try {
+    if (is_patient) {
+      const rs = await PatientModel.updatePatient(id, requestBody);
+      if (rs) {
+        return res.json({ success: true, payload: rs });
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: await translator.NotFoundMessage("Patient", req.query.lang),
+        });
+      }
+    } else {
+      const staff = await StaffModel.findById(id);
+      if (staff == null) {
+        return res.status(404).json({
+          success: false,
+          message: await translator.NotFoundMessage("Staff", req.query.lang),
+        });
+      }
+      const rs = await StaffModel.updateStaff(staff, requestBody);
+      return res.json({ success: true, payload: rs });
+    }
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: await translator.Translate(
+        "Internal server error",
+        req.query.lang
+      ),
+    });
+  }
+};
+exports.getProfile = async function (req, res) {
+  if (req.decoded == null) {
+    return res.status(403).send({
+      success: false,
+      message: "Decode data from token not found",
+    });
+  }
+  let is_patient = false;
+  let id = null;
+  if (
+    req.decoded &&
+    req.decoded.user_type == constants.USER.USER_TYPE_PATIENT
+  ) {
+    is_patient = true;
+    id = req.decoded.patient_id;
+  } else {
+    is_patient = false;
+    id = req.decoded.staff_id;
+  }
+  if (id == null) {
+    return res.status(403).send({
+      success: false,
+      message: "ID from token not found",
+    });
+  }
+  try {
+    if (is_patient) {
+      const rs = await PatientModel.get({ _id: id }, { one: true });
+      if (rs == null) {
+        return res.status(404).json({
+          success: false,
+          message: await translator.NotFoundMessage("Patient", req.query.lang),
+        });
+      }
+      return res.json({ success: true, payload: rs });
+    } else {
+      const staff = await StaffModel.get({ _id: id }, { one: true });
+      if (staff == null) {
+        return res.status(404).json({
+          success: false,
+          message: await translator.NotFoundMessage("Staff", req.query.lang),
+        });
+      }
+      return res.json({ success: true, payload: staff });
+    }
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: await translator.Translate(
+        "Internal server error",
+        req.query.lang
+      ),
+    });
   }
 };

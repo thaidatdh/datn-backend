@@ -2,12 +2,15 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const chairModel = require("../models/chair.model");
+const PracticeModel = require("../models/practice.model");
 const appointmentModel = require("../models/appointment.model");
 const treatmentModel = require("../models/treatment.model");
 const recallModel = require("../models/recall.model");
 const blockModel = require("../models/appointment.block.model");
+const ProviderScheduleModel = require("../models/provider.schedule.model");
 const translator = require("../utils/translator");
 const { RANDOM_COLOR } = require("../constants/constants");
+const { formatReadableDate } = require("../utils/utils");
 //Chair
 exports.chair_index = async function (req, res) {
   try {
@@ -96,6 +99,7 @@ exports.update_chair = async function (req, res) {
     if (chair) {
       chair.name = req.body.name !== undefined ? req.body.name : chair.name;
       chair.order = req.body.name !== undefined ? req.body.order : chair.order;
+      chair.color = req.body.color !== undefined ? req.body.color : chair.color;
       chair.is_deleted =
         req.body.is_deleted !== undefined
           ? req.body.is_deleted
@@ -154,6 +158,8 @@ exports.delete_chair = async function (req, res) {
 exports.appointments_index = async function (req, res) {
   try {
     const options = {
+      get_treatments: req.query.get_treatments == "true",
+      get_recalls: req.query.get_recalls == "true",
       limit: req.query.limit,
       page: req.query.page,
     };
@@ -196,6 +202,7 @@ exports.appointments_index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -219,24 +226,56 @@ exports.appointments_of_patient = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
     const options = {
+      get_treatments: req.query.get_treatments == "true",
+      get_recalls: req.query.get_recalls == "true",
       page: req.query.page,
       limit: req.query.limit,
     };
-    const appointments = await appointmentModel.get(
-      { patient: patient_id },
-      options
-    );
+    let query = { patient: patient_id };
+    if (req.query.date) {
+      const startDate = new Date(req.query.date);
+      query = Object.assign(query, {
+        appointment_date: { $gte: startDate },
+      });
+    }
+    if (req.query.from && req.query.to) {
+      const startDate = new Date(req.query.from);
+      const endDate = new Date(req.query.to);
+      query = Object.assign(query, {
+        appointment_date: { $gte: startDate, $lte: endDate },
+      });
+    }
+    const appointments = await appointmentModel.get(query, options);
+    let resultArray = [];
+    for (const appt of appointments) {
+      let appointmentObject = Object.assign({}, appt._doc);
+      appointmentObject.treatments = appt.treatments;
+      appointmentObject.recalls = appt.recalls;
+      if (
+        options.get_treatments == true &&
+        appt.treatments &&
+        appt.treatments.length > 0
+      ) {
+        appointmentObject.service_name = appt.treatments[0].description;
+      } else if (options.get_treatments == false) {
+        appointmentObject.service_name = await appointmentModel.getFirstTreatmentDescription(
+          appt._id
+        );
+      } else {
+        appointmentObject.service_name = null;
+      }
+      resultArray.push(appointmentObject);
+    }
     let result = {
       success: true,
-      payload: appointments,
+      payload: resultArray,
     };
     if (options.page && options.limit) {
-      const totalCount = await appointmentModel.countDocuments({
-        patient: patient_id,
-      });
+      const totalCount = await appointmentModel.countDocuments(query);
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -265,9 +304,25 @@ exports.appointment_info = async function (req, res) {
     };
     const appointment = await appointmentModel.getById(appointment_id, options);
     if (appointment) {
+      let appointmentObject = Object.assign({}, appointment._doc);
+      appointmentObject.treatments = appointment.treatments;
+      appointmentObject.recalls = appointment.recalls;
+      if (
+        options.get_treatments == true &&
+        appointment.treatments &&
+        appointment.treatments.length > 0
+      ) {
+        appointmentObject.service_name = appointment.treatments[0].description;
+      } else if (options.get_treatments == false) {
+        appointmentObject.service_name = await appointmentModel.getFirstTreatmentDescription(
+          appointment._id
+        );
+      } else {
+        appointmentObject.service_name = null;
+      }
       res.json({
         success: true,
-        payload: appointment,
+        payload: appointmentObject,
       });
     } else {
       res.status(404).json({
@@ -292,9 +347,84 @@ exports.appointment_info = async function (req, res) {
 };
 exports.add_appointment = async function (req, res) {
   try {
-    let apptInfo = req.body;
+    let apptInfo = Object.assign({}, req.body);
     if (apptInfo.provider == null) {
       apptInfo.provider = req.default_provider_id;
+    }
+    let missingRequiredParams = [];
+    if (apptInfo.patient == null) {
+      missingRequiredParams.push("patient");
+    }
+    if (apptInfo.provider == null) {
+      missingRequiredParams.push("provider");
+    }
+    if (apptInfo.appointment_date == null) {
+      missingRequiredParams.push("appointment_date");
+    }
+    if (apptInfo.appointment_time == null) {
+      missingRequiredParams.push("appointment_time");
+    }
+    if (apptInfo.duration == null) {
+      missingRequiredParams.push("duration");
+    }
+    if (apptInfo.chair == null) {
+      missingRequiredParams.push("chair");
+    }
+    if (missingRequiredParams.length > 0) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Missing Required Fields",
+          req.query.lang
+        ),
+        params: missingRequiredParams,
+      });
+    }
+    const isProviderAvailable = await ProviderScheduleModel.isProviderAvailable(
+      apptInfo.provider,
+      apptInfo.appointment_date
+    );
+    if (isProviderAvailable == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Provider is not working at " +
+            formatReadableDate(apptInfo.appointment_date),
+          req.query.lang
+        ),
+      });
+    }
+    const practiceCheckResult = await PracticeModel.checkTime(
+      apptInfo.appointment_date,
+      apptInfo.appointment_time,
+      apptInfo.duration
+    );
+    if (practiceCheckResult.success == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          practiceCheckResult.message,
+          req.query.lang
+        ),
+        param: "duration",
+      });
+    }
+    const availableCheckResult = await appointmentModel.checkAvailable(
+      apptInfo.provider,
+      apptInfo.chair,
+      apptInfo.appointment_date,
+      apptInfo.appointment_time,
+      apptInfo.duration
+    );
+    if (availableCheckResult.available == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          availableCheckResult.message,
+          req.query.lang
+        ),
+        param: availableCheckResult.param,
+      });
     }
     let rs = await appointmentModel.insert(apptInfo);
     let returnValue = await appointmentModel.getById(rs._id, {
@@ -317,15 +447,94 @@ exports.add_appointment = async function (req, res) {
 exports.update_appointment = async function (req, res) {
   try {
     let apptInfo = req.body;
+    const currentAppointment = await appointmentModel.findById(
+      req.params.appointment_id
+    );
+    if (currentAppointment == null) {
+      return res.status(404).json({
+        success: false,
+        message: await translator.NotFoundMessage(
+          "Appointment",
+          req.query.lang
+        ),
+      });
+    }
+    apptInfo.appointment_date = apptInfo.appointment_date
+      ? apptInfo.appointment_date
+      : currentAppointment.appointment_date;
+    apptInfo.appointment_time = apptInfo.appointment_time
+      ? apptInfo.appointment_time
+      : currentAppointment.appointment_time;
+    apptInfo.duration = apptInfo.duration
+      ? apptInfo.duration
+      : currentAppointment.duration;
+    apptInfo.chair = apptInfo.chair ? apptInfo.chair : currentAppointment.chair;
+    apptInfo.provider = apptInfo.provider
+      ? apptInfo.provider
+      : currentAppointment.provider;
+    const newDate = new Date(apptInfo.appointment_date);
+    const currentDate = new Date(currentAppointment.appointment_date);
+    if (
+      apptInfo.provider != currentAppointment.provider ||
+      newDate.getTime() != currentDate.getTime()
+    ) {
+      const isProviderAvailable = await ProviderScheduleModel.isProviderAvailable(
+        apptInfo.provider,
+        apptInfo.appointment_date
+      );
+      if (isProviderAvailable == false) {
+        return res.status(403).json({
+          success: false,
+          message: await translator.Translate(
+            "Provider is not working at " +
+              formatReadableDate(apptInfo.appointment_date),
+            req.query.lang
+          ),
+        });
+      }
+    }
+
+    const practiceCheckResult = await PracticeModel.checkTime(
+      apptInfo.appointment_date,
+      apptInfo.appointment_time,
+      apptInfo.duration
+    );
+    if (practiceCheckResult.success == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          practiceCheckResult.message,
+          req.query.lang
+        ),
+        param: "duration",
+      });
+    }
+    const availableCheckResult = await appointmentModel.checkAvailable(
+      apptInfo.provider,
+      apptInfo.chair,
+      apptInfo.appointment_date,
+      apptInfo.appointment_time,
+      apptInfo.duration,
+      currentAppointment._id
+    );
+    if (availableCheckResult.available == false) {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          availableCheckResult.message,
+          req.query.lang
+        ),
+        param: availableCheckResult.param,
+      });
+    }
+
     const rs = await appointmentModel.updateAppt(
       apptInfo,
       req.params.appointment_id
     );
     if (rs) {
       //link treatment and recall here
-      let returnValue = await appointmentModel.getById(rs._id, {
-
-      });
+      let returnValue = await appointmentModel.getById(rs._id, {});
       return res.json({ success: true, payload: returnValue });
     } else {
       return res.status(404).json({

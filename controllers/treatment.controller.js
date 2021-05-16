@@ -25,6 +25,7 @@ exports.index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -58,6 +59,18 @@ exports.patient_treatment = async function (req, res) {
     if (req.query.query_status) {
       query = Object.assign(query, { status: req.query.query_status });
     }
+    if (req.query.from && req.query.to) {
+      const startDate = new Date(req.query.from);
+      const endDate = new Date(req.query.to);
+      query = Object.assign(query, {
+        appointment_date: { $gte: startDate, $lte: endDate },
+      });
+    } else if (req.query.from && req.query.to == undefined) {
+      const startDate = new Date(req.query.from);
+      query = Object.assign(query, {
+        appointment_date: { $gte: startDate },
+      });
+    }
     if (req.query.query_date) {
       const startDate = new Date(req.query.query_date);
       const endDate = new Date(
@@ -68,7 +81,11 @@ exports.patient_treatment = async function (req, res) {
         treatment_date: DateRange,
       });
     }
-
+    if (req.query.link == "true") {
+      query = Object.assign(query, {
+        appointment: null,
+      });
+    }
     const treatments = await TreatmentModel.get(query, options);
     let result = {
       success: true,
@@ -81,6 +98,7 @@ exports.patient_treatment = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),

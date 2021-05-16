@@ -24,6 +24,7 @@ exports.index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -52,21 +53,31 @@ exports.patient_prescription = async function (req, res) {
       limit: req.query.limit,
       page: req.query.page,
     };
-
-    const prescriptions = await PrescriptionModel.get(
-      { patient: patient_id },
-      options
-    );
+    let query = { patient: patient_id };
+    if (req.query.from && req.query.to) {
+      const startDate = new Date(req.query.from);
+      const endDate = new Date(req.query.to);
+      query = Object.assign(query, {
+        prescription_date: { $gte: startDate, $lte: endDate },
+      });
+    } else if (req.query.from && req.query.to == undefined) {
+      const startDate = new Date(req.query.from);
+      query = Object.assign(query, {
+        prescription_date: { $gte: startDate },
+      });
+    }
+    const prescriptions = await PrescriptionModel.get(query, options);
     let resultList = prescriptions;
     let result = {
       success: true,
       payload: resultList,
     };
     if (options.page && options.limit) {
-      const totalCount = await PrescriptionModel.estimatedDocumentCount();
+      const totalCount = await PrescriptionModel.countDocuments(query);
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -122,7 +133,7 @@ exports.detail = async function (req, res) {
     const options = {
       get_details: req.query.get_details == "true",
       get_provider: req.query.get_provider == "true",
-      one: true
+      one: true,
     };
     const prescription = await PrescriptionModel.get(
       { _id: req.params.prescription_id },

@@ -20,6 +20,7 @@ exports.index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -56,6 +57,7 @@ exports.medical_alert_index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -95,6 +97,7 @@ exports.treatment_note_index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -134,6 +137,7 @@ exports.back_note_index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -227,10 +231,18 @@ exports.update = async function (req, res) {
 };
 exports.delete = async function (req, res) {
   try {
-    await NoteMacroModel.findByIdAndDelete(req.params.note_id);
-    res.json({
-      success: true,
-    });
+    let macro = await NoteMacroModel.findById(req.params.note_id);
+    if (macro) {
+      await NoteMacroModel.deleteOne({ _id: req.params.note_id });
+      res.json({
+        success: true,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: await translator.NotFoundMessage("Macro", req.query.lang),
+      });
+    }
   } catch (err) {
     res.status(500).json({
       success: false,

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { SEARCH, STAFF } = require("../constants/constants");
 const constants = require("../constants/constants");
 const StaffModel = require("../models/staff.model");
+const ProviderScheduleModel = require("../models/provider.schedule.model");
 const translator = require("../utils/translator");
 //For index
 exports.index = async function (req, res) {
@@ -23,6 +24,7 @@ exports.index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -46,13 +48,39 @@ exports.index_provider = async function (req, res) {
     const options = {
       get_access_group: req.query.get_access_group == "true",
       get_specialty: req.query.get_specialty == "true",
+      get_schedule: req.query.get_schedule == "true",
+      schedule_date: req.query.date,
       limit: req.query.limit,
       page: req.query.page,
     };
-    const providerList = await StaffModel.get(
-      { staff_type: constants.STAFF.STAFF_TYPE_PROVIDER },
-      options
-    );
+    let query = {
+      staff_type: constants.STAFF.STAFF_TYPE_PROVIDER,
+      is_active: true,
+    };
+    if (req.query.active == "true") {
+      query = Object.assign({}, query, { is_active: true });
+    }
+    if (options.schedule_date) {
+      const dateValue = new Date(options.schedule_date);
+      const ListSchedule = await ProviderScheduleModel.find({
+        $or: [
+          {
+            end_date: { $gte: dateValue },
+          },
+          {
+            end_date: null,
+          },
+        ],
+      });
+      let ListProviderId = [];
+      for (const schedule of ListSchedule) {
+        if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
+          ListProviderId.push(schedule.provider);
+        }
+      }
+      query = Object.assign(query, { _id: { $in: ListProviderId } });
+    }
+    const providerList = await StaffModel.get(query, options);
     let result = {
       success: true,
       payload: providerList,
@@ -64,6 +92,7 @@ exports.index_provider = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -105,6 +134,7 @@ exports.index_staff = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -230,6 +260,9 @@ exports.delete = async function (req, res) {
 };
 
 exports.autocomplete = async function (req, res) {
+  const options = {
+    schedule_date: req.query.date,
+  };
   const searchType =
     req.query.type && SEARCH.AUTO_COMPLETE_PATIENT_TYPE.includes(req.query.type)
       ? req.query.type
@@ -245,7 +278,7 @@ exports.autocomplete = async function (req, res) {
     $regex: "^" + searchData,
     $options: "i",
   };
-  const matchSearch =
+  let matchSearch =
     searchType == SEARCH.AUTO_COMPLETE_TYPE_NAME
       ? {
           $or: [{ name: regexSearch }, { last_name: regexSearch }],
@@ -257,6 +290,27 @@ exports.autocomplete = async function (req, res) {
           is_active: true,
           staff_type: staffType,
         };
+  if (options.schedule_date) {
+    const dateValue = new Date(options.schedule_date);
+    const ListSchedule = await ProviderScheduleModel.find({
+      start_date: { $lte: dateValue },
+      $or: [
+        {
+          end_date: { $gte: dateValue },
+        },
+        {
+          end_date: null,
+        },
+      ],
+    });
+    let ListProviderId = [];
+    for (const schedule of ListSchedule) {
+      if (ProviderScheduleModel.isAvailable(schedule, dateValue)) {
+        ListProviderId.push(schedule.provider);
+      }
+    }
+    matchSearch = Object.assign(matchSearch, { _id: { $in: ListProviderId } });
+  }
   try {
     const result = await StaffModel.aggregate([
       {

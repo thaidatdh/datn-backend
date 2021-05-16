@@ -14,7 +14,7 @@ exports.index = async function (req, res) {
       limit: req.query.limit,
       page: req.query.page,
     };
-    const recall = await RecallModel.get({}, options);
+    const recalls = await RecallModel.get({}, options);
     let result = {
       success: true,
       payload: recalls,
@@ -24,6 +24,7 @@ exports.index = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -77,6 +78,7 @@ exports.patient_recall = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),

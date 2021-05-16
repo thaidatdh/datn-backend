@@ -53,6 +53,7 @@ exports.patient_referral = async function (req, res) {
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
+        total: totalCount,
         page: page,
         limit: limit,
         total_page: Math.ceil(totalCount / limit),
@@ -99,7 +100,15 @@ exports.add = async function (req, res) {
 };
 exports.detail = async function (req, res) {
   try {
-    const referral = await referralModel.findById(req.params.referral_id);
+    const options = {
+      get_patient: req.query.get_patient == "true",
+      get_staff: req.query.get_staff == "true",
+      get_source: req.query.get_source == "true",
+      limit: req.query.limit,
+      page: req.query.page,
+      one: true,
+    };
+    const referral = await referralModel.get({ _id: req.params.referral_id }, options);
     if (referral) {
       res.json({
         success: true,

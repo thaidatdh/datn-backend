@@ -5,6 +5,8 @@ const Staff = require("./staff.model");
 const Chair = require("./chair.model");
 const RecallModel = require("./recall.model");
 const TreatmentModel = require("./treatment.model");
+const AppointmentRequestModel = require("./appointment.request.model");
+const { getDates, isOverlap } = require("../utils/utils");
 const AppointmentSchema = mongoose.Schema(
   {
     patient: {
@@ -60,7 +62,7 @@ const AppointmentModel = (module.exports = mongoose.model(
 ));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = AppointmentModel.find(query);
+  const promise = AppointmentModel.find(query).sort({ appointment_date: -1 });
   promise.populate({
     path: "patient",
     populate: {
@@ -195,7 +197,22 @@ module.exports.getById = async function (id, populateOptions) {
   const resultQuery = await promise.exec();
   return resultQuery;
 };
-
+const getFirstTreatmentDescriptionFunc = (module.exports.getFirstTreatmentDescription = async function (
+  appointment_id
+) {
+  try {
+    const treatment = await TreatmentModel.findOne({
+      appointment: appointment_id,
+    });
+    if (treatment) {
+      return treatment.description;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+});
 module.exports.insert = async function (apptInfo) {
   let appointment = new AppointmentModel();
   appointment.patient = apptInfo.patient ? apptInfo.patient : null;
@@ -222,6 +239,14 @@ module.exports.insert = async function (apptInfo) {
       await TreatmentModel.linkAppt(treatment_id, rs._id);
     }
   }
+  if (apptInfo.request_id) {
+    try {
+      await AppointmentRequestModel.updateMany(
+        { _id: apptInfo.request_id },
+        { status: constants.APPOINTMENT_REQUEST.MODE_ACCEPTED }
+      );
+    } catch (e) {}
+  }
   return rs;
 };
 module.exports.updateAppt = async function (apptInfo, appointment_id) {
@@ -229,25 +254,27 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
   if (appointment == null) {
     return null;
   }
-  appointment.patient =
-    apptInfo.patient? apptInfo.patient : appointment.patient;
-  appointment.provider =
-    apptInfo.provider? apptInfo.provider : appointment.provider;
-  appointment.assistant =
-    apptInfo.assistant? apptInfo.assistant : appointment.assistant;
-  appointment.chair =
-    apptInfo.chair? apptInfo.chair : appointment.chair;
+  appointment.patient = apptInfo.patient
+    ? apptInfo.patient
+    : appointment.patient;
+  appointment.provider = apptInfo.provider
+    ? apptInfo.provider
+    : appointment.provider;
+  appointment.assistant = apptInfo.assistant
+    ? apptInfo.assistant
+    : appointment.assistant;
+  appointment.chair = apptInfo.chair ? apptInfo.chair : appointment.chair;
   appointment.appointment_date = apptInfo.appointment_date
-    ? Date.parse(apptInfo.appointment_date)
+    ? new Date(apptInfo.appointment_date)
     : appointment.appointment_date;
-  appointment.appointment_time =
-    apptInfo.appointment_time? apptInfo.appointment_time : appointment.appointment_time;
-  appointment.duration =
-    apptInfo.duration? apptInfo.duration : appointment.duration;
-  appointment.note =
-    apptInfo.note? apptInfo.note : appointment.note;
-  appointment.status =
-    apptInfo.status? apptInfo.status : appointment.status;
+  appointment.appointment_time = apptInfo.appointment_time
+    ? apptInfo.appointment_time
+    : appointment.appointment_time;
+  appointment.duration = apptInfo.duration
+    ? apptInfo.duration
+    : appointment.duration;
+  appointment.note = apptInfo.note ? apptInfo.note : appointment.note;
+  appointment.status = apptInfo.status ? apptInfo.status : appointment.status;
   const rs = await appointment.save();
   if (apptInfo.recall_link) {
     for (const recallId of apptInfo.recall_link) {
@@ -270,4 +297,64 @@ module.exports.updateAppt = async function (apptInfo, appointment_id) {
     }
   }
   return rs;
+};
+
+module.exports.checkAvailable = async function (
+  provider,
+  chair,
+  date,
+  time,
+  duration,
+  appointID
+) {
+  try {
+    if (process.env.DATABASE_DEBUG_SKIP_VALIDATE == "true") {
+      return true;
+    }
+    const startDate = new Date(date);
+    const endDate = new Date(
+      new Date(startDate).setDate(startDate.getDate() + 1)
+    );
+    const query = {
+      appointment_date: { $gte: startDate, $lt: endDate },
+    };
+    const todayAppointmentList = await AppointmentModel.find(query);
+    const dateNewAppt = getDates(date, time, duration);
+    for (const appt of todayAppointmentList) {
+      if (appointID && appt._id.toString() === appointID.toString()) {
+        continue;
+      }
+      const dateAppt = getDates(
+        appt.appointment_date,
+        appt.appointment_time,
+        appt.duration
+      );
+      const isOverlapValue = isOverlap(
+        dateNewAppt.start,
+        dateNewAppt.end,
+        dateAppt.start,
+        dateAppt.end
+      );
+      if (isOverlapValue == true && provider == appt.provider) {
+        return {
+          available: false,
+          message: "Provider already has appointment at the time",
+          param: "provider",
+        };
+      } else if (isOverlapValue == true && chair == appt.chair) {
+        return {
+          available: false,
+          message: "Chair already has appointment at the time",
+          param: "chair",
+        };
+      }
+    }
+    return { available: true, message: "Available" };
+  } catch (e) {
+    return {
+      available: false,
+      message: "Exception checking appointment available",
+      param: null,
+    };
+  }
 };

@@ -38,7 +38,7 @@ const ReferralModel = (module.exports = mongoose.model(
 ));
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = ReferralModel.find(query);
+  const promise = populateOptions.one ? ReferralModel.findOne(query) : ReferralModel.find(query);
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(
@@ -61,10 +61,21 @@ module.exports.get = async function (query, populateOptions) {
         },
       },
     });
+    promise.populate({
+      path: "ref_patient",
+      populate: {
+        path: "user",
+        select: {
+          _id: 1,
+          first_name: 1,
+          last_name: 1,
+        },
+      },
+    });
   }
   if (populateOptions.get_staff) {
     promise.populate({
-      path: "staff",
+      path: "ref_staff",
       select: {
         staff_type: 1,
         display_id: 1,
