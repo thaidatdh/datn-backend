@@ -63,12 +63,12 @@ exports.patient_treatment = async function (req, res) {
       const startDate = new Date(req.query.from);
       const endDate = new Date(req.query.to);
       query = Object.assign(query, {
-        appointment_date: { $gte: startDate, $lte: endDate },
+        treatment_date: { $gte: startDate, $lte: endDate },
       });
     } else if (req.query.from && req.query.to == undefined) {
       const startDate = new Date(req.query.from);
       query = Object.assign(query, {
-        appointment_date: { $gte: startDate },
+        treatment_date: { $gte: startDate },
       });
     }
     if (req.query.query_date) {
