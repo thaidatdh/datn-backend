@@ -16,7 +16,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: "http://0.0.0.0",
+      url: "https://a-dental-clinic-hcmus.herokuapp.com/",
       description: "Development server",
     },
   ],

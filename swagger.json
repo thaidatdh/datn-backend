@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "ADC RESTful API."
   },
-  "servers": [{ "url": "0.0.0.0/api" }],
+  "servers": [{ "url": "https://a-dental-clinic-hcmus.herokuapp.com/api" }],
   "security": [
     {
       "bearerAuth": []

@@ -13,7 +13,6 @@ global.atob = require("atob");
 const app = express();
 app.use(cors());
 
-
 //verify authentication middleware
 app.use(authMiddleware.verifyUser);
 // Configuring the database
@@ -35,7 +34,7 @@ mongoose
     process.exit();
   });
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json({ limit: "100mb" }));
@@ -55,5 +54,6 @@ app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 // listen for requests
 const SERVER_PORT = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
 app.listen(SERVER_PORT, () => {
+  if (err) throw err;
   console.log("Server is listening on port " + SERVER_PORT);
 });
