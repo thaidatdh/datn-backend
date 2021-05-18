@@ -175,7 +175,7 @@ module.exports.insert = async function (req) {
     ? req.selected_tooth_raw
     : null;
   if (req.selected_tooth_raw) {
-    const toothSurface = getToothSurface(req.RawData);
+    const toothSurface = getToothSurface(req.selected_tooth_raw);
     treatment.tooth = toothSurface.tooth;
     treatment.surface = toothSurface.surface;
   }
