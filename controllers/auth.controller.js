@@ -182,7 +182,6 @@ exports.signin_patient = async function (req, res) {
               }
             );
             const token = jwt.sign(returnUser, process.env.TOKEN_SECRET);
-
             // return the information including token as JSON
             return res.json({
               success: true,
