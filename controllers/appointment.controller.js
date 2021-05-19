@@ -14,7 +14,11 @@ const { formatReadableDate } = require("../utils/utils");
 //Chair
 exports.chair_index = async function (req, res) {
   try {
-    const chairs = await chairModel.find().sort("order").exec();
+    let query = {};
+    if (req.query.active == "true") {
+      query = Object.assign({}, query, { is_deleted: false });
+    }
+    const chairs = await chairModel.find(query).sort("order").exec();
     res.json({
       success: true,
       payload: chairs,
