@@ -39,8 +39,15 @@ exports.verifyUser = async (request, response, next) => {
         request.query.lang
       ),
     });
-  token = token.replace("Bearer ", "");
-
+  token = token.replace("Bearer", "").trim();
+  if (!token)
+    return response.status(403).send({
+      success: false,
+      message: await translator.Translate(
+        "No token provided. Access denied",
+        request.query.lang
+      ),
+    });
   try {
     const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
     request.decoded = decoded;
@@ -80,7 +87,7 @@ exports.verifyUser = async (request, response, next) => {
     return response.status(401).send({
       success: false,
       message: await translator.Translate(
-        "Unauthorized access. Access denied",
+        "Unauthorized access. Error when checking token. Access denied",
         request.query.lang
       ),
     });

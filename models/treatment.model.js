@@ -171,9 +171,11 @@ module.exports.insert = async function (req) {
     ? req.description
     : Procedure.description;
   treatment.mark_type = req.mark_type ? req.mark_type : Procedure.mark_type;
-  treatment.selected_tooth_raw = req.RawData ? req.RawData : null;
-  if (req.RawData) {
-    const toothSurface = getToothSurface(req.RawData);
+  treatment.selected_tooth_raw = req.selected_tooth_raw
+    ? req.selected_tooth_raw
+    : null;
+  if (req.selected_tooth_raw) {
+    const toothSurface = getToothSurface(req.selected_tooth_raw);
     treatment.tooth = toothSurface.tooth;
     treatment.surface = toothSurface.surface;
   }
