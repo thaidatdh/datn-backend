@@ -35,7 +35,7 @@ const ProgressNoteModel = (module.exports = mongoose.model(
 
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = ProgressNoteModel.find(query);
+  const promise = ProgressNoteModel.find(query).sort({ note_date: -1 });
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(
