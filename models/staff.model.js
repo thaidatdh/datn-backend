@@ -155,7 +155,7 @@ module.exports.updateStaff = async function (staff, staffInfo) {
 };
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = StaffModel.find(query).sort("start_date");
+  const promise = StaffModel.find(query).sort({ is_active: -1 });
   promise.populate({
     path: "user",
     select: {
