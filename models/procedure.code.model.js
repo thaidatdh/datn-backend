@@ -84,7 +84,7 @@ module.exports.insert = async function (procedureCodeInfo) {
   proc.is_show = procedureCodeInfo.is_show ? procedureCodeInfo.is_show : false;
   proc.tooth_select = procedureCodeInfo.tooth_select
     ? procedureCodeInfo.tooth_select
-    : null;
+    : "N";
   proc.surface_number = procedureCodeInfo.surface_number
     ? procedureCodeInfo.surface_number
     : null;
