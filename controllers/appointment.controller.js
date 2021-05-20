@@ -14,10 +14,11 @@ const { formatReadableDate } = require("../utils/utils");
 //Chair
 exports.chair_index = async function (req, res) {
   try {
-    const chairs = await chairModel
-      .find({ is_deleted: false })
-      .sort("order")
-      .exec();
+    let query = {};
+    if (req.query.active == "true") {
+      query = Object.assign({}, query, { is_deleted: false });
+    }
+    const chairs = await chairModel.find(query).sort("order").exec();
     res.json({
       success: true,
       payload: chairs,
@@ -263,9 +264,8 @@ exports.appointments_of_patient = async function (req, res) {
       ) {
         appointmentObject.service_name = appt.treatments[0].description;
       } else if (options.get_treatments == false) {
-        appointmentObject.service_name = await appointmentModel.getFirstTreatmentDescription(
-          appt._id
-        );
+        appointmentObject.service_name =
+          await appointmentModel.getFirstTreatmentDescription(appt._id);
       } else {
         appointmentObject.service_name = null;
       }
@@ -319,9 +319,8 @@ exports.appointment_info = async function (req, res) {
       ) {
         appointmentObject.service_name = appointment.treatments[0].description;
       } else if (options.get_treatments == false) {
-        appointmentObject.service_name = await appointmentModel.getFirstTreatmentDescription(
-          appointment._id
-        );
+        appointmentObject.service_name =
+          await appointmentModel.getFirstTreatmentDescription(appointment._id);
       } else {
         appointmentObject.service_name = null;
       }
@@ -483,10 +482,11 @@ exports.update_appointment = async function (req, res) {
       apptInfo.provider != currentAppointment.provider ||
       newDate.getTime() != currentDate.getTime()
     ) {
-      const isProviderAvailable = await ProviderScheduleModel.isProviderAvailable(
-        apptInfo.provider,
-        apptInfo.appointment_date
-      );
+      const isProviderAvailable =
+        await ProviderScheduleModel.isProviderAvailable(
+          apptInfo.provider,
+          apptInfo.appointment_date
+        );
       if (isProviderAvailable == false) {
         return res.status(403).json({
           success: false,

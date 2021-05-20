@@ -97,6 +97,9 @@ exports.add = async function (req, res) {
     if (req.body.provider == null) {
       req.body.provider = req.default_provider_id;
     }
+    if (req.body.provider == null) {
+      req.body.provider = req.default_staff_id;
+    }
     const rs = await ProgressNoteModel.insert(req.body);
     return res.json({ success: true, payload: rs });
   } catch (err) {

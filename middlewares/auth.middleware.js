@@ -54,6 +54,7 @@ exports.verifyUser = async (request, response, next) => {
     if (decoded.user_type === constants.USER.USER_TYPE_PROVIDER) {
       request.default_provider_id = decoded.staff_id;
     }
+    request.default_staff_id = decoded.staff_id;
     if (decoded.is_active == false) {
       return response.status(403).send({
         success: false,

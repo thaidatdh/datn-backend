@@ -55,7 +55,6 @@ exports.index_provider = async function (req, res) {
     };
     let query = {
       staff_type: constants.STAFF.STAFF_TYPE_PROVIDER,
-      is_active: true,
     };
     if (req.query.active == "true") {
       query = Object.assign({}, query, { is_active: true });
