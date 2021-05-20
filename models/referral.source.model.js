@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
-
+const { formatPhone } = require("../utils/utils");
 const ReferralSourceSchema = mongoose.Schema(
   {
     name: String,
@@ -27,8 +27,8 @@ module.exports.insert = async function (sourceInfo) {
   let source = new ReferralSourceModel();
   source.name = sourceInfo.name ? sourceInfo.name : null;
   source.address = sourceInfo.address ? sourceInfo.address : null;
-  source.phone = sourceInfo.phone ? sourceInfo.phone : null;
-  source.fax = sourceInfo.fax ? sourceInfo.fax : null;
+  source.phone = sourceInfo.phone ? formatPhone(sourceInfo.phone) : null;
+  source.fax = sourceInfo.fax ? formatPhone(sourceInfo.fax) : null;
   source.email = sourceInfo.email ? sourceInfo.email : null;
   source.additional_info = sourceInfo.additional_info
     ? sourceInfo.additional_info
@@ -40,8 +40,8 @@ module.exports.updateSource = async function (source, sourceInfo) {
   source.address =
     sourceInfo.address !== undefined ? sourceInfo.address : source.address;
   source.phone =
-    sourceInfo.phone != undefined ? sourceInfo.phone : source.phone;
-  source.fax = sourceInfo.fax !== undefined ? sourceInfo.fax : source.fax;
+    sourceInfo.phone != undefined ? formatPhone(sourceInfo.phone) : source.phone;
+  source.fax = sourceInfo.fax !== undefined ? formatPhone(sourceInfo.fax) : source.fax;
   source.email =
     sourceInfo.email !== undefined ? sourceInfo.email : source.email;
   source.additional_info =
