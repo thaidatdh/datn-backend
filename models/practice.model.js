@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const Staff = require("./staff.model");
-const { getDates, isOverlap } = require("../utils/utils");
+const { getDates, isOverlap, formatPhone } = require("../utils/utils");
 const PracticeSchema = mongoose.Schema(
   {
     name: String,
@@ -38,9 +38,9 @@ const UpdatePractice = (module.exports.updatePractice = async function (
       ? practiceInfo.address
       : practice.address;
   practice.phone =
-    practiceInfo.phone !== undefined ? practiceInfo.phone : practice.phone;
+    practiceInfo.phone !== undefined ? formatPhone(practiceInfo.phone) : practice.phone;
   practice.fax =
-    practiceInfo.fax !== undefined ? practiceInfo.fax : practice.fax;
+    practiceInfo.fax !== undefined ? formatPhone(practiceInfo.fax) : practice.fax;
   practice.default_provider =
     practiceInfo.default_provider !== undefined
       ? practiceInfo.default_provider
@@ -61,8 +61,8 @@ module.exports.insert = async function (practiceInfo) {
     let practice = new PracticeModel();
     practice.name = practiceInfo.name ? practiceInfo.name : null;
     practice.address = practiceInfo.address ? practiceInfo.address : null;
-    practice.phone = practiceInfo.phone ? practiceInfo.phone : null;
-    practice.fax = practiceInfo.fax ? practiceInfo.fax : null;
+    practice.phone = practiceInfo.phone ? formatPhone(practiceInfo.phone) : null;
+    practice.fax = practiceInfo.fax ? formatPhone(practiceInfo.fax) : null;
     practice.default_provider = practiceInfo.default_provider
       ? practiceInfo.default_provider
       : null;
