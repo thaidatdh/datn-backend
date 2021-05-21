@@ -292,9 +292,26 @@ exports.test = async function (req, res) {
 };
 exports.report_treatment_history = async function (req, res) {
   try {
-    let Query = {
-      patient: mongoose.Types.ObjectId(req.params.patient_id),
-    };
+    let Query = {};
+    let mode = "";
+    if (req.query.patient_id) {
+      Query = {
+        patient: mongoose.Types.ObjectId(req.query.patient_id),
+      };
+      mode = "Patient";
+    }
+    if (req.query.provider_id) {
+      Query = {
+        provider: mongoose.Types.ObjectId(req.query.provider_id),
+      };
+      mode = "Dentist";
+    }
+    if (req.query.assistant_id) {
+      Query = {
+        assistant: mongoose.Types.ObjectId(req.query.assistant_id),
+      };
+      mode = "Assistant";
+    }
     const lang = req.query.lang;
     const createDate = formatReadableDate(new Date());
     let startDateString = null;
@@ -328,17 +345,36 @@ exports.report_treatment_history = async function (req, res) {
         ),
       });
     }
-    const Patient = await PatientModel.get(
-      { _id: req.params.patient_id },
-      { one: true }
-    );
-    if (Patient == null || Patient.length == 0) {
-      return res.status(404).json({
-        success: false,
-        message: await translator.NotFoundMessage("Patient", req.query.lang),
-      });
+    let patientInfo = null;
+
+    if (req.query.patient_id) {
+      const Patient = await PatientModel.get(
+        { _id: req.query.patient_id },
+        { one: true }
+      );
+      if (Patient != null) {
+        const User = await Patient.user;
+        patientInfo = {
+          name: User.first_name + " " + User.last_name,
+          dob: Patient.dob ? formatReadableDate(Patient.dob) : null,
+          id: Patient.patient_id,
+        };
+      }
     }
-    const User = await Patient.user;
+    if (req.query.provider_id || req.query.assistant_id) {
+      const staff_id = req.query.provider_id
+        ? req.query.provider_id
+        : req.query.assistant_id;
+      const Staff = await StaffModel.get({ _id: staff_id }, { one: true });
+      if (Staff != null) {
+        const User = await Staff.user;
+        patientInfo = {
+          name: User.first_name + " " + User.last_name,
+          dob: null,
+          id: Staff.display_id,
+        };
+      }
+    }
     let treatment_selected_fields = {
       provider_name: 1,
       status: { $substr: ["$status", 0, 1] },
@@ -401,6 +437,11 @@ exports.report_treatment_history = async function (req, res) {
         $project: treatment_selected_fields,
       },
     ]);
+    let treatmentList = [];
+    for (const treatment of TreatmentData) {
+      const treatmentValue = Object.assign({}, treatment, {fee: parseFloat(treatment.fee)});
+      treatmentList.push(treatmentValue);
+    }
     const Practice = await PracticeModel.findOne();
 
     const content = await readFileAsync(
@@ -409,13 +450,10 @@ exports.report_treatment_history = async function (req, res) {
     const css = await readFileAsync("./report_template/provider-report.css");
     const data = {
       css: css,
+      mode: mode,
       startDate: startDateString,
       endDate: endDateStr,
-      patient: {
-        name: User.first_name + " " + User.last_name,
-        dob: Patient.dob ? formatReadableDate(Patient.dob) : null,
-        id: Patient.patient_id,
-      },
+      patient: patientInfo == null ? undefined : patientInfo,
       total: TreatmentData.length,
       now: createDate,
       practice: {
@@ -423,9 +461,8 @@ exports.report_treatment_history = async function (req, res) {
         address: Practice.address,
         phone: Practice.phone,
       },
-      items: TreatmentData,
+      items: treatmentList,
     };
-
     const ReportFile = await jsreport.render({
       template: {
         content: content.toString(),
@@ -434,7 +471,7 @@ exports.report_treatment_history = async function (req, res) {
       },
       data: data,
     });
-    //res.contentType("application/pdf").send(ReportFile.content);
+    //return res.contentType("application/pdf").send(ReportFile.content);
     const payload = Buffer.from(ReportFile.content).toString("base64");
     res.json({
       success: true,
@@ -454,10 +491,24 @@ exports.report_treatment_history = async function (req, res) {
 exports.report_appointment = async function (req, res) {
   try {
     let Query = {};
+    let mode = "";
     if (req.query.patient_id) {
       Query = {
         patient: mongoose.Types.ObjectId(req.query.patient_id),
       };
+      mode = "Patient";
+    }
+    if (req.query.provider_id) {
+      Query = {
+        provider: mongoose.Types.ObjectId(req.query.provider_id),
+      };
+      mode = "Dentist";
+    }
+    if (req.query.assistant_id) {
+      Query = {
+        assistant: mongoose.Types.ObjectId(req.query.assistant_id),
+      };
+      mode = "Assistant";
     }
     const lang = req.query.lang;
     const createDate = formatReadableDate(new Date());
@@ -483,8 +534,7 @@ exports.report_appointment = async function (req, res) {
       endDateStr = formatReadableDate(new Date(req.query.endDate));
       const DateRange = { $gte: startDate, $lt: endDate };
       Query = Object.assign(Query, { appointment_date: DateRange });
-    }
-    else {
+    } else {
       return res.status(403).json({
         success: false,
         message: await translator.Translate(
@@ -493,18 +543,36 @@ exports.report_appointment = async function (req, res) {
         ),
       });
     }
-    const Patient = await PatientModel.get(
-      { _id: req.query.patient_id },
-      { one: true }
-    );
+
     let patientInfo = null;
-    if (Patient != null) {
-      const User = await Patient.user;
-      patientInfo = {
-        name: User.first_name + " " + User.last_name,
-        dob: Patient.dob ? formatReadableDate(Patient.dob) : null,
-        id: Patient.patient_id,
-      };
+
+    if (req.query.patient_id) {
+      const Patient = await PatientModel.get(
+        { _id: req.query.patient_id },
+        { one: true }
+      );
+      if (Patient != null) {
+        const User = await Patient.user;
+        patientInfo = {
+          name: User.first_name + " " + User.last_name,
+          dob: Patient.dob ? formatReadableDate(Patient.dob) : null,
+          id: Patient.patient_id,
+        };
+      }
+    }
+    if (req.query.provider_id || req.query.assistant_id) {
+      const staff_id = req.query.provider_id
+        ? req.query.provider_id
+        : req.query.assistant_id;
+      const Staff = await StaffModel.get({ _id: staff_id }, { one: true });
+      if (Staff != null) {
+        const User = await Staff.user;
+        patientInfo = {
+          name: User.first_name + " " + User.last_name,
+          dob: null,
+          id: Staff.display_id,
+        };
+      }
     }
     let appointment_selected_fields = {
       provider_name: 1,
@@ -649,6 +717,7 @@ exports.report_appointment = async function (req, res) {
     }
     const data = {
       css: css,
+      mode: mode,
       statistic: TotalData,
       startDate: startDateString,
       endDate: endDateStr,
@@ -670,8 +739,8 @@ exports.report_appointment = async function (req, res) {
       },
       data: data,
     });
-    //res.contentType("application/pdf").send(ReportFile.content);
-    const payload = Buffer.from(ReportFile.content).toString('base64');
+    //return res.contentType("application/pdf").send(ReportFile.content);
+    const payload = Buffer.from(ReportFile.content).toString("base64");
     res.json({
       success: true,
       payload: payload,
