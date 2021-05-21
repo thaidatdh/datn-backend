@@ -103,9 +103,7 @@ exports.patient_treatment = async function (req, res) {
       payload: treatments,
     };
     if (options.page && options.limit) {
-      const totalCount = await TreatmentModel.countDocuments({
-        patient: patient_id,
-      });
+      const totalCount = await TreatmentModel.countDocuments(query);
       const limit = Number.parseInt(options.limit);
       const page = Number.parseInt(options.page);
       result = Object.assign(result, {
