@@ -54,7 +54,9 @@ incoming API request.
   <div style="text-align: left; margin-left: 20px; margin-bottom: 10px;">
     <h3 style="margin-bottom: 5px; color:deepskyblue">{{patient.name}}</h3>
     <h4 style="margin-top: 5px; margin-bottom: 5px;">ID: {{patient.id}}</h4>
+    {{#if patient.dob}}
     <h4 style="margin-top: 5px;">DOB: {{patient.dob}}</h4>
+    {{/if}}
   </div>
   {{/if}}
   <div class="invoice-box">

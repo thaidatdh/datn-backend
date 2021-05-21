@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const chairModel = require("../models/chair.model");
 const AppointmentModel = require("../models/appointment.model");
+const ReferralModel = require("../models/referral.model");
 const AppointmentRequestModel = require("../models/appointment.request.model");
 const TreatmentModel = require("../models/treatment.model");
 const procedureCodeModel = require("../models/procedure.code.model");
@@ -439,7 +440,9 @@ exports.report_treatment_history = async function (req, res) {
     ]);
     let treatmentList = [];
     for (const treatment of TreatmentData) {
-      const treatmentValue = Object.assign({}, treatment, {fee: parseFloat(treatment.fee)});
+      const treatmentValue = Object.assign({}, treatment, {
+        fee: parseFloat(treatment.fee),
+      });
       treatmentList.push(treatmentValue);
     }
     const Practice = await PracticeModel.findOne();
@@ -730,6 +733,176 @@ exports.report_appointment = async function (req, res) {
         phone: Practice.phone,
       },
       items: AppointmentData,
+    };
+    const ReportFile = await jsreport.render({
+      template: {
+        content: content.toString(),
+        engine: "handlebars",
+        recipe: "chrome-pdf",
+      },
+      data: data,
+    });
+    //return res.contentType("application/pdf").send(ReportFile.content);
+    const payload = Buffer.from(ReportFile.content).toString("base64");
+    res.json({
+      success: true,
+      payload: payload,
+    });
+  } catch (e) {
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Statistic Report",
+        req.query.lang
+      ),
+    });
+  }
+};
+exports.report_referral = async function (req, res) {
+  try {
+    let Query = {};
+    let mode = "";
+    if (req.params.mode == "PATIENT") {
+      Query = {
+        ref_patient: { $ne: null },
+      };
+      mode = "Patient";
+    }
+    if (req.params.mode == "STAFF") {
+      Query = {
+        ref_staff: mongoose.Types.ObjectId(req.query.id),
+      };
+      mode = "Staff";
+    }
+    if (req.params.mode == "SOURCE") {
+      Query = {
+        referral_source: mongoose.Types.ObjectId(req.query.id),
+      };
+      mode = "Referrer";
+    }
+    const lang = req.query.lang;
+    const createDate = formatReadableDate(new Date());
+    let startDateString = null;
+    let endDateStr = null;
+    if (req.query.startDate && req.query.endDate) {
+      const startDate = new Date(req.query.startDate);
+      const endDate = new Date(
+        new Date(req.query.endDate).setDate(
+          new Date(req.query.endDate).getDate() + 1
+        )
+      );
+      if (startDate >= endDate) {
+        return res.status(400).json({
+          success: false,
+          message: await translator.Translate(
+            "Statistic Report require start date <= end date",
+            req.query.lang
+          ),
+        });
+      }
+      startDateString = formatReadableDate(startDate);
+      endDateStr = formatReadableDate(new Date(req.query.endDate));
+      const DateRange = { $gte: startDate, $lt: endDate };
+      Query = Object.assign(Query, { referral_date: DateRange });
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: await translator.Translate(
+          "Statistic Report require start date and end date",
+          req.query.lang
+        ),
+      });
+    }
+
+    let patientInfo = null;
+
+    if (req.params.mode == "STAFF" && req.query.id) {
+      const staff_id = req.query.id;
+      const Staff = await StaffModel.get({ _id: staff_id }, { one: true });
+      if (Staff != null) {
+        const User = await Staff.user;
+        patientInfo = {
+          name: User.first_name + " " + User.last_name,
+          dob: null,
+          id: Staff.display_id,
+        };
+      }
+    }
+    const ReferralData = await ReferralModel.get(Query, {
+      get_patient: true,
+      get_staff: true,
+      get_source: true,
+    });
+    let dataList = [];
+    let referralTo = 0;
+    let referralBy = 0;
+    for (const referral of ReferralData) {
+      let ref_name = "";
+      if (referral.ref_patient) {
+        ref_name = (
+          referral.ref_patient.user.first_name +
+          " " +
+          referral.ref_patient.user.last_name
+        ).trim();
+      } else if (referral.ref_staff) {
+        ref_name = (
+          referral.ref_staff.user.first_name +
+          " " +
+          referral.ref_staff.user.last_name
+        ).trim();
+      }
+      else if (referral.ref_source) {
+        ref_name = referral.ref_source.name;
+      }
+      const dataValue = {
+        patient_id: referral.patient.patient_id,
+        patient_name: (
+          referral.patient.user.first_name +
+          " " +
+          referral.patient.user.last_name
+        ).trim(),
+        ref_name: ref_name,
+        referral_type: referral.referral_type == "TO" ? "To" : "By",
+        referral_date: formatReadableDate(referral.referral_date),
+      };
+      dataList.push(dataValue);
+      if (referral.referral_type == "TO") {
+        referralTo = referralTo + 1;
+      }
+      else {
+        referralBy = referralBy + 1;
+      }
+    }
+    dataList.sort((a,b) => {
+      const aType = a.referral_type == "TO" ? 1 : 0;
+      const bType = b.referral_type == "TO" ? 1 : 0;
+      return aType - bType;
+    });
+    const Practice = await PracticeModel.findOne();
+    const content = await readFileAsync("./report_template/referral.hbs");
+    const css = await readFileAsync("./report_template/provider-report.css");
+    let TotalData = {
+      referralTo: req.params.mode == "SOURCE" ? referralTo : null,
+      referralBy: referralBy,
+    };
+    const data = {
+      css: css,
+      mode: mode,
+      is_by_patient: req.params.mode == "PATIENT",
+      is_by_source: req.params.mode == "SOURCE",
+      statistic: TotalData,
+      startDate: startDateString,
+      endDate: endDateStr,
+      patient: patientInfo == null ? undefined : patientInfo,
+      total: dataList.length,
+      now: createDate,
+      practice: {
+        name: Practice.name,
+        address: Practice.address,
+        phone: Practice.phone,
+      },
+      items: dataList,
     };
     const ReportFile = await jsreport.render({
       template: {
