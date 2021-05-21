@@ -65,10 +65,21 @@ exports.patient_treatment = async function (req, res) {
       query = Object.assign(query, {
         treatment_date: { $gte: startDate, $lte: endDate },
       });
-    } else if (req.query.from && req.query.to == undefined) {
+    } else if (
+      req.query.from &&
+      (req.query.to == undefined || req.query.to == "")
+    ) {
       const startDate = new Date(req.query.from);
       query = Object.assign(query, {
         treatment_date: { $gte: startDate },
+      });
+    } else if (
+      req.query.to &&
+      (req.query.from == undefined || req.query.from == "")
+    ) {
+      const endDate = new Date(req.query.to);
+      query = Object.assign(query, {
+        treatment_date: { $lte: endDate },
       });
     }
     if (req.query.query_date) {

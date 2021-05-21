@@ -39,7 +39,9 @@ exports.add_chair = async function (req, res) {
   try {
     let chair = new chairModel();
     chair.name = req.body.name ? req.body.name : null;
-    chair.order = req.body.order ? req.body.order : await chairModel.estimatedDocumentCount() + 1;
+    chair.order = req.body.order
+      ? req.body.order
+      : (await chairModel.estimatedDocumentCount()) + 1;
     chair.color = req.body.color ? req.body.color : RANDOM_COLOR();
     chair.is_deleted = req.body.is_deleted ? req.body.is_deleted : false;
     if (chair.name) {
@@ -245,10 +247,18 @@ exports.appointments_of_patient = async function (req, res) {
       query = Object.assign(query, {
         appointment_date: { $gte: startDate, $lte: endDate },
       });
-    } else if (req.query.from && req.query.to == undefined) {
+    } else if (
+      req.query.from &&
+      (req.query.to == undefined || req.query.to == "")
+    ) {
       const startDate = new Date(req.query.from);
       query = Object.assign(query, {
         appointment_date: { $gte: startDate },
+      });
+    } else if (req.query.to && (req.query.from == undefined || req.query.from == "")) {
+      const endDate = new Date(req.query.to);
+      query = Object.assign(query, {
+        appointment_date: { $lte: endDate },
       });
     }
     const appointments = await appointmentModel.get(query, options);
