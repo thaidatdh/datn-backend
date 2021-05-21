@@ -39,7 +39,7 @@ exports.add_chair = async function (req, res) {
   try {
     let chair = new chairModel();
     chair.name = req.body.name ? req.body.name : null;
-    chair.order = req.body.order ? req.body.order : null;
+    chair.order = req.body.order ? req.body.order : await chairModel.estimatedDocumentCount() + 1;
     chair.color = req.body.color ? req.body.color : RANDOM_COLOR();
     chair.is_deleted = req.body.is_deleted ? req.body.is_deleted : false;
     if (chair.name) {
