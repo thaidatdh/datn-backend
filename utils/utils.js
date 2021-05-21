@@ -1,3 +1,4 @@
+const { fa } = require("translatte/languages");
 const constants = require("../constants/constants");
 exports.calculateDateRecallByInterval = function (treatmentDate, interval) {
   const intervalValue = interval.split(/\D/).filter((n) => n !== "");
@@ -118,6 +119,7 @@ const getSurface = (exports.getSurface = (toothData) => {
   return surfaceData;
 });
 const isContinuousIntArray = (exports.isContinuousIntArray = (intArray) => {
+  if (!Array.isArray(intArray)) return false;
   for (let indexValue = 0; indexValue < intArray.length - 1; indexValue++) {
     const nextInt = parseInt(intArray[indexValue + 1]);
     const expectedNextInt = parseInt(intArray[indexValue]) + 1;

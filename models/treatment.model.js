@@ -250,11 +250,11 @@ module.exports.updateTreatment = async function (treatment, req) {
     constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(req.status) &&
     !constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(treatment.status);
   treatment.status = req.status ? req.status : treatment.status;
-  treatment.selected_tooth_raw = req.RawData
-    ? req.RawData
+  treatment.selected_tooth_raw = req.selected_tooth_raw
+    ? req.selected_tooth_raw
     : treatment.selected_tooth_raw;
-  if (req.RawData) {
-    const toothSurface = getToothSurface(req.RawData);
+  if (req.selected_tooth_raw) {
+    const toothSurface = getToothSurface(req.selected_tooth_raw);
     treatment.tooth = toothSurface.tooth;
     treatment.surface = toothSurface.surface;
   }
