@@ -1,6 +1,8 @@
 //Import User Model
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
+const PatientModel = require("../models/patient.model");
+const TreatmentModel = require("../models/treatment.model");
 const TransactionModel = require("../models/transaction.model");
 const translator = require("../utils/translator");
 //For index
@@ -76,7 +78,65 @@ exports.patient_transaction = async function (req, res) {
     }
     res.json(result);
   } catch (err) {
-    
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Transaction list of patient " + patient_id + "failed",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+exports.get_new_transaction_info = async function (req, res) {
+  const patient_id = req.params.patient_id;
+  try {
+    const PatientInfo = await PatientModel.findById(patient_id);
+    if (PatientInfo == null) {
+      return res.status(404).json({
+        success: false,
+        message: await translator.Translate(
+          "Get Transaction failed. Patient not found",
+          req.query.lang
+        ),
+      });
+    }
+    const TreatmentList = await TreatmentModel.find({
+      patient: patient_id,
+      transaction: null,
+    });
+    let treatment_id_list = [];
+    let amount = 0;
+    for (const Treatment of TreatmentList) {
+      treatment_id_list.push(Treatment._id);
+      amount = amount + parseFloat(Treatment.fee);
+    }
+    const resultObject = {
+      patient: patient_id,
+      treatments: treatment_id_list,
+      treatment_list: TreatmentList,
+      amount: amount,
+    };
+    let result = {
+      success: true,
+      payload: resultObject,
+    };
+    if (options.page && options.limit) {
+      const totalCount = await TransactionModel.countDocuments({
+        patient: patient_id,
+      });
+      const limit = Number.parseInt(options.limit);
+      const page = Number.parseInt(options.page);
+      result = Object.assign(result, {
+        total: totalCount,
+        page: page,
+        limit: limit,
+        total_page: Math.ceil(totalCount / limit),
+      });
+    }
+    res.json(result);
+  } catch (err) {
     res.status(500).json({
       success: false,
       message: await translator.FailedMessage(
@@ -93,15 +153,37 @@ exports.add = async function (req, res) {
     if (req.body.patient == null) {
       return res.status(400).json({
         success: false,
-        message: await translator.FailedMessage(
-          constants.ACTION.INSERT,
-          "Transaction failed. Require patient",
+        message: await translator.Translate("Require patient", req.query.lang),
+      });
+    }
+    if (
+      req.body.amount == null ||
+      req.body.paid_amount == null ||
+      parseFloat(req.body.amount) > parseFloat(req.body.paid_amount)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: await translator.Translate(
+          "Pay amount must be larger than fee amount",
           req.query.lang
         ),
       });
     }
     if (req.body.provider == null) {
       req.body.provider = req.default_provider_id;
+    }
+    if (req.body.provider == null) {
+      req.body.provider = req.default_staff_id;
+    }
+    if (req.body.provider == null) {
+      return res.status(400).json({
+        success: false,
+        message: await translator.Translate(
+          constants.ACTION.INSERT,
+          "Require staff",
+          req.query.lang
+        ),
+      });
     }
     const rs = await TransactionModel.insert(req.body);
     if (rs != null) {
@@ -148,7 +230,10 @@ exports.detail = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.NotFoundMessage("Transaction", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Transaction",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {
@@ -165,9 +250,14 @@ exports.detail = async function (req, res) {
 };
 exports.update = async function (req, res) {
   try {
-    let transaction = await TransactionModel.findById(req.params.transaction_id);
+    let transaction = await TransactionModel.findById(
+      req.params.transaction_id
+    );
     if (transaction) {
-      const result = await TransactionModel.updateTransaction(transaction, req.body);
+      const result = await TransactionModel.updateTransaction(
+        transaction,
+        req.body
+      );
       if (result) {
         res.json({
           success: true,
@@ -186,7 +276,10 @@ exports.update = async function (req, res) {
     } else {
       res.status(404).json({
         success: false,
-        message: await translator.NotFoundMessage("Transaction", req.query.lang),
+        message: await translator.NotFoundMessage(
+          "Transaction",
+          req.query.lang
+        ),
       });
     }
   } catch (err) {

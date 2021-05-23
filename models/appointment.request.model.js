@@ -54,7 +54,9 @@ module.exports.updateRequest = async function (request, requestinfo) {
 };
 module.exports.get = async function (query, populateOptions) {
   populateOptions = populateOptions || {};
-  const promise = AppointmentRequestModel.find(query);
+  const promise = populateOptions.one
+    ? AppointmentRequestModel.findOne(query)
+    : AppointmentRequestModel.find(query);
   promise.populate({
     path: "patient",
     populate: {

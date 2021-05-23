@@ -51,6 +51,11 @@ const TreatmentSchema = mongoose.Schema(
     mark_type: String,
     status: String,
     selected_tooth_raw: mongoose.Schema.Types.Mixed,
+    transaction: {
+      type: mongoose.Types.ObjectId,
+      ref: "transaction",
+      required: false,
+    },
   },
   {
     timestamps: true,
@@ -155,18 +160,12 @@ module.exports.insert = async function (req) {
   treatment.procedure_code = req.procedure_code ? req.procedure_code : null;
   treatment.tooth = req.tooth ? req.tooth : null;
   treatment.surface = req.surface ? req.surface : null;
-  //treatment.discount = req.discount ? req.discount : 0;
-  //treatment.insurance_amount = req.insurance_amount ? req.insurance_amount : 0;
-  //treatment.patient_amount = req.patient_amount ? req.patient_amount : 0;
   treatment.note = req.note ? req.note : null;
   treatment.treatment_plan = req.treatment_plan ? req.treatment_plan : null;
   treatment.appointment = req.appointment ? req.appointment : null;
   treatment.status = req.status ? req.status : "PLAN";
   treatment.ada_code = req.ada_code ? req.ada_code : Procedure.procedure_code;
   treatment.fee = req.fee ? req.fee : Procedure.procedure_fee;
-  //treatment.insurance_percent = req.insurance_percent
-  //  ? req.insurance_percent
-  //  : Procedure.insured_percent;
   treatment.description = req.description
     ? req.description
     : Procedure.description;
@@ -199,46 +198,24 @@ module.exports.insert = async function (req) {
       console.log(errorRecall);
     }
   }
-  if (constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(treatment.status)) {
-    await Patient.updateBalance(
-      treatment.patient,
-      treatment.fee,
-      constants.TRANSACTION.INCREASE
-    );
-  }
+  await Patient.updateBalance(
+    treatment.patient,
+    treatment.fee,
+    constants.TRANSACTION.INCREASE
+  );
   return treatmentResult;
 };
 module.exports.updateTreatment = async function (treatment, req) {
-  const Procedure = await ProcedureModel.findById(req.procedure_code);
-  if (req.procedure_code && !Procedure) {
-    return null;
-  }
   treatment.treatment_date = req.treatment_date
     ? Date.parse(req.treatment_date)
     : treatment.treatment_date;
-  //treatment.patient =
-  //  req.patient !== undefined ? req.patient : treatment.patient;
   treatment.assistant =
     req.assistant !== undefined ? req.assistant : treatment.assistant;
   treatment.provider =
     req.provider !== undefined ? req.provider : treatment.provider;
-  /*treatment.procedure_code =
-    req.procedure_code && Procedure
-      ? req.procedure_code
-      : treatment.procedure_code;*/
   treatment.tooth = req.tooth !== undefined ? req.tooth : treatment.tooth;
   treatment.surface =
     req.surface !== undefined ? req.surface : treatment.surface;
-  //treatment.discount =
-  //  req.discount !== undefined ? req.discount : treatment.discount;
-  //treatment.insurance_amount =
-  //  req.insurance_amount !== undefined
-  //    ? req.insurance_amount
-  //    : treatment.insurance_amount;
-  //treatment.patient_amount =
-  //  req.patient_amount !== undefined
-  //    ? req.patient_amount
-  //    : treatment.patient_amount;
   treatment.note = req.note !== undefined ? req.note : treatment.note;
   treatment.treatment_plan =
     req.treatment_plan !== undefined
@@ -246,9 +223,6 @@ module.exports.updateTreatment = async function (treatment, req) {
       : treatment.treatment_plan;
   treatment.appointment =
     req.appointment !== undefined ? req.appointment : treatment.appointment;
-  const isUpdateBalance =
-    constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(req.status) &&
-    !constants.TREATMENT.UPDATE_BALANCE_STATUS.includes(treatment.status);
   treatment.status = req.status ? req.status : treatment.status;
   treatment.selected_tooth_raw = req.selected_tooth_raw
     ? req.selected_tooth_raw
@@ -257,26 +231,6 @@ module.exports.updateTreatment = async function (treatment, req) {
     const toothSurface = getToothSurface(req.selected_tooth_raw);
     treatment.tooth = toothSurface.tooth;
     treatment.surface = toothSurface.surface;
-  }
-  if (Procedure) {
-    treatment.ada_code =
-      req.ada_code != undefined ? req.ada_code : Procedure.procedure_code;
-    treatment.fee = req.fee != undefined ? req.fee : Procedure.procedure_fee;
-    //treatment.insurance_percent =
-    //  req.insurance_percent != undefined
-    //    ? req.insurance_percent
-    //    : Procedure.insured_percent;
-    treatment.description =
-      req.description != undefined ? req.description : Procedure.description;
-    treatment.mark_type =
-      req.mark_type != undefined ? req.mark_type : Procedure.mark_type;
-  }
-  if (isUpdateBalance) {
-    await Patient.updateBalance(
-      treatment.patient._id,
-      treatment.fee,
-      constants.TRANSACTION.INCREASE
-    );
   }
   return await treatment.save();
 };

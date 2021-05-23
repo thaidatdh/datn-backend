@@ -23,6 +23,7 @@ const UserSchema = mongoose.Schema(
     theme: Number,
     language: String,
     address: String,
+    user_photo: String,
   },
   {
     timestamps: true,
@@ -94,6 +95,9 @@ module.exports.insert = async function (userInfo) {
     ? userInfo.user_type
     : constants.USER.USER_TYPE_OTHER;
   user.theme = userInfo.theme ? userInfo.theme : 0;
+  user.user_photo = userInfo.user_photo
+    ? userInfo.user_photo
+    : constants.PATIENT.DEFAULT_PATIENT_PHOTO_LINK;
   user.language = userInfo.language ? userInfo.language : "EN";
   return await user.save();
 };
@@ -129,6 +133,7 @@ module.exports.updateUser = async function (user_id, userInfo) {
   user.theme = userInfo.theme !== undefined ? userInfo.theme : user.theme;
   user.language =
     userInfo.language !== undefined ? userInfo.language : user.language;
+  user.user_photo = userInfo.user_photo ? userInfo.user_photo : user.user_photo;
   return await user.save();
 };
 module.exports.generateEncryptedPassword = async function (password) {

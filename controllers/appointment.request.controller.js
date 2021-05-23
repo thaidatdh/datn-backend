@@ -1,4 +1,5 @@
 //Import User Model
+const { request } = require("express");
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
 const ApptRequestModel = require("../models/appointment.request.model");
@@ -57,7 +58,7 @@ exports.index = async function (req, res) {
           request_date: 1,
           note: 1,
           status: 1,
-          createdAt: 1
+          createdAt: 1,
         },
       },
     ]);
@@ -115,6 +116,7 @@ exports.patient_request = async function (req, res) {
 };
 exports.add = async function (req, res) {
   try {
+    const isCustomizeResult = req.query.customize == "true";
     if (req.body.patient == null) {
       return res.status(403).json({
         success: false,
@@ -134,7 +136,27 @@ exports.add = async function (req, res) {
       });
     }
     const rs = await ApptRequestModel.insert(req.body);
-    return res.json({ success: true, payload: rs });
+    const resultValue = await ApptRequestModel.get(
+      { _id: rs._id },
+      { one: true }
+    );
+    if (resultValue.patient == null) {
+      return res.status(404).json({
+        success: false,
+        message: await translator.Translate(
+          "Patient of Request is not found",
+          req.query.lang
+        ),
+      });
+    }
+    const additionalInfo = {
+      patient: resultValue.patient._id,
+      patient_id: resultValue.patient.patient_id,
+      first_name: resultValue.patient.user.first_name,
+      last_name: resultValue.patient.user.last_name,
+    };
+    const result = Object.assign({}, resultValue._doc, additionalInfo);
+    return res.json({ success: true, payload: result });
   } catch (err) {
     return res.status(500).json({
       success: false,
@@ -149,7 +171,35 @@ exports.add = async function (req, res) {
 };
 exports.apptRequest = async function (req, res) {
   try {
-    const apptRequest = await ApptRequestModel.findById(req.params.request_id);
+    const resultValue = await ApptRequestModel.get(
+      { _id: req.params.request_id },
+      { one: true }
+    );
+    if (resultValue == null) {
+      return res.status(404).json({
+        success: false,
+        message: await translator.NotFoundMessage(
+          "Appointment Request",
+          req.query.lang
+        ),
+      });
+    }
+    if (resultValue.patient == null) {
+      return res.status(404).json({
+        success: false,
+        message: await translator.Translate(
+          "Patient of Request is not found",
+          req.query.lang
+        ),
+      });
+    }
+    const additionalInfo = {
+      patient: resultValue.patient._id,
+      patient_id: resultValue.patient.patient_id,
+      first_name: resultValue.patient.user.first_name,
+      last_name: resultValue.patient.user.last_name,
+    };
+    const apptRequest = Object.assign({}, resultValue._doc, additionalInfo);
     if (apptRequest) {
       res.json({
         success: true,
@@ -180,14 +230,31 @@ exports.update = async function (req, res) {
   try {
     let apptRequest = await ApptRequestModel.findById(req.params.request_id);
     if (apptRequest) {
-      const result = await ApptRequestModel.updateRequest(
+      const rs = await ApptRequestModel.updateRequest(
         apptRequest,
         req.body
       );
-      res.json({
-        success: true,
-        payload: result,
-      });
+      const resultValue = await ApptRequestModel.get(
+        { _id: rs._id },
+        { one: true }
+      );
+      if (resultValue.patient == null) {
+        return res.status(404).json({
+          success: false,
+          message: await translator.Translate(
+            "Patient of Request is not found",
+            req.query.lang
+          ),
+        });
+      }
+      const additionalInfo = {
+        patient: resultValue.patient._id,
+        patient_id: resultValue.patient.patient_id,
+        first_name: resultValue.patient.user.first_name,
+        last_name: resultValue.patient.user.last_name,
+      };
+      const result = Object.assign({}, resultValue._doc, additionalInfo);
+      return res.json({ success: true, payload: result });
     } else {
       res.status(404).json({
         success: false,

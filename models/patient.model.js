@@ -38,10 +38,8 @@ const PatientSchema = mongoose.Schema(
       type: String,
       default: "NOT_SPECIFY", //MALE, FEMALE, NOT_SPECIFY
     },
-    patient_photo: String,
     patient_balance: mongoose.Types.Decimal128,
-    //insurance_balance: Number,
-    credit_amount: mongoose.Types.Decimal128,
+    paid_amount: mongoose.Types.Decimal128,
   },
   {
     timestamps: true,
@@ -145,12 +143,8 @@ module.exports.insert = async function (patientInfo) {
   patient.gender = patientInfo.gender
     ? patientInfo.gender
     : constants.DEFAULT_GENDER;
-  patient.patient_photo = patientInfo.patient_photo
-    ? patientInfo.patient_photo
-    : constants.PATIENT.DEFAULT_PATIENT_PHOTO_LINK;
   patient.patient_balance = 0.0;
-  //patient.insurance_balance = 0.0;
-  patient.credit_amount = 0.0;
+  patient.paid_amount = 0.0;
   patient.plaque_index = patientInfo.plaque_index
     ? patientInfo.plaque_index
     : 0;
@@ -236,22 +230,14 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
       : patient.appt_reminder;
   patient.gender =
     patientInfo.gender !== undefined ? patientInfo.gender : patient.gender;
-  patient.patient_photo =
-    patientInfo.patient_photo !== undefined
-      ? patientInfo.patient_photo
-      : patient.patient_photo;
   patient.patient_balance =
     patientInfo.patient_balance != undefined
       ? patientInfo.patient_balance
       : patient.patient_balance;
-  //patient.insurance_balance =
-  //  patientInfo.insurance_balance != undefined
-  //    ? patientInfo.insurance_balance
-  //    : patient.insurance_balance;
-  patient.credit_amount =
-    patientInfo.credit_amount != undefined
-      ? patientInfo.credit_amount
-      : patient.credit_amount;
+  patient.paid_amount =
+    patientInfo.paid_amount != undefined
+      ? patientInfo.paid_amount
+      : patient.paid_amount;
   patient.plaque_index = patientInfo.plaque_index
     ? patientInfo.plaque_index
     : patient.plaque_index;
@@ -346,7 +332,21 @@ module.exports.get = async function (query, populateOptions) {
   }
   return resultQuery;
 };
-
+module.exports.updatePaidAmount = async (patient_id, amount, type) => {
+  const Patient = await PatientModel.findById(patient_id);
+  if (!Patient) {
+    return false;
+  }
+  const amountNumber = parseFloat(amount);
+  const originalAmount = parseFloat(Patient.paid_amount.toString());
+  if (type === constants.TRANSACTION.INCREASE) {
+    Patient.paid_amount = originalAmount + amountNumber;
+  } else if (type == constants.TRANSACTION.DECREASE) {
+    Patient.paid_amount = originalAmount - amountNumber;
+  }
+  await Patient.save();
+  return true;
+};
 module.exports.updateBalance = async (patient_id, amount, type) => {
   const Patient = await PatientModel.findById(patient_id);
   if (!Patient) {
