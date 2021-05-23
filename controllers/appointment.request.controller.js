@@ -156,6 +156,16 @@ exports.add = async function (req, res) {
       last_name: resultValue.patient.user.last_name,
     };
     const result = Object.assign({}, resultValue._doc, additionalInfo);
+    // Notify Appointment Requests socket
+    try {
+      if (global.socketIO && global.socketUsers) {
+        Object.keys(global.socketUsers).forEach((userID) => {
+          global.socketIO
+            .to(userID)
+            .emit("Notify-Appointment-Request-Response", rs);
+        });
+      }
+    } catch (e) {}
     return res.json({ success: true, payload: result });
   } catch (err) {
     return res.status(500).json({
@@ -230,10 +240,7 @@ exports.update = async function (req, res) {
   try {
     let apptRequest = await ApptRequestModel.findById(req.params.request_id);
     if (apptRequest) {
-      const rs = await ApptRequestModel.updateRequest(
-        apptRequest,
-        req.body
-      );
+      const rs = await ApptRequestModel.updateRequest(apptRequest, req.body);
       const resultValue = await ApptRequestModel.get(
         { _id: rs._id },
         { one: true }
@@ -254,6 +261,16 @@ exports.update = async function (req, res) {
         last_name: resultValue.patient.user.last_name,
       };
       const result = Object.assign({}, resultValue._doc, additionalInfo);
+      try {
+        // Notify Appointment Requests socket
+        if (global.socketIO && global.socketUsers) {
+          Object.keys(global.socketUsers).forEach((userID) => {
+            global.socketIO
+              .to(userID)
+              .emit("Notify-Update-Appointment-Request-Response", result);
+          });
+        }
+      } catch (e) {}
       return res.json({ success: true, payload: result });
     } else {
       res.status(404).json({
@@ -282,6 +299,20 @@ exports.delete = async function (req, res) {
       { _id: req.params.request_id },
       { status: constants.APPOINTMENT_REQUEST.MODE_REJECTED }
     );
+
+    try {
+      // Notify Appointment Requests socket
+      if (global.socketIO && global.socketUsers) {
+        Object.keys(global.socketUsers).forEach((userID) => {
+          global.socketIO
+            .to(userID)
+            .emit(
+              "Notify-Delete-Appointment-Request-Response",
+              req.params.request_id
+            );
+        });
+      }
+    } catch (e) {}
     res.json({
       success: true,
     });

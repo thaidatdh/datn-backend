@@ -245,6 +245,12 @@ module.exports.insert = async function (apptInfo) {
         { _id: apptInfo.request_id },
         { status: constants.APPOINTMENT_REQUEST.MODE_ACCEPTED }
       );
+      // Notify Appointment Requests socket
+      if (global.socketIO && global.socketUsers){
+        Object.keys(global.socketUsers).forEach((userID) => {
+          global.socketIO.to(userID).emit("Notify-Delete-Appointment-Request-Response", apptInfo.request_id);
+        })
+      }
     } catch (e) {}
   }
   return rs;

@@ -54,6 +54,20 @@ var options = {
 app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 // listen for requests
 const SERVER_PORT = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
-app.listen(SERVER_PORT, () => {
+const server = app.listen(SERVER_PORT, () => {
   console.log("Server is listening on port " + SERVER_PORT);
 });
+
+//Socket io
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST"]
+  }
+});
+global.socketIO = io;
+global.socketUsers = Object.create(null);
+const { socketService } = require("./services/socket");
+
+socketService(io);
