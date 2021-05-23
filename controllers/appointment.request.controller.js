@@ -134,6 +134,13 @@ exports.add = async function (req, res) {
       });
     }
     const rs = await ApptRequestModel.insert(req.body);
+
+    // Notify Appointment Requests socket
+    if (global.socketIO && global.socketUsers){
+      Object.keys(global.socketUsers).forEach((userID) => {
+        global.socketIO.to(userID).emit("Notify-Appointment-Request-Response", rs);
+      })
+    }
     return res.json({ success: true, payload: rs });
   } catch (err) {
     return res.status(500).json({
@@ -184,6 +191,14 @@ exports.update = async function (req, res) {
         apptRequest,
         req.body
       );
+
+      // Notify Appointment Requests socket
+      if (global.socketIO && global.socketUsers){
+        Object.keys(global.socketUsers).forEach((userID) => {
+          global.socketIO.to(userID).emit("Notify-Update-Appointment-Request-Response", result);
+        })
+      }
+
       res.json({
         success: true,
         payload: result,
@@ -215,6 +230,14 @@ exports.delete = async function (req, res) {
       { _id: req.params.request_id },
       { status: constants.APPOINTMENT_REQUEST.MODE_REJECTED }
     );
+
+    // Notify Appointment Requests socket
+    if (global.socketIO && global.socketUsers){
+      Object.keys(global.socketUsers).forEach((userID) => {
+        global.socketIO.to(userID).emit("Notify-Delete-Appointment-Request-Response", req.params.request_id);
+      })
+    }
+    
     res.json({
       success: true,
     });
