@@ -39,6 +39,35 @@ exports.index = async function (req, res) {
     });
   }
 };
+exports.autocomplete = async function (req, res) {
+  const limit = req.query.limit
+    ? Number.parseInt(req.query.limit)
+    : SEARCH.DEFAILT_LIMIT_AUTO_COMPLETE;
+  const searchData = req.query.data;
+  const regexSearch = {
+    $regex: "^" + searchData,
+    $options: "i",
+  };
+  let matchSearch = {
+    $or: [{ name: regexSearch }, { email: regexSearch }],
+  };
+  try {
+    const result = await referralSourceModel.find(matchSearch).limit(limit);
+    res.json({ success: true, payload: result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "Staff",
+        req.query.lang
+      ),
+      exeption: err,
+    });
+  }
+};
+
 exports.add = async function (req, res) {
   try {
     const sourceInfo = req.body;
@@ -77,7 +106,11 @@ exports.source = async function (req, res) {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: await translator.FailedMessage(constants.ACTION.GET, "detail", req.query.lang),
+      message: await translator.FailedMessage(
+        constants.ACTION.GET,
+        "detail",
+        req.query.lang
+      ),
       exeption: err,
     });
   }
