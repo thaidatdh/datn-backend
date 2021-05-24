@@ -162,7 +162,7 @@ exports.add = async function (req, res) {
         Object.keys(global.socketUsers).forEach((userID) => {
           global.socketIO
             .to(userID)
-            .emit("Notify-Appointment-Request-Response", rs);
+            .emit("Notify-Appointment-Request-Response", result);
         });
       }
     } catch (e) {}
