@@ -268,7 +268,7 @@ exports.autocomplete = async function (req, res) {
       : SEARCH.AUTO_COMPLETE_TYPE_NAME;
   const staffType = STAFF.STAFF_TYPES.includes(req.query.staffType)
     ? req.query.staffType
-    : STAFF.STAFF_TYPE_PROVIDER;
+    : "";
   const limit = req.query.limit
     ? Number.parseInt(req.query.limit)
     : SEARCH.DEFAILT_LIMIT_AUTO_COMPLETE;
@@ -282,13 +282,16 @@ exports.autocomplete = async function (req, res) {
       ? {
           $or: [{ name: regexSearch }, { last_name: regexSearch }],
           is_active: true,
-          staff_type: staffType,
         }
       : {
           display_id: regexSearch,
           is_active: true,
-          staff_type: staffType,
         };
+  if (staffType){
+    matchSearch.staff_type = staffType;
+  } else {
+    matchSearch.staff_type = {$in: [STAFF.STAFF_TYPE_STAFF, STAFF.STAFF_TYPE_PROVIDER]}
+  }
   if (options.schedule_date) {
     const dateValue = new Date(options.schedule_date);
     const ListSchedule = await ProviderScheduleModel.find({

@@ -6,5 +6,5 @@ router
   .route("/treatment-history")
   .get(reportController.report_treatment_history);
 router.route("/appointment").get(reportController.report_appointment);
-router.route("/referral/:mode").get(reportController.report_referral);
+router.route("/referral/").get(reportController.report_referral);
 module.exports = router;

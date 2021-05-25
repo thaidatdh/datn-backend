@@ -763,21 +763,21 @@ exports.report_referral = async function (req, res) {
   try {
     let Query = {};
     let mode = "";
-    if (req.params.mode == "PATIENT") {
+    if (req.query.patient_id) {
       Query = {
         ref_patient: { $ne: null },
       };
       mode = "Patient";
     }
-    if (req.params.mode == "STAFF") {
+    if (req.query.staff_id) {
       Query = {
-        ref_staff: mongoose.Types.ObjectId(req.query.id),
+        ref_staff: mongoose.Types.ObjectId(req.query.staff_id),
       };
       mode = "Staff";
     }
-    if (req.params.mode == "SOURCE") {
+    if (req.query.source_id) {
       Query = {
-        referral_source: mongoose.Types.ObjectId(req.query.id),
+        referral_source: mongoose.Types.ObjectId(req.query.source_id),
       };
       mode = "Referrer";
     }
