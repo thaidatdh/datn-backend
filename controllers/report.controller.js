@@ -817,8 +817,8 @@ exports.report_referral = async function (req, res) {
 
     let patientInfo = null;
 
-    if (req.params.mode == "STAFF" && req.query.id) {
-      const staff_id = req.query.id;
+    if (mode == "Staff" && req.query.staff_id) {
+      const staff_id = req.query.staff_id;
       const Staff = await StaffModel.get({ _id: staff_id }, { one: true });
       if (Staff != null) {
         const User = await Staff.user;
@@ -883,14 +883,15 @@ exports.report_referral = async function (req, res) {
     const content = await readFileAsync("./report_template/referral.hbs");
     const css = await readFileAsync("./report_template/provider-report.css");
     let TotalData = {
-      referralTo: req.params.mode == "SOURCE" ? referralTo : null,
+      referralTo: mode == "Referrer" ? referralTo : null,
       referralBy: referralBy,
     };
     const data = {
       css: css,
       mode: mode,
-      is_by_patient: req.params.mode == "PATIENT",
-      is_by_source: req.params.mode == "SOURCE",
+      is_by_patient: mode == "Patient",
+      is_by_source: mode == "Referrer",
+      is_by_staff: mode == "Staff",
       statistic: TotalData,
       startDate: startDateString,
       endDate: endDateStr,
