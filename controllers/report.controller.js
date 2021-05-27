@@ -4,6 +4,7 @@ const constants = require("../constants/constants");
 const chairModel = require("../models/chair.model");
 const AppointmentModel = require("../models/appointment.model");
 const ReferralModel = require("../models/referral.model");
+const ReferralSourceModel = require("../models/referral.source.model");
 const AppointmentRequestModel = require("../models/appointment.request.model");
 const TreatmentModel = require("../models/treatment.model");
 const procedureCodeModel = require("../models/procedure.code.model");
@@ -826,6 +827,30 @@ exports.report_referral = async function (req, res) {
           name: User.first_name + " " + User.last_name,
           dob: null,
           id: Staff.display_id,
+        };
+      }
+    }
+    else if (mode == "Patient" && req.query.patient_id) {
+      const Patient = await PatientModel.get(
+        { _id: req.query.patient_id },
+        { one: true }
+      );
+      if (Patient != null) {
+        const User = await Patient.user;
+        patientInfo = {
+          name: User.first_name + " " + User.last_name,
+          dob: Patient.dob ? formatReadableDate(Patient.dob) : null,
+          id: Patient.patient_id,
+        };
+      }
+    }
+    if (mode == "Referrer" && req.query.source_id) {
+      const Source = await ReferralSourceModel.findById(req.query.source_id);
+      if (Source != null) {
+        patientInfo = {
+          name: Source.name,
+          dob: null,
+          id: null,
         };
       }
     }
