@@ -830,20 +830,6 @@ exports.report_referral = async function (req, res) {
         };
       }
     }
-    else if (mode == "Patient" && req.query.patient_id) {
-      const Patient = await PatientModel.get(
-        { _id: req.query.patient_id },
-        { one: true }
-      );
-      if (Patient != null) {
-        const User = await Patient.user;
-        patientInfo = {
-          name: User.first_name + " " + User.last_name,
-          dob: Patient.dob ? formatReadableDate(Patient.dob) : null,
-          id: Patient.patient_id,
-        };
-      }
-    }
     if (mode == "Referrer" && req.query.source_id) {
       const Source = await ReferralSourceModel.findById(req.query.source_id);
       if (Source != null) {
@@ -877,8 +863,8 @@ exports.report_referral = async function (req, res) {
           referral.ref_staff.user.last_name
         ).trim();
       }
-      else if (referral.ref_source) {
-        ref_name = referral.ref_source.name;
+      else if (referral.referral_source) {
+        ref_name = referral.referral_source.name;
       }
       const dataValue = {
         patient_id: referral.patient.patient_id,
@@ -908,7 +894,8 @@ exports.report_referral = async function (req, res) {
     const content = await readFileAsync("./report_template/referral.hbs");
     const css = await readFileAsync("./report_template/provider-report.css");
     let TotalData = {
-      referralTo: mode == "Referrer" ? referralTo : null,
+      includeTo: mode == "Referrer" || mode == "" ? true : false,
+      referralTo: referralTo,
       referralBy: referralBy,
     };
     const data = {
