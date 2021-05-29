@@ -92,6 +92,10 @@ exports.patient_transaction = async function (req, res) {
 exports.get_new_transaction_info = async function (req, res) {
   const patient_id = req.params.patient_id;
   try {
+    const options = {
+      page: req.query.page,
+      limit: req.query.limit,
+    };
     const PatientInfo = await PatientModel.findById(patient_id);
     if (PatientInfo == null) {
       return res.status(404).json({
@@ -102,10 +106,15 @@ exports.get_new_transaction_info = async function (req, res) {
         ),
       });
     }
-    const TreatmentList = await TreatmentModel.find({
-      patient: patient_id,
-      transaction: null,
-    });
+    const TreatmentList = await TreatmentModel.get(
+      {
+        patient: patient_id,
+        transaction: null,
+      },
+      {
+        get_staff: true,
+      }
+    );
     let treatment_id_list = [];
     let amount = 0;
     for (const Treatment of TreatmentList) {
