@@ -49,7 +49,10 @@ module.exports.get = async function (query, populateOptions) {
   const promise =
     populateOptions.one == true
       ? TransactionModel.findOne(query)
-      : TransactionModel.find(query);
+      : TransactionModel.find(query).sort({
+          transaction_date: -1,
+          is_delete: 1,
+        });
   // Limit
   if (populateOptions.limit && populateOptions.page) {
     promise.skip(
