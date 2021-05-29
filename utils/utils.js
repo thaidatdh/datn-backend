@@ -179,10 +179,13 @@ exports.getToothSurface = (rawRequestData) => {
       }
     }
   }
-  tooth = isContinuousIntArray(toothArray)
+  tooth = toothArray.length > 0 && isContinuousIntArray(toothArray)
     ? toothArray[0] + "-" + toothArray[toothArray.length - 1]
     : toothArray.join(",");
   surface = GetSurfaceString(surfaceArray);
+  const tempUndefined = undefined;
+  const undefinedToothValue = tempUndefined + "-" + tempUndefined;
+  if (tooth == undefinedToothValue) tooth = null;
   return {
     tooth: tooth,
     surface: surface,
