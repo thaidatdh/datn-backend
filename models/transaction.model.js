@@ -96,7 +96,10 @@ module.exports.get = async function (query, populateOptions) {
     });
   }
   if (populateOptions.get_treatment) {
-    promise.populate("treatment_list");
+    promise.populate({
+      path: "treatment_list",
+      options: { sort: { treatment_date: 1 } },
+    });
   }
   const resultQuery = await promise.exec();
   return resultQuery;
