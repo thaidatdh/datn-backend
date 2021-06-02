@@ -452,7 +452,7 @@
             "type": "string",
             "example": "string"
           },
-          "patient_balance": {
+          "total_amount": {
             "type": "number",
             "example": 0.0
           },
@@ -4164,7 +4164,7 @@
                     "type": "string",
                     "example": "string"
                   },
-                  "patient_balance": {
+                  "total_amount": {
                     "type": "number",
                     "example": 0.0
                   },
@@ -4411,7 +4411,7 @@
                     "type": "string",
                     "example": "string"
                   },
-                  "patient_balance": {
+                  "total_amount": {
                     "type": "number",
                     "example": 0.0
                   },

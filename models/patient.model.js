@@ -38,7 +38,7 @@ const PatientSchema = mongoose.Schema(
       type: String,
       default: "NOT_SPECIFY", //MALE, FEMALE, NOT_SPECIFY
     },
-    patient_balance: mongoose.Types.Decimal128,
+    total_amount: mongoose.Types.Decimal128,
     paid_amount: mongoose.Types.Decimal128,
   },
   {
@@ -143,7 +143,7 @@ module.exports.insert = async function (patientInfo) {
   patient.gender = patientInfo.gender
     ? patientInfo.gender
     : constants.DEFAULT_GENDER;
-  patient.patient_balance = 0.0;
+  patient.total_amount = 0.0;
   patient.paid_amount = 0.0;
   patient.plaque_index = patientInfo.plaque_index
     ? patientInfo.plaque_index
@@ -230,10 +230,10 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
       : patient.appt_reminder;
   patient.gender =
     patientInfo.gender !== undefined ? patientInfo.gender : patient.gender;
-  patient.patient_balance =
-    patientInfo.patient_balance != undefined
-      ? patientInfo.patient_balance
-      : patient.patient_balance;
+  patient.total_amount =
+    patientInfo.total_amount != undefined
+      ? patientInfo.total_amount
+      : patient.total_amount;
   patient.paid_amount =
     patientInfo.paid_amount != undefined
       ? patientInfo.paid_amount
@@ -353,11 +353,11 @@ module.exports.updateBalance = async (patient_id, amount, type) => {
     return false;
   }
   const amountNumber = parseFloat(amount);
-  const originalAmount = parseFloat(Patient.patient_balance.toString());
+  const originalAmount = parseFloat(Patient.total_amount.toString());
   if (type === constants.TRANSACTION.INCREASE) {
-    Patient.patient_balance = originalAmount + amountNumber;
+    Patient.total_amount = originalAmount + amountNumber;
   } else if (type == constants.TRANSACTION.DECREASE) {
-    Patient.patient_balance = originalAmount - amountNumber;
+    Patient.total_amount = originalAmount - amountNumber;
   }
   await Patient.save();
   return true;
