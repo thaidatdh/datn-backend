@@ -85,7 +85,7 @@ exports.verifyUser = async (request, response, next) => {
     }
   } catch (err) {
     console.error(err);
-    return response.status(401).send({
+    return response.status(402).send({
       success: false,
       message: await translator.Translate(
         "Unauthorized access. Error when checking token. Access denied",
