@@ -237,7 +237,7 @@ exports.refresh_token = async function (req, res) {
         });
       }
       const expiredTimeToken = process.env.TOKEN_EXPIRE
-        ? process.env.TOKEN_EXPIRE
+        ? parseInt(process.env.TOKEN_EXPIRE)
         : 3600;
       let expiredDateToken = new Date();
       expiredDateToken.setTime(
