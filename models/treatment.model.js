@@ -5,6 +5,7 @@ require("./treatment.plan.model");
 const Patient = require("./patient.model");
 const ProcedureModel = require("./procedure.code.model");
 const RecallModel = require("./recall.model");
+const ToothModel = require("./tooth.model");
 const TreatmentSchema = mongoose.Schema(
   {
     patient: {
@@ -203,6 +204,15 @@ module.exports.insert = async function (req) {
     treatment.fee,
     constants.TRANSACTION.INCREASE
   );
+  if (Procedure.description == "Missing" && treatment.status !== "CANCEL") {
+    try {
+      const toothNumber = parseInt(treatment.tooth);
+      await ToothModel.updateOne(
+        { patient: treatment.patient, tooth_number: toothNumber },
+        { condition: "MISSING" }
+      );
+    } catch (error) {}
+  }
   return treatmentResult;
 };
 module.exports.updateTreatment = async function (treatment, req) {
@@ -231,6 +241,22 @@ module.exports.updateTreatment = async function (treatment, req) {
     const toothSurface = getToothSurface(req.selected_tooth_raw);
     treatment.tooth = toothSurface.tooth;
     treatment.surface = toothSurface.surface;
+  }
+  if (treatment.description == "Missing") {
+    try {
+      const toothNumber = parseInt(treatment.tooth);
+      if (treatment.status !== "CANCEL")
+        await ToothModel.updateOne(
+          { patient: treatment.patient, tooth_number: toothNumber },
+          { condition: "MISSING" }
+        );
+      else {
+        await ToothModel.updateOne(
+          { patient: treatment.patient, tooth_number: toothNumber },
+          { condition: null }
+        );
+      }
+    } catch (error) {}
   }
   return await treatment.save();
 };
