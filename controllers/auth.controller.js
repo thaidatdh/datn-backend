@@ -24,12 +24,12 @@ exports.signin_staff = async function (req, res) {
       });
     } else {
       // check if password matches
-      if (req.body.password.length < 8) {
+      if (req.body.password.length < 6) {
         return res.status(422).send({
           success: false,
           value: req.body.password,
           message: await translator.Translate(
-            "Password must be at least 8 chars long",
+            "Password must be at least 6 chars long",
             req.query.lang
           ),
           param: "password",
