@@ -9,7 +9,7 @@ const translator = require("../utils/translator");
 exports.index = async function (req, res) {
   try {
     const options = {
-      get_access_group: req.query.get_access_group == "true",
+      //get_access_group: req.query.get_access_group == "true",
       get_specialty: req.query.get_specialty == "true",
       limit: req.query.limit,
       page: req.query.page,
@@ -46,7 +46,7 @@ exports.index = async function (req, res) {
 exports.index_provider = async function (req, res) {
   try {
     const options = {
-      get_access_group: req.query.get_access_group == "true",
+      //get_access_group: req.query.get_access_group == "true",
       get_specialty: req.query.get_specialty == "true",
       get_schedule: req.query.get_schedule == "true",
       schedule_date: req.query.date,
@@ -113,7 +113,7 @@ exports.index_provider = async function (req, res) {
 exports.index_staff = async function (req, res) {
   try {
     const options = {
-      get_access_group: req.query.get_access_group == "true",
+      //get_access_group: req.query.get_access_group == "true",
       get_specialty: req.query.get_specialty == "true",
       limit: req.query.limit,
       page: req.query.page,
@@ -173,7 +173,7 @@ exports.add = async function (req, res) {
 exports.staff = async function (req, res) {
   try {
     const options = {
-      get_access_group: req.query.get_access_group == "true",
+      //get_access_group: req.query.get_access_group == "true",
       get_specialty: req.query.get_specialty == "true",
     };
     const staff = await StaffModel.get({ _id: req.params.staff_id }, options);

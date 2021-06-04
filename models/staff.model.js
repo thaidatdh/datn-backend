@@ -24,16 +24,16 @@ const StaffSchema = mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "specialty",
     },
-    access_group: {
+    /*access_group: {
       type: mongoose.Types.ObjectId,
       ref: "access_group",
-    },
+    },*/
     start_date: { type: Date, default: Date.now() },
     npi: String,
     biography: String,
-    notify_staff_msg: Boolean,
-    notify_patient_msg: Boolean,
-    notify_meeting: Boolean,
+    //notify_staff_msg: Boolean,
+    //notify_patient_msg: Boolean,
+    //notify_meeting: Boolean,
   },
   {
     timestamps: true,
@@ -73,15 +73,15 @@ module.exports.insert = async function (staffInfo) {
   staff.specialty = staffInfo.specialty
     ? mongoose.Types.ObjectId(staffInfo.specialty)
     : null;
-  staff.access_group = staffInfo.access_group
+  /*staff.access_group = staffInfo.access_group
     ? mongoose.Types.ObjectId(staffInfo.access_group)
-    : null;
+    : null;*/
   staff.start_date = staffInfo.start_date
     ? Date.parse(staffInfo.start_date)
     : Date.now();
   staff.npi = staffInfo.npi ? staffInfo.npi : null;
   staff.biography = staffInfo.biography ? staffInfo.biography : null;
-  staff.notify_staff_msg =
+  /*staff.notify_staff_msg =
     staffInfo.notify_staff_msg != undefined
       ? staffInfo.notify_staff_msg
       : false;
@@ -90,7 +90,7 @@ module.exports.insert = async function (staffInfo) {
       ? staffInfo.notify_patient_msg
       : false;
   staff.notify_meeting =
-    staffInfo.notify_meeting != undefined ? staffInfo.notify_meeting : false;
+    staffInfo.notify_meeting != undefined ? staffInfo.notify_meeting : false;*/
   const insertedStaff = await staff.save();
   const result = await Object.assign({}, insertedStaff._doc);
   result.user = await Object.assign({}, insertedUser._doc);
@@ -121,16 +121,16 @@ module.exports.updateStaff = async function (staff, staffInfo) {
   staff.specialty = staffInfo.specialty
     ? mongoose.Types.ObjectId(staffInfo.specialty)
     : staff.specialty;
-  staff.access_group = staffInfo.access_group
+  /*staff.access_group = staffInfo.access_group
     ? mongoose.Types.ObjectId(staffInfo.access_group)
-    : staff.access_group;
+    : staff.access_group;*/
   staff.start_date = staffInfo.start_date
     ? Date.parse(staffInfo.start_date)
     : staff.start_date;
   staff.npi = staffInfo.npi !== undefined ? staffInfo.npi : staffInfo.npi;
   staff.biography =
     staffInfo.biography !== undefined ? staffInfo.biography : staff.biography;
-  staff.notify_staff_msg =
+  /*staff.notify_staff_msg =
     staffInfo.notify_staff_msg != undefined
       ? staffInfo.notify_staff_msg
       : staff.notify_staff_msg;
@@ -141,7 +141,7 @@ module.exports.updateStaff = async function (staff, staffInfo) {
   staff.notify_meeting =
     staffInfo.notify_meeting != undefined
       ? staffInfo.notify_meeting
-      : staff.notify_meeting;
+      : staff.notify_meeting;*/
   const updatedStaff = await staff.save();
   const result = await Object.assign({}, updatedStaff._doc);
   result.user = await Object.assign({}, updatedUser._doc);
@@ -178,9 +178,9 @@ module.exports.get = async function (query, populateOptions) {
     promise.limit(Number.parseInt(populateOptions.limit));
   }
   // Access group
-  if (populateOptions.get_access_group) {
+  /*if (populateOptions.get_access_group) {
     promise.populate("access_group");
-  }
+  }*/
   // Specialty
   if (populateOptions.get_specialty) {
     promise.populate("specialty");

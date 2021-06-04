@@ -4,7 +4,7 @@ require("./procedure.code.model");
 const ProcedureCategorySchema = mongoose.Schema(
   {
     name: String,
-    icon: String,
+    //icon: String,
   },
   {
     timestamps: true,

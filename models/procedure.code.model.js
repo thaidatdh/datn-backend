@@ -24,15 +24,15 @@ const ProcedureCodeSchema = mongoose.Schema(
     },
     tooth_select: String,
     surface_number: String,
-    mark_type: Number,
+    //mark_type: Number,
     tooth_type: {
       type: String,
       default: "DEFAULT",
     }, //Child, Adult, DEFAULT
-    auto_progress_note: {
+    /*auto_progress_note: {
       type: Boolean,
       default: false,
-    },
+    },*/
     auto_recall: {
       type: Boolean,
       default: false,
@@ -88,15 +88,15 @@ module.exports.insert = async function (procedureCodeInfo) {
   proc.surface_number = procedureCodeInfo.surface_number
     ? procedureCodeInfo.surface_number
     : null;
-  proc.mark_type = procedureCodeInfo.mark_type
+  /*proc.mark_type = procedureCodeInfo.mark_type
     ? procedureCodeInfo.mark_type
-    : null;
+    : null;*/
   proc.tooth_type = procedureCodeInfo.tooth_type
     ? procedureCodeInfo.tooth_type
     : "ADULT";
-  proc.auto_progress_note = procedureCodeInfo.auto_progress_note
+  /*proc.auto_progress_note = procedureCodeInfo.auto_progress_note
     ? procedureCodeInfo.auto_progress_note
-    : false;
+    : false;*/
   proc.auto_recall = procedureCodeInfo.auto_recall
     ? procedureCodeInfo.auto_recall
     : false;
@@ -152,18 +152,18 @@ module.exports.updateProcedure = async function (procedure, procedureCodeInfo) {
     procedureCodeInfo.surface_number !== undefined
       ? procedureCodeInfo.surface_number
       : procedure.surface_number;
-  procedure.mark_type =
+  /*procedure.mark_type =
     procedureCodeInfo.mark_type !== undefined
       ? procedureCodeInfo.mark_type
-      : procedure.mark_type;
+      : procedure.mark_type;*/
   procedure.tooth_type =
     procedureCodeInfo.tooth_type !== undefined
       ? procedureCodeInfo.tooth_type
       : procedure.tooth_type;
-  procedure.auto_progress_note =
+  /*procedure.auto_progress_note =
     procedureCodeInfo.auto_progress_note != undefined
       ? procedureCodeInfo.auto_progress_note
-      : procedure.auto_progress_note;
+      : procedure.auto_progress_note;*/
   procedure.auto_recall =
     procedureCodeInfo.auto_recall != undefined
       ? procedureCodeInfo.auto_recall

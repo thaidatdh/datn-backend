@@ -39,7 +39,7 @@ const TreatmentSchema = mongoose.Schema(
     //patient_amount: Number,
     description: String,
     note: String,
-    treatment_plan: {
+    /*treatment_plan: {
       type: mongoose.Types.ObjectId,
       ref: "treatment_plan",
       required: false,
@@ -48,8 +48,8 @@ const TreatmentSchema = mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "appointment",
       required: false,
-    },
-    mark_type: String,
+    },*/
+    //mark_type: String,
     status: String,
     selected_tooth_raw: mongoose.Schema.Types.Mixed,
     transaction: {
@@ -83,12 +83,12 @@ module.exports.get = async function (query, populateOptions) {
   if (populateOptions.limit) {
     promise.limit(Number.parseInt(populateOptions.limit));
   }
-  if (populateOptions.get_plan) {
+  /*if (populateOptions.get_plan) {
     promise.populate({
       path: "treatment_plan",
       select: { _id: 1, name: 1, description: 1 },
     });
-  }
+  }*/
   if (populateOptions.get_procedure) {
     promise.populate({
       path: "procedure_code",
@@ -162,7 +162,7 @@ module.exports.insert = async function (req) {
   treatment.tooth = req.tooth ? req.tooth : null;
   treatment.surface = req.surface ? req.surface : null;
   treatment.note = req.note ? req.note : null;
-  treatment.treatment_plan = req.treatment_plan ? req.treatment_plan : null;
+  //treatment.treatment_plan = req.treatment_plan ? req.treatment_plan : null;
   treatment.appointment = req.appointment ? req.appointment : null;
   treatment.status = req.status ? req.status : "PLAN";
   treatment.ada_code = req.ada_code ? req.ada_code : Procedure.procedure_code;
@@ -170,7 +170,7 @@ module.exports.insert = async function (req) {
   treatment.description = req.description
     ? req.description
     : Procedure.description;
-  treatment.mark_type = req.mark_type ? req.mark_type : Procedure.mark_type;
+  //treatment.mark_type = req.mark_type ? req.mark_type : Procedure.mark_type;
   treatment.selected_tooth_raw = req.selected_tooth_raw
     ? req.selected_tooth_raw
     : null;
@@ -227,10 +227,10 @@ module.exports.updateTreatment = async function (treatment, req) {
   treatment.surface =
     req.surface !== undefined ? req.surface : treatment.surface;
   treatment.note = req.note !== undefined ? req.note : treatment.note;
-  treatment.treatment_plan =
+  /*treatment.treatment_plan =
     req.treatment_plan !== undefined
       ? req.treatment_plan
-      : treatment.treatment_plan;
+      : treatment.treatment_plan;*/
   treatment.appointment =
     req.appointment !== undefined ? req.appointment : treatment.appointment;
   treatment.status = req.status ? req.status : treatment.status;

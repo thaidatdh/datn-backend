@@ -20,7 +20,7 @@ const TransactionSchema = mongoose.Schema(
     paid_amount: mongoose.Types.Decimal128,
     return_amount: mongoose.Types.Decimal128,
     transaction_date: Date,
-    transaction_type: String,
+    //transaction_type: String,
     is_delete: {
       type: Boolean,
       default: false,
@@ -127,9 +127,9 @@ module.exports.insert = async function (req) {
   transaction.paid_amount = req.paid_amount ? req.paid_amount : 0;
   transaction.return_amount =
     parseFloat(transaction.paid_amount) - parseFloat(transaction.amount);
-  transaction.transaction_type = req.transaction_type
+  /*transaction.transaction_type = req.transaction_type
     ? req.transaction_type
-    : constants.TRANSACTION.TRANSACTION_TYPE_PAYMENT;
+    : constants.TRANSACTION.TRANSACTION_TYPE_PAYMENT;*/
   transaction.is_delete = req.is_delete ? req.is_delete : false;
   const transactionResult = await transaction.save();
   if (transaction.is_delete == true) return transactionResult;
@@ -151,6 +151,9 @@ module.exports.updateTransaction = async function (transaction, req) {
   const isDelete = transaction.is_delete == false && req.is_delete == true;
   transaction.is_delete =
     req.is_delete !== undefined ? req.is_delete : transaction.is_delete;
+  if (isDelete == true && !transaction.note.includes("[DELETED]")) {
+    transaction.note = "[DELETED]" + transaction.note;
+  }
   const transactionResult = await transaction.save();
   if (isDelete == false) return transactionResult;
   await TreatmentModel.updateMany(
@@ -159,7 +162,7 @@ module.exports.updateTransaction = async function (transaction, req) {
   );
   await PatientModel.updatePaidAmount(
     transaction.patient,
-    req.amount,
+    transaction.amount,
     constants.TRANSACTION.DECREASE
   );
   return transactionResult;

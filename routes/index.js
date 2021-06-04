@@ -48,12 +48,12 @@ router.use("/referral", referralRouter);
 router.use("/recall", recallRouter);
 router.use("/tooth", toothRouter);
 router.use("/progress-note", progressNoteRouter);
-router.use("/treatment-plan", treatmentPlanRouter);
+//router.use("/treatment-plan", treatmentPlanRouter);//deprecated
 router.use("/treatment", treatmentRouter);
 //router.use("/insurance", insuranceRouter);//deprecated
 router.use("/image-mouth", imageMouthRouter);
 router.use("/image-mouth-template", imageMouthTemplateRouter);
-router.use("/multi-code", multiCodeRouter);
+//router.use("/multi-code", multiCodeRouter);//deprecated
 router.use("/prescription", prescriptionRouter);
 router.use("/holiday", holidayRouter);
 router.use("/access-control", accessRouter);

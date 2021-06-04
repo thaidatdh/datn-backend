@@ -14,11 +14,11 @@ const PatientSchema = mongoose.Schema(
     patient_id_numeric: Number,
     active_date: Date,
     is_active: Boolean,
-    head_of_household: {
+    /*head_of_household: {
       type: mongoose.Types.ObjectId,
       ref: "patient",
-    },
-    patient_type: String, //PATIENT/NON-PATIENT
+    },*/
+    //patient_type: String, //PATIENT/NON-PATIENT
     new_patient: Boolean, //is new patient
     medical_alert: String,
     patient_note: String,
@@ -29,8 +29,8 @@ const PatientSchema = mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "staff",
     },
-    email_recall: Boolean,
-    appt_reminder: Boolean,
+    //email_recall: Boolean,
+    //appt_reminder: Boolean,
     plaque_index: Number,
     bleeding_index: Number,
     halitosis: Number,
@@ -108,12 +108,12 @@ module.exports.insert = async function (patientInfo) {
     patientInfo.is_active != undefined
       ? patientInfo.is_active
       : constants.PATIENT.DEFAULT_IS_ACTIVE;
-  patient.head_of_household = patientInfo.head_of_household
+  /*patient.head_of_household = patientInfo.head_of_household
     ? mongoose.Types.ObjectId(patientInfo.head_of_household)
     : null;
   patient.patient_type = patientInfo.patient_type
     ? patientInfo.patient_type
-    : patient.patient_type;
+    : patient.patient_type;*/
   patient.new_patient =
     patientInfo.new_patient != undefined
       ? patientInfo.new_patient
@@ -132,14 +132,14 @@ module.exports.insert = async function (patientInfo) {
   patient.provider = patientInfo.provider
     ? mongoose.Types.ObjectId(patientInfo.provider)
     : null;
-  patient.email_recall =
+  /*patient.email_recall =
     patientInfo.email_recall != undefined
       ? patientInfo.email_recall
       : constants.PATIENT.DEFAULT_EMAIL_RECALL;
   patient.appt_reminder =
     patientInfo.appt_reminder != undefined
       ? patientInfo.appt_reminder
-      : constants.PATIENT.DEFAULT_APPT_REMINDER;
+      : constants.PATIENT.DEFAULT_APPT_REMINDER;*/
   patient.gender = patientInfo.gender
     ? patientInfo.gender
     : constants.DEFAULT_GENDER;
@@ -186,14 +186,14 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
     patientInfo.is_active != undefined
       ? patientInfo.is_active
       : patient.is_active;
-  patient.head_of_household =
+  /*patient.head_of_household =
     patientInfo.head_of_household !== undefined
       ? patientInfo.head_of_household
       : patient.head_of_household;
   patient.patient_type =
     patientInfo.patient_type != undefined
       ? patientInfo.patient_type
-      : patient.patient_type;
+      : patient.patient_type;*/
   patient.new_patient =
     patientInfo.new_patient != undefined
       ? patientInfo.new_patient
@@ -220,14 +220,14 @@ module.exports.updatePatient = async function (patient_id, patientInfo) {
     patientInfo.provider !== undefined
       ? patientInfo.provider
       : patient.provider;
-  patient.email_recall =
+  /*patient.email_recall =
     patientInfo.email_recall != undefined
       ? patientInfo.email_recall
       : patient.email_recall;
   patient.appt_reminder =
     patientInfo.appt_reminder !== undefined
       ? patientInfo.appt_reminder
-      : patient.appt_reminder;
+      : patient.appt_reminder;*/
   patient.gender =
     patientInfo.gender !== undefined ? patientInfo.gender : patient.gender;
   patient.total_amount =
@@ -342,7 +342,8 @@ module.exports.updatePaidAmount = async (patient_id, amount, type) => {
   if (type === constants.TRANSACTION.INCREASE) {
     Patient.paid_amount = originalAmount + amountNumber;
   } else if (type == constants.TRANSACTION.DECREASE) {
-    Patient.paid_amount = originalAmount - amountNumber;
+    const result = originalAmount - amountNumber;;
+    Patient.paid_amount = result == "NaN" ? 0 : result;
   }
   await Patient.save();
   return true;

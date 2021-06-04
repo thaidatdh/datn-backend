@@ -232,7 +232,7 @@ exports.add_category = async function (req, res) {
   try {
     let category = new categoryModel();
     category.name = req.body.name ? req.body.name : null;
-    category.icon = req.body.icon ? req.body.icon : null;
+    //category.icon = req.body.icon ? req.body.icon : null;
     const rs = await category.save();
     return res.json({ success: true, payload: rs });
   } catch (err) {
@@ -253,8 +253,8 @@ exports.update_category = async function (req, res) {
     if (category) {
       category.name =
         req.body.name !== undefined ? req.body.name : category.name;
-      category.icon =
-        req.body.icon !== undefined ? req.body.icon : category.icon;
+      //category.icon =
+      //  req.body.icon !== undefined ? req.body.icon : category.icon;
       res.json({
         success: true,
         payload: category,
