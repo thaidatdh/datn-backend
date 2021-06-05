@@ -17,6 +17,7 @@ const nonSecurePaths = [
   "/api/swagger-ui-init.js",
   "/api/favicon-32x32.png",
   "/api/swagger-ui.css",
+  "/api/payment/momo-wallet/callback",
 ];
 
 exports.verifyUser = async (request, response, next) => {
