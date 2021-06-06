@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const { SEARCH } = require("../constants/constants");
-const constants = require("../constants/constants");
 const { v1: uuidv1 } = require("uuid");
 const QRCode = require("qrcode");
 const crypto = require("crypto");
 const https = require("https");
 const { default: axios } = require("axios");
-
+const PatientModel = require("../models/patient.model");
+const TransactionModel = require("../models/transaction.model");
+const translator = require("../utils/translator");
 //MOMO CONFIG API
 const config = {
   partner_code: process.env.MOMO_PARTNER_CODE,
@@ -22,9 +22,9 @@ const config = {
 exports.generateQrCode = async function (req, res) {
   try {
     /****** PARAMS ******/
-    const orderId = uuidv1(); //AUTO GENERATE
+    const orderId = req.body.transaction_id; //uuidv1(); //AUTO GENERATE
     const requestId = uuidv1(); //AUTO GENERATE
-    const amount = 1000; //TREATMENT AMOUNT
+    const amount = req.body.amount; //TREATMENT AMOUNT
     const orderInfo = "Pay with MoMo"; //DESCRIPTION
     const extraData = "merchantName=Payment"; //pass empty value if your merchant does not have stores else merchantName=[storeName]; merchantId=[storeId] to identify a transaction map with a physical store
 
@@ -101,9 +101,25 @@ exports.callbackNotifyMomo = async function (req, res) {
   try {
     //MOMO REQUEST BODY
     const body = req.body;
-
+    let transaction_id = body.orderId;
+    if (transaction_id == null) {
+      transaction_id = body.partnerRefId;
+    }
     /****** UPDATE DATABASE ******/
-    // DO SOMETHING
+    const transaction = await TransactionModel.findById(transaction_id);
+    if (transaction === null) {
+      return res.status(404).json({
+        success: false,
+      });
+    }
+    transaction.status = "COMPLETED";
+    transaction.paid_amount = transaction.amount;
+    await PatientModel.updatePaidAmount(
+      transaction.patient,
+      req.amount,
+      constants.TRANSACTION.INCREASE
+    );
+    await transaction.save();
     /******       END      *******/
 
     //THE PARTNER SERVER NEEDS TO REPLY BACK TO THE MOMO SERVER TO KNOW THE STATUS OF THE ORDER HAS BEEN RECORDED
@@ -111,7 +127,7 @@ exports.callbackNotifyMomo = async function (req, res) {
       status: 0,
       message: body.localMessage,
       amount: body.amount,
-      partnerRefId: "", //PARTNER ORDER ID
+      partnerRefId: transaction_id, //PARTNER ORDER ID
       momoTransId: body.transId,
       signature: body.signature,
     });

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const constants = require("../constants/constants");
+const { generateQrCode } = require("../services/momo");
 const PatientModel = require("./patient.model");
 const Staff = require("./staff.model");
 const TreatmentModel = require("./treatment.model");
@@ -26,6 +27,9 @@ const TransactionSchema = mongoose.Schema(
       default: false,
     },
     note: String,
+    mode: String,
+    status: String,
+    qr_code: String,
   },
   {
     timestamps: true,
@@ -131,7 +135,20 @@ module.exports.insert = async function (req) {
     ? req.transaction_type
     : constants.TRANSACTION.TRANSACTION_TYPE_PAYMENT;*/
   transaction.is_delete = req.is_delete ? req.is_delete : false;
-  const transactionResult = await transaction.save();
+  transaction.mode = req.mode ? req.mode : "CASH";
+  if (transaction.mode === "MOMO") {
+    transaction.status = "PENDING";
+  } else {
+    transaction.status = "COMPLETED";
+  }
+  let transactionResult = await transaction.save();
+  if (transactionResult.mode === "MOMO") {
+    transactionResult.qr_code = await generateQrCode(
+      transactionResult.amount,
+      transactionResult._id
+    );
+    transactionResult = await transactionResult.save();
+  }
   if (transaction.is_delete == true) return transactionResult;
   if (Array.isArray(transaction.treatments)) {
     await TreatmentModel.updateMany(
@@ -139,11 +156,13 @@ module.exports.insert = async function (req) {
       { transaction: transactionResult._id }
     );
   }
-  await PatientModel.updatePaidAmount(
-    transaction.patient,
-    req.amount,
-    constants.TRANSACTION.INCREASE
-  );
+  if (transactionResult.status == "COMPLETED") {
+    await PatientModel.updatePaidAmount(
+      transaction.patient,
+      req.amount,
+      constants.TRANSACTION.INCREASE
+    );
+  }
   return transactionResult;
 };
 module.exports.updateTransaction = async function (transaction, req) {
