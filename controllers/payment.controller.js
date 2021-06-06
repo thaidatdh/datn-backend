@@ -7,6 +7,7 @@ const { default: axios } = require("axios");
 const PatientModel = require("../models/patient.model");
 const TransactionModel = require("../models/transaction.model");
 const translator = require("../utils/translator");
+const constants = require("../constants/constants");
 //MOMO CONFIG API
 const config = {
   partner_code: process.env.MOMO_PARTNER_CODE,
@@ -113,10 +114,10 @@ exports.callbackNotifyMomo = async function (req, res) {
       });
     }
     transaction.status = "COMPLETED";
-    transaction.paid_amount = transaction.amount;
+    transaction.paid_amount = body.amount;
     await PatientModel.updatePaidAmount(
       transaction.patient,
-      req.amount,
+      body.amount,
       constants.TRANSACTION.INCREASE
     );
     await transaction.save();

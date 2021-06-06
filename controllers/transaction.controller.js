@@ -167,8 +167,9 @@ exports.add = async function (req, res) {
     }
     if (
       req.body.amount == null ||
-      req.body.paid_amount == null ||
-      parseFloat(req.body.amount) > parseFloat(req.body.paid_amount)
+      ((req.body.paid_amount == null ||
+        parseFloat(req.body.amount) > parseFloat(req.body.paid_amount)) &&
+        req.body.mode == "CASH")
     ) {
       return res.status(400).json({
         success: false,

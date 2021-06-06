@@ -40,7 +40,6 @@ exports.generateQrCode = async (amount, transaction_id) => {
       config.return_url +
       "&notifyUrl=" +
       config.notify_url +
-      "&payType=qr" +
       "&extraData=" +
       extraData;
 
@@ -64,7 +63,6 @@ exports.generateQrCode = async (amount, transaction_id) => {
       extraData: extraData,
       requestType: requestType,
       signature: signature,
-      payType: "qr",
     });
 
     //Create the HTTPS objects

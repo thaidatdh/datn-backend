@@ -130,7 +130,9 @@ module.exports.insert = async function (req) {
   transaction.amount = req.amount ? req.amount : 0;
   transaction.paid_amount = req.paid_amount ? req.paid_amount : 0;
   transaction.return_amount =
-    parseFloat(transaction.paid_amount) - parseFloat(transaction.amount);
+    req.mode === "MOMO"
+      ? 0
+      : parseFloat(transaction.paid_amount) - parseFloat(transaction.amount);
   /*transaction.transaction_type = req.transaction_type
     ? req.transaction_type
     : constants.TRANSACTION.TRANSACTION_TYPE_PAYMENT;*/
@@ -170,8 +172,14 @@ module.exports.updateTransaction = async function (transaction, req) {
   const isDelete = transaction.is_delete == false && req.is_delete == true;
   transaction.is_delete =
     req.is_delete !== undefined ? req.is_delete : transaction.is_delete;
-  if (isDelete == true && !transaction.note.includes("[DELETED]")) {
-    transaction.note = "[DELETED]" + transaction.note;
+  if (
+    isDelete == true &&
+    (transaction.note === null || !transaction.note.includes("[DELETED]"))
+  ) {
+    transaction.note = "[DELETED]" + (transaction.note ? transaction.note : "");
+  }
+  if (isDelete == true) {
+    transaction.status = "DELETED";
   }
   const transactionResult = await transaction.save();
   if (isDelete == false) return transactionResult;
@@ -181,7 +189,7 @@ module.exports.updateTransaction = async function (transaction, req) {
   );
   await PatientModel.updatePaidAmount(
     transaction.patient,
-    transaction.amount,
+    transaction.paid_amount,
     constants.TRANSACTION.DECREASE
   );
   return transactionResult;
