@@ -31,14 +31,14 @@ incoming API request.
               <td>
                 {{practice.name}}<br>
                 {{practice.address}}<br>
-                Phone: {{practice.phone}}
+                Điện thoại: {{practice.phone}}
               </td>
               <td>
 
               </td>
               <td style="text-align: right;">
-                {{mode}} Report
-                <br> Date: {{now}}
+                {{mode}} Báo cáo
+                <br> Ngày xuất: {{now}}
               </td>
             </tr>
           </table>
@@ -47,7 +47,7 @@ incoming API request.
     </table>
   </div>
   <div style="text-align: center; margin-top: 20px; margin-bottom: 10px;">
-    <h2 style="margin-bottom: 1px">Appointment</h2>
+    <h2 style="margin-bottom: 1px">Lịch hẹn</h2>
     <h3 style="margin-top: 1px;">{{startDate}} - {{endDate}}</h3>
   </div>
   {{#if patient}}
@@ -55,7 +55,7 @@ incoming API request.
     <h3 style="margin-bottom: 5px; color:deepskyblue">{{patient.name}}</h3>
     <h4 style="margin-top: 5px; margin-bottom: 5px;">ID: {{patient.id}}</h4>
     {{#if patient.dob}}
-    <h4 style="margin-top: 5px;">DOB: {{patient.dob}}</h4>
+    <h4 style="margin-top: 5px;">Ngày sinh: {{patient.dob}}</h4>
     {{/if}}
   </div>
   {{/if}}
@@ -63,19 +63,19 @@ incoming API request.
     <table cellpadding="0" cellspacing="0">
       <tr class="item">
         <td style="text-align: left;">
-          New:
+          Mới:
         </td>
         <td style="text-align: center;">
           {{statistic.New}}
         </td>
         <td style="text-align: left;">
-          Check in seated:
+          Đang:
         </td>
         <td style="text-align: center;">
           {{statistic.Check_in_seated}}
         </td>
         <td style="text-align: left;">
-          Check in waiting:
+          Đang chờ:
         </td>
         <td style="text-align: center;">
           {{statistic.Check_in_waiting}}
@@ -83,19 +83,19 @@ incoming API request.
       </tr>
       <tr class="item">
         <td style="text-align: left;">
-          Check out:
+          Đã thanh toán:
         </td>
         <td style="text-align: center;">
           {{statistic.Check_out}}
         </td>
         <td style="text-align: left;">
-          Confirm Hold:
+          Xác nhận giữ:
         </td>
         <td style="text-align: center;">
           {{statistic.Confirm_Hold}}
         </td>
         <td style="text-align: left;">
-          Confirmed:
+          Xác nhận:
         </td>
         <td style="text-align: center;">
           {{statistic.Confirmed}}
@@ -103,19 +103,19 @@ incoming API request.
       </tr>
       <tr class="item">
         <td style="text-align: left;">
-          Rescheduled:
+          Dời lịch:
         </td>
         <td style="text-align: center;">
           {{statistic.Rescheduled}}
         </td>
         <td style="text-align: left;">
-          Cancelled:
+          Hủy:
         </td>
         <td style="text-align: center;">
           {{statistic.Cancelled}}
         </td>
         <td style="text-align: left;">
-          No Show:
+          Không xuất hiện:
         </td>
         <td style="text-align: center;">
           {{statistic.No_Show}}
@@ -123,7 +123,7 @@ incoming API request.
       </tr>
       <tr class="total ">
         <td style="font-weight: bold;text-align: left;">
-          Total:
+          Tổng:
         </td>
         <td style="text-align: center;">
           {{total}}
@@ -135,25 +135,25 @@ incoming API request.
     <table cellpadding="0" cellspacing="0">
       <tr class="heading ">
         <td colspan="1" style="text-align: center;">
-          Date
+          Ngày
         </td>
         <td style="text-align: center;">
-          Time
+          Giờ
         </td>
         <td style="text-align: center;">
-          Duration
+          Thời gian
         </td>
         <td style="min-width: 100; text-align: left;max-width: 150;">
-          Facility
+          Ghế
         </td>
         <td style="max-width: 200;">
-          Dentist
+          Bác sĩ
         </td>
         <td style="max-width: 200;">
-          Patient
+          Bệnh nhân
         </td>
         <td style="text-align: right;">
-          Status
+          Trạng thái
         </td>
       </tr>
       {{#each items}}

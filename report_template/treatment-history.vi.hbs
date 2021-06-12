@@ -30,14 +30,14 @@ incoming API request.
               <td>
                 {{practice.name}}<br>
                 {{practice.address}}<br>
-                Phone: {{practice.phone}}
+                Điện thoại: {{practice.phone}}
               </td>
               <td>
                 
               </td>
               <td style="text-align: right;">
-                {{mode}} Report
-                <br> Date: {{now}}
+                {{mode}} Báo cáo
+                <br> Ngày xuất: {{now}}
               </td>
             </tr>
           </table>
@@ -46,7 +46,7 @@ incoming API request.
     </table>
   </div>
   <div style="text-align: center; margin-top: 20px; margin-bottom: 10px;">
-    <h2 style="margin-bottom: 1px">Treatment History</h2>
+    <h2 style="margin-bottom: 1px">Lịch sử điều trị</h2>
     <h3 style="margin-top: 1px;">{{startDate}} - {{endDate}}</h3>
   </div>
   {{#if patient}}
@@ -54,7 +54,7 @@ incoming API request.
     <h3 style="margin-bottom: 5px; color:deepskyblue">{{patient.name}}</h3>
     <h4 style="margin-top: 5px; margin-bottom: 5px;">ID: {{patient.id}}</h4>
     {{#if patient.dob}}
-    <h4 style="margin-top: 5px;">DOB: {{patient.dob}}</h4>
+    <h4 style="margin-top: 5px;">Ngày sinh: {{patient.dob}}</h4>
     {{/if}}
   </div>
   {{/if}}
@@ -62,28 +62,28 @@ incoming API request.
     <table cellpadding="0" cellspacing="0">
       <tr class="heading ">
         <td colspan="1" style="text-align: center;">
-          Date
+          Ngày
         </td>
         <td style="text-align: center;">
-          Code
+          Mã
         </td>
         <td>
-          Tooth
+          Răng
         </td>
         <td>
-          Surface
+          Bề mặt
         </td>
         <td style="max-width: 300;">
-          Description
+          Mô tả
         </td>
         <td>
-          Fee
+          Phí
         </td>
         <td>
-          Dentist
+          Bác sĩ
         </td>
         <td style="text-align: center;">
-          Status
+          Trạng thái
         </td>
       </tr>
       {{#each items}}
@@ -116,7 +116,7 @@ incoming API request.
       {{/each}}
       <tr class="total ">
         <td>
-          Total: {{total}}
+          Tổng: {{total}}
         </td>
       </tr>
     </table>

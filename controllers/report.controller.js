@@ -300,21 +300,21 @@ exports.report_treatment_history = async function (req, res) {
       Query = {
         patient: mongoose.Types.ObjectId(req.query.patient_id),
       };
-      mode = "Patient";
+      mode = req.query.lang == "vi" ? "Bệnh nhân" : "Patient";
     }
     if (req.query.provider_id) {
       Query = {
         provider: mongoose.Types.ObjectId(req.query.provider_id),
       };
-      mode = "Dentist";
+      mode = req.query.lang == "vi" ? "Bác sĩ" : "Dentist";
     }
     if (req.query.assistant_id) {
       Query = {
         assistant: mongoose.Types.ObjectId(req.query.assistant_id),
       };
-      mode = "Assistant";
+      mode = req.query.lang == "vi" ? "Phụ tá" : "Assistant";
     }
-    const lang = req.query.lang;
+    const lang = req.query.lang === "vi" ? ".vi" : "";
     const createDate = formatReadableDate(new Date());
     let startDateString = null;
     let endDateStr = null;
@@ -449,7 +449,7 @@ exports.report_treatment_history = async function (req, res) {
     const Practice = await PracticeModel.findOne();
 
     const content = await readFileAsync(
-      "./report_template/treatment-history.hbs"
+      "./report_template/treatment-history" + lang + ".hbs"
     );
     const css = await readFileAsync("./report_template/provider-report.css");
     const data = {
@@ -475,7 +475,6 @@ exports.report_treatment_history = async function (req, res) {
       },
       data: data,
     });
-    //return res.contentType("application/pdf").send(ReportFile.content);
     const payload = Buffer.from(ReportFile.content).toString("base64");
     res.json({
       success: true,
@@ -500,21 +499,21 @@ exports.report_appointment = async function (req, res) {
       Query = {
         patient: mongoose.Types.ObjectId(req.query.patient_id),
       };
-      mode = "Patient";
+      mode = req.query.lang == "vi" ? "Bệnh nhân" : "Patient";
     }
     if (req.query.provider_id) {
       Query = {
         provider: mongoose.Types.ObjectId(req.query.provider_id),
       };
-      mode = "Dentist";
+      mode = req.query.lang == "vi" ? "Bác sĩ" : "Dentist";
     }
     if (req.query.assistant_id) {
       Query = {
         assistant: mongoose.Types.ObjectId(req.query.assistant_id),
       };
-      mode = "Assistant";
+      mode = req.query.lang == "vi" ? "Phụ tá" : "Assistant";
     }
-    const lang = req.query.lang;
+    const lang = req.query.lang === "vi" ? ".vi" : "";
     const createDate = formatReadableDate(new Date());
     let startDateString = null;
     let endDateStr = null;
@@ -698,7 +697,9 @@ exports.report_appointment = async function (req, res) {
       },
     ]);
     const Practice = await PracticeModel.findOne();
-    const content = await readFileAsync("./report_template/appointment.hbs");
+    const content = await readFileAsync(
+      "./report_template/appointment" + lang + ".hbs"
+    );
     const css = await readFileAsync("./report_template/provider-report.css");
     let TotalData = {
       New: 0,
@@ -768,21 +769,21 @@ exports.report_referral = async function (req, res) {
       Query = {
         ref_patient: { $ne: null },
       };
-      mode = "Patient";
+      mode = req.query.lang == "vi" ? "Bệnh nhân" : "Patient";
     }
     if (req.query.staff_id) {
       Query = {
         ref_staff: mongoose.Types.ObjectId(req.query.staff_id),
       };
-      mode = "Staff";
+      mode = req.query.lang == "vi" ? "Nhân viên" : "Staff";
     }
     if (req.query.source_id) {
       Query = {
         referral_source: mongoose.Types.ObjectId(req.query.source_id),
       };
-      mode = "Referrer";
+      mode = req.query.lang == "vi" ? "Nguồn giới thiệu" : "Referrer";
     }
-    const lang = req.query.lang;
+    const lang = req.query.lang === "vi" ? ".vi" : "";
     const createDate = formatReadableDate(new Date());
     let startDateString = null;
     let endDateStr = null;
@@ -862,8 +863,7 @@ exports.report_referral = async function (req, res) {
           " " +
           referral.ref_staff.user.last_name
         ).trim();
-      }
-      else if (referral.referral_source) {
+      } else if (referral.referral_source) {
         ref_name = referral.referral_source.name;
       }
       const dataValue = {
@@ -880,18 +880,19 @@ exports.report_referral = async function (req, res) {
       dataList.push(dataValue);
       if (referral.referral_type == "TO") {
         referralTo = referralTo + 1;
-      }
-      else {
+      } else {
         referralBy = referralBy + 1;
       }
     }
-    dataList.sort((a,b) => {
+    dataList.sort((a, b) => {
       const aType = a.referral_type == "TO" ? 1 : 0;
       const bType = b.referral_type == "TO" ? 1 : 0;
       return aType - bType;
     });
     const Practice = await PracticeModel.findOne();
-    const content = await readFileAsync("./report_template/referral.hbs");
+    const content = await readFileAsync(
+      "./report_template/referral" + lang + ".hbs"
+    );
     const css = await readFileAsync("./report_template/provider-report.css");
     let TotalData = {
       includeTo: mode == "Referrer" || mode == "" ? true : false,
