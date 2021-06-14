@@ -47,6 +47,13 @@ UserSchema.pre("save", function (next) {
     user.user_type == constants.USER.USER_TYPE_PATIENT
   ) {
     user.username = user.mobile_phone ? user.mobile_phone : user.home_phone;
+  } else if (
+    !user.password &&
+    !user.username &&
+    user.user_type == constants.USER.USER_TYPE_PATIENT
+  ) {
+    user.username = user.mobile_phone ? user.mobile_phone : user.home_phone;
+    user.password = "hello123";
   }
   if (this.isModified("password") || this.isNew) {
     bcrypt.genSalt(10, function (err, salt) {
