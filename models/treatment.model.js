@@ -43,12 +43,12 @@ const TreatmentSchema = mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "treatment_plan",
       required: false,
-    },
+    },*/
     appointment: {
       type: mongoose.Types.ObjectId,
       ref: "appointment",
       required: false,
-    },*/
+    },
     //mark_type: String,
     status: String,
     selected_tooth_raw: mongoose.Schema.Types.Mixed,
